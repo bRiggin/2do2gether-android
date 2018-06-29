@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <group
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_to_do_lists"
+            android:icon="@drawable/icon_to_do_list"
+            android:title="@string/to_do_lists" />
+        <item
+            android:id="@+id/drawer_checklists"
+            android:icon="@drawable/icon_checklist"
+            android:title="@string/checklists" />
+        <item
+            android:id="@+id/drawer_my_connections"
+            android:icon="@drawable/icon_my_connections"
+            android:title="@string/my_connections" />
+        <item
+            android:id="@+id/drawer_my_profile"
+            android:icon="@drawable/icon_profile"
+            android:title="@string/my_profile" />
+        <item
+            android:id="@+id/drawer_settings"
+            android:icon="@drawable/icon_settings"
+            android:title="@string/settings" />
+    </group>
+
+
+</menu>

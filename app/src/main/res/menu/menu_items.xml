@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_add"
+        android:icon="@drawable/icon_plus_button"
+        android:title="@string/to_do_lists"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_delete"
+        android:icon="@drawable/icon_delete_button"
+        android:title="@string/delete"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/icon_share"
+        android:title="@string/share_list"
+        app:showAsAction="always"/>
+</menu>

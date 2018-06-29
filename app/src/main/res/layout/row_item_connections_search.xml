@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:layout_marginBottom="16dp">
+
+    <ImageView
+        android:id="@+id/userProfilePicture"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/profile_default"/>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="2"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+        <TextView style="@style/TextViewStyle"
+            android:id="@+id/userName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="Whatever"/>
+        <TextView style="@style/TextViewStyle"
+            android:id="@+id/userNickname"
+            android:layout_margin="8dp"
+            android:textSize="12sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="whatever"/>
+    </LinearLayout>
+
+    <Button style="@style/TextViewStyle"
+        android:id="@+id/connectUserBtn"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:text="Connect"
+        android:textAllCaps="false"
+        android:background="@drawable/layout_button"/>
+
+</LinearLayout>

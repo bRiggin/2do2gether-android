@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/alertDialogLayout"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp"
+    android:background="@drawable/layout_dialog">
+    <LinearLayout
+        android:id="@+id/alertDialogTitleAndMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true">
+        <TextView style="@style/TextViewStyle"
+            android:id="@+id/alertDialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alert Dialog Demo Title"
+            android:textColor="@color/white"
+            android:layout_marginBottom="5dp"
+            android:textSize="24sp"/>
+        <TextView style="@style/TextViewStyle"
+            android:id="@+id/alertDialogMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:text="Alert Dialog Message string demo.."
+            android:textSize="16sp"
+            android:layout_marginBottom="5dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/alertDialogButtons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/alertDialogTitleAndMessage"
+        android:layout_alignParentEnd="true">
+        <TextView style="@style/TextViewStyle"
+            android:id="@+id/alertDialogNegativeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No"
+            android:textColor="@color/white"
+            android:padding="3dp"
+            android:layout_marginEnd="30dp"
+            android:textSize="16sp"/>
+        <TextView style="@style/TextViewStyle"
+            android:id="@+id/alertDialogPositiveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yes"
+            android:padding="3dp"
+            android:textColor="@color/white"
+            android:layout_marginEnd="15dp"
+            android:textSize="16sp"/>
+    </LinearLayout>
+</RelativeLayout>
