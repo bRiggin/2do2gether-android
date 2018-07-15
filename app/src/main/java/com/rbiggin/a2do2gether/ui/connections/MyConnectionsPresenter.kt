@@ -13,10 +13,10 @@ import javax.inject.Inject
  * Presenter responsible for the My Connections Fragment
  */
 class MyConnectionsPresenter @Inject constructor(private val constants: Constants,
-                                                 utilities: Utilities,
-                                                 sharedPreferences: SharedPreferences,
                                                  private val connectionsRepo: IntConnectionsRepository,
-                                                 private val userRepo: UserProfileRepository) :
+                                                 private val userRepo: UserProfileRepository,
+                                                 utilities: Utilities,
+                                                 sharedPreferences: SharedPreferences) :
                                                  BasePresenter<MyConnectionsFragment>(sharedPreferences, utilities, constants),
                                                  IntMyConnectionsPresenter,
                                                  IntConnectionsRepositoryListener,
@@ -157,13 +157,6 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
             isProcessingBol = false
             mFragment?.displayProgressSpinner(false)
         }
-    }
-
-    /**
-     * Auth Command Result
-     */
-    override fun onAuthCommandResult(response_id: Int, message: String?) {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     /**

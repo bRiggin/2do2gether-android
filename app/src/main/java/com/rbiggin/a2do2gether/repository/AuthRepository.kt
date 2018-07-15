@@ -15,7 +15,7 @@ import javax.inject.Inject
  */
 class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
                                          private val sharedPrefs: SharedPreferences,
-                                         private val fbDatabseApi: IntFirebaseDatabase,
+                                         private val fbDatabaseApi: IntFirebaseDatabase,
                                          private val utilities: Utilities,
                                          private val constants: Constants) :
                      IntAuthRepository, IntFirebaseAuthListener, com.google.firebase.auth.FirebaseAuth.AuthStateListener{
@@ -29,6 +29,9 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
     /** Firebase authentication listener */
     private var mListener: IntAuthRepositoryListener? = null
 
+    /** Firebase actice authentication listener */
+    private var mActivieListener: IntAuthRepositoryActiveListener? = null
+
     /** Database Reference */
     private var mDatabase: DatabaseReference? = null
 
@@ -37,6 +40,7 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
      */
     override fun setup(listener: IntAuthRepositoryListener) {
         mListener = listener
+        if (listener is IntAuthRepositoryActiveListener) { mActivieListener = listener }
         mAuth = com.google.firebase.auth.FirebaseAuth.getInstance()
         mAuth?.addAuthStateListener(this)
         user = User(mAuth?.currentUser)
@@ -97,7 +101,7 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
             val decodedToken = utilities.decode(currentFcmToken)
             user?.firebaseUser?.uid?.let {
                 val data = hashMapOf(it to decodedToken as Any)
-                mDatabase?.let { fbDatabseApi.doWrite(it, constants.FB_FCM_TOKENS, data) }
+                mDatabase?.let { fbDatabaseApi.doWrite(it, constants.FB_FCM_TOKENS, data) }
             }
         }
     }
@@ -117,45 +121,45 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
      */
     override fun apiResult(type: Constants.AuthApiType, success: Boolean, message: String?) {
         val errorMessage = message ?: "Undefined Error"
-        when(type){
+        when (type) {
             constants.authApiCreateAccount() -> {
-                when(success){
+                when (success) {
                     true -> {
                         user?.firebaseUser = mAuth?.currentUser
-                        mListener?.onAuthCommandResult(constants.AUTH_CREATE_ACCOUNT_SUCCESSFUL, null)
+                        mActivieListener?.onAuthCommandResult(constants.AUTH_CREATE_ACCOUNT_SUCCESSFUL, null)
                     }
-                    false ->{
-                        mListener?.onAuthCommandResult(constants.AUTH_CREATE_ACCOUNT_UNSUCCESSFUL, errorMessage)
+                    false -> {
+                        mActivieListener?.onAuthCommandResult(constants.AUTH_CREATE_ACCOUNT_UNSUCCESSFUL, errorMessage)
                     }
                 }
             }
             constants.authApiLogin() -> {
-                when(success){
+                when (success) {
                     true -> {
                         user?.firebaseUser = mAuth?.currentUser
-                        mListener?.onAuthCommandResult(constants.AUTH_LOGIN_SUCCESSFUL , null)
+                        mActivieListener?.onAuthCommandResult(constants.AUTH_LOGIN_SUCCESSFUL, null)
                     }
-                    false ->{
-                        mListener?.onAuthCommandResult(constants.AUTH_LOGIN_FAILED, errorMessage)
+                    false -> {
+                        mActivieListener?.onAuthCommandResult(constants.AUTH_LOGIN_FAILED, errorMessage)
                     }
                 }
             }
             constants.authApiResetPassword() -> {
-                when(success){
+                when (success) {
                     true -> {
-                        mListener?.onAuthCommandResult(constants.AUTH_PASSWORD_RESET_SUCCESSFUL, null)
+                        mActivieListener?.onAuthCommandResult(constants.AUTH_PASSWORD_RESET_SUCCESSFUL, null)
                     }
-                    false ->{
-                        mListener?.onAuthCommandResult(constants.AUTH_PASSWORD_RESET_UNSUCCESSFUL, errorMessage)
+                    false -> {
+                        mActivieListener?.onAuthCommandResult(constants.AUTH_PASSWORD_RESET_UNSUCCESSFUL, errorMessage)
                     }
                 }
             }
             constants.authApiLogout() -> {
-                when(success){
+                when (success) {
                     true -> {
 
                     }
-                    false ->{
+                    false -> {
 
                     }
                 }
@@ -175,6 +179,7 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
      */
     override fun detach() {
         mListener = null
+        mActivieListener = null
     }
 
     /**

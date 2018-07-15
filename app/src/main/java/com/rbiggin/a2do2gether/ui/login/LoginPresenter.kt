@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.rbiggin.a2do2gether.ui.login.fragments.IntLoginFragmentCallbacks
 import com.rbiggin.a2do2gether.repository.IntAuthRepository
+import com.rbiggin.a2do2gether.repository.IntAuthRepositoryActiveListener
 import com.rbiggin.a2do2gether.repository.IntAuthRepositoryListener
 import com.rbiggin.a2do2gether.utils.Constants
 import javax.inject.Inject
@@ -14,7 +15,7 @@ import javax.inject.Inject
  */
 class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository,
                                          private val constants: Constants) :
-                                         IntLoginPresenter, IntAuthRepositoryListener{
+                                         IntLoginPresenter, IntAuthRepositoryActiveListener{
 
     /** Instance Login Activity Interface */
     private var mLoginActivity: IntLoginActivity? = null

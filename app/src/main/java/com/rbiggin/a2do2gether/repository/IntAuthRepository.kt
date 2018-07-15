@@ -31,7 +31,9 @@ interface IntAuthRepository{
  * Defines callbacks from Authentication Repository
  */
 interface IntAuthRepositoryListener{
-    fun onAuthCommandResult(response_id: Int, message: String?)
-
     fun onAuthStateChange(response_id: Int, message: String?)
+}
+
+interface IntAuthRepositoryActiveListener: IntAuthRepositoryListener{
+    fun onAuthCommandResult(response_id: Int, message: String?)
 }

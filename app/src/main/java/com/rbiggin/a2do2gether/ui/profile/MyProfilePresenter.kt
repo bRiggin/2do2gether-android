@@ -12,8 +12,7 @@ import javax.inject.Inject
 /**
  * Presenter responsible for the My Profile Fragment
  */
-class MyProfilePresenter @Inject constructor(private val authRepo: IntAuthRepository,
-                                             private val userRepo: IntUserRepositoryFragment,
+class MyProfilePresenter @Inject constructor(private val userRepo: IntUserRepositoryFragment,
                                              private val constants: Constants,
                                              utilities: Utilities,
                                              sharedPreferences: SharedPreferences) :
@@ -28,7 +27,6 @@ class MyProfilePresenter @Inject constructor(private val authRepo: IntAuthReposi
      * View Will Show
      */
     override fun onViewWillShow() {
-        authRepo.setup(this)
         userRepo.onSetFragment(this)
         mFragment?.onUpdateDetails(userRepo.geUsersFirstName(), userRepo.getUsersSecondName(), userRepo.getUsersNickname())
 
@@ -40,7 +38,6 @@ class MyProfilePresenter @Inject constructor(private val authRepo: IntAuthReposi
      */
     override fun onViewWillHide() {
         super.onViewWillHide()
-        authRepo.detach()
         userRepo.onDetachFragment()
     }
 
@@ -86,7 +83,7 @@ class MyProfilePresenter @Inject constructor(private val authRepo: IntAuthReposi
             mFragment?.onDisplayDialogMessage(constants.ERROR_IMAGE_CROPPING_ACTIVITY_EXCEPTION,
                     errorMessage?.message)
         } else if (mFragment?.hasNetworkConnection()!!){
-            authRepo.userId()?.let {
+            getUid()?.let {
                 userRepo.uploadNewProfilePicture(image, it)
             } ?: throw ExceptionInInitializerError()
         } else {
@@ -120,13 +117,6 @@ class MyProfilePresenter @Inject constructor(private val authRepo: IntAuthReposi
      */
     override fun onUserDetailsChanged(firstName: String, secondName: String, nickname: String) {
         mFragment?.onUpdateDetails(firstName, secondName, nickname)
-    }
-
-    /**
-     * Auth Command Result
-     */
-    override fun onAuthCommandResult(response_id: Int, message: String?) {
-        // not currently used within MyProfilePresenter
     }
 
     /**

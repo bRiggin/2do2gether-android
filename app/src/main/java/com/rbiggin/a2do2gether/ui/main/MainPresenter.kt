@@ -127,13 +127,6 @@ class MainPresenter @Inject constructor(private val constants: Constants,
     }
 
     /**
-     * Auth Command Result
-     */
-    override fun onAuthCommandResult(response_id: Int, message: String?) {
-        // Not relevant to Main Activity
-    }
-
-    /**
      * Auth State Change
      */
     override fun onAuthStateChange(response_id: Int, message: String?) {

@@ -1,17 +1,21 @@
 package com.rbiggin.a2do2gether.ui.settings
 
+import android.content.SharedPreferences
 import com.rbiggin.a2do2gether.repository.IntAuthRepository
 import com.rbiggin.a2do2gether.repository.IntAuthRepositoryListener
 import com.rbiggin.a2do2gether.ui.base.BasePresenter
 import com.rbiggin.a2do2gether.utils.Constants
+import com.rbiggin.a2do2gether.utils.Utilities
 import javax.inject.Inject
 
 /**
  * Insert class/object/interface/file description...
  */
 class SettingPresenter @Inject constructor(private val authRepo: IntAuthRepository,
-                                           private val constants: Constants) :
-                                           BasePresenter<SettingsFragment>(),
+                                           private val constants: Constants,
+                                           utilities: Utilities,
+                                           sharedPreferences: SharedPreferences) :
+                                           BasePresenter<SettingsFragment>(sharedPreferences, utilities, constants),
                                            IntSettingsPresenter,
                                            IntAuthRepositoryListener{
     /**
@@ -35,13 +39,6 @@ class SettingPresenter @Inject constructor(private val authRepo: IntAuthReposito
     override fun onViewWillHide() {
         super.onViewWillHide()
         authRepo.detach()
-    }
-
-    /**
-     *
-     */
-    override fun onAuthCommandResult(response_id: Int, message: String?) {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     /**

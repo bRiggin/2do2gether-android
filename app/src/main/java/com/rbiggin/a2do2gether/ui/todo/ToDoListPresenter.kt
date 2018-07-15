@@ -1,15 +1,19 @@
 package com.rbiggin.a2do2gether.ui.todo
 
+import android.content.SharedPreferences
 import com.rbiggin.a2do2gether.ui.base.BasePresenter
 import com.rbiggin.a2do2gether.utils.Constants
+import com.rbiggin.a2do2gether.utils.Utilities
 import javax.inject.Inject
 
 /**
  * Insert class/object/interface/file description...
  */
-class ToDoListPresenter @Inject constructor(private val constants: Constants) :
-                                              BasePresenter<ToDoListFragment>(),
-                                              IntToDoListPresenter{
+class ToDoListPresenter @Inject constructor(private val constants: Constants,
+                                            utilities: Utilities,
+                                            sharedPreferences: SharedPreferences) :
+                                            BasePresenter<ToDoListFragment>(sharedPreferences, utilities, constants),
+                                            IntToDoListPresenter{
     /**
      *
      */
