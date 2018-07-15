@@ -14,7 +14,7 @@ interface IntMyConnectionsFragment : IntBaseFragment {
 
     fun onDisplaySearchResults(result: ArrayList<UserConnectionSearch>)
 
-    fun onDisplayConnectionRequests(requests: ArrayList<UserConnectionRequest>)
+    fun onDisplayConnectionRequests(requests: HashMap<String, UserConnectionRequest>)
 
     fun onClearSearchView()
 

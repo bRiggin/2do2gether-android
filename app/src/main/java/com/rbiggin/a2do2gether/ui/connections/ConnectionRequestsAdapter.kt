@@ -10,7 +10,7 @@ import com.rbiggin.a2do2gether.utils.Constants
 import com.rbiggin.a2do2gether.utils.inflate
 import kotlinx.android.synthetic.main.row_item_connection_request.view.*
 
-class ConnectionRequestsAdapter (private val requests: ArrayList<UserConnectionRequest>,
+class ConnectionRequestsAdapter (private val requests: HashMap<String, UserConnectionRequest>,
                                  private val constants: Constants,
                                  private val listener: IntMyConnectionsRecyclerButton)
                                  : RecyclerView.Adapter<ConnectionRequestsAdapter.ItemHolder>(){

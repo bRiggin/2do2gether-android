@@ -25,6 +25,9 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
     /** ... */
     private lateinit var mUid: String
 
+    /** ... */
+    private val mConnectionRequests: HashMap<String, UserConnectionRequest> = HashMap()
+
     /**
      * Set Fragment
      */
@@ -79,20 +82,17 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
         when (type){
             constants.dbApiFindUsers() -> {
                 if (success){
-                    data?.apply {
-                        handleConnectionSearchResults(data)
-                    }
-                } else {
-
+                    data?.let { handleConnectionSearchResults(data) }
                 }
             }
             constants.dbApiFindPendingConnections() -> {
                 if (success){
-                    data?.apply {
-                        handlePendingConnectionsResults(data)
-                    }
-                } else {
-
+                    data?.let { handlePendingConnectionsResults(data) }
+                }
+            }
+            constants.dbApiReadUserDetails() -> {
+                if (success){
+                    data?.let { handlePendingConnectionDetails(data) }
                 }
             }
             else -> {
@@ -129,16 +129,32 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
      * Handle Pending Connections Results
      */
     private fun handlePendingConnectionsResults(data: DataSnapshot){
-        val requests = ArrayList<UserConnectionRequest>()
         for (foundRequest in data.children){
-            val first_name = foundRequest.child(constants.FB_FIRST_NAME).value.toString()
-            val second_name = foundRequest.child(constants.FB_SECOND_NAME).value.toString()
-            val nickname = foundRequest.child(constants.FB_NICKNAME).value.toString()
             val uid = foundRequest.key.toString()
-            requests.add(UserConnectionRequest(first_name, second_name, nickname, uid))
+            mDatabase?.let {
+                databaseApi.doRead(it, "${constants.FB_USER_PROFILE}/$uid", this,
+                        constants.dbApiReadUserDetails())
+            }
         }
-        mFragmentListener?.onPendingConnectionResults(requests)
     }
+
+    /**
+     * Handle Pending Connection Details
+     */
+    private fun handlePendingConnectionDetails(data: DataSnapshot){
+        if (!mConnectionRequests.containsKey(data.key)){
+            val first_name = data.child(constants.FB_FIRST_NAME).value.toString()
+            val second_name = data.child(constants.FB_SECOND_NAME).value.toString()
+            val nickname = data.child(constants.FB_NICKNAME).value.toString()
+            val uid = data.key.toString()
+            mConnectionRequests. put(uid, UserConnectionRequest(first_name, second_name, nickname, uid))
+            mFragmentListener?.onPendingConnectionResults(mConnectionRequests)
+        } else {
+            //todo could check if details have been updated.
+        }
+
+    }
+
 
     /**
      * Submit Connection Request

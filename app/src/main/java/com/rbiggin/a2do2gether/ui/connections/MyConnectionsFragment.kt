@@ -125,7 +125,7 @@ class MyConnectionsFragment : BaseFragment(), IntMyConnectionsFragment,
     /**
      * Display Connection Requests
      */
-    override fun onDisplayConnectionRequests(requests: ArrayList<UserConnectionRequest>) {
+    override fun onDisplayConnectionRequests(requests: HashMap<String, UserConnectionRequest>) {
         pendingConnectionsRecyclerView.adapter = ConnectionRequestsAdapter(requests, constants, this)
     }
 

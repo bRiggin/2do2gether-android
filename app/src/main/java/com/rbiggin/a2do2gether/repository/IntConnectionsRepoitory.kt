@@ -27,5 +27,5 @@ interface IntConnectionsRepository {
 interface IntConnectionsRepositoryListener {
     fun onSearchResults(users: ArrayList<UserConnectionSearch>)
 
-    fun onPendingConnectionResults(requests: ArrayList<UserConnectionRequest>)
+    fun onPendingConnectionResults(requests: HashMap<String, UserConnectionRequest>)
 }

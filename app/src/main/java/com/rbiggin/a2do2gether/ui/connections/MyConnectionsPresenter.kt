@@ -12,12 +12,11 @@ import javax.inject.Inject
 /**
  * Presenter responsible for the My Connections Fragment
  */
-class MyConnectionsPresenter @Inject constructor(private val constants: Constants,
-                                                 utilities: Utilities,
-                                                 sharedPreferences: SharedPreferences,
+class MyConnectionsPresenter @Inject constructor(utilities: Utilities, sharedPrefs: SharedPreferences,
+                                                 private val constants: Constants,
                                                  private val connectionsRepo: IntConnectionsRepository,
                                                  private val userRepo: UserProfileRepository) :
-                                                 BasePresenter<MyConnectionsFragment>(sharedPreferences, utilities, constants),
+                                                 BasePresenter<MyConnectionsFragment>(sharedPrefs, utilities, constants),
                                                  IntMyConnectionsPresenter,
                                                  IntConnectionsRepositoryListener,
                                                  IntAuthRepositoryListener {
@@ -121,9 +120,9 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
     /**
      * Pending Connection Results
      */
-    override fun onPendingConnectionResults(requests: ArrayList<UserConnectionRequest>) {
+    override fun onPendingConnectionResults(requests: HashMap<String, UserConnectionRequest>) {
         if (!requests.isEmpty()){
-            //mFragment?.onDisplaySearchResults(requests)
+            mFragment?.onDisplayConnectionRequests(requests)
         } else {
             //mFragment?.displayNoResultsFound(true)
         }
