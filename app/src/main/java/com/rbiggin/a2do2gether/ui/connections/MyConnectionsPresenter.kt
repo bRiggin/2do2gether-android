@@ -19,8 +19,7 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
                                                  sharedPreferences: SharedPreferences) :
                                                  BasePresenter<MyConnectionsFragment>(sharedPreferences, utilities, constants),
                                                  IntMyConnectionsPresenter,
-                                                 IntConnectionsRepositoryListener,
-                                                 IntAuthRepositoryListener {
+                                                 IntConnectionsRepositoryListener{
     /** Current view in view flipper */
     private var currentView: Constants.MyConnectionView? = null
 
@@ -123,7 +122,7 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
      */
     override fun onPendingConnectionResults(requests: ArrayList<UserConnectionRequest>) {
         if (!requests.isEmpty()){
-            //mFragment?.onDisplaySearchResults(requests)
+            mFragment?.onDisplayConnectionRequests(requests)
         } else {
             //mFragment?.displayNoResultsFound(true)
         }
@@ -157,12 +156,5 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
             isProcessingBol = false
             mFragment?.displayProgressSpinner(false)
         }
-    }
-
-    /**
-     * Auth State Change
-     */
-    override fun onAuthStateChange(response_id: Int, message: String?) {
-        //todo perform logout
     }
 }

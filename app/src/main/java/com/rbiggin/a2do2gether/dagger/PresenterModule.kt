@@ -21,7 +21,6 @@ import com.rbiggin.a2do2gether.utils.Constants
 import com.rbiggin.a2do2gether.utils.Utilities
 import dagger.Module
 import dagger.Provides
-import org.jetbrains.annotations.Nullable
 import javax.inject.Singleton
 
 /**
@@ -31,48 +30,61 @@ import javax.inject.Singleton
 class PresenterModule {
     @Provides
     @Singleton
-    fun provideLoginPresenter(repo: AuthRepository, constants: Constants): IntLoginPresenter {
+    fun provideLoginPresenter(repo: AuthRepository,
+                              constants: Constants): IntLoginPresenter {
         return LoginPresenter(repo, constants)
     }
 
     @Provides
     @Singleton
-    fun provideMainPresenter(constants: Constants, aRepo: AuthRepository, uRepo: UserProfileRepository): IntMainPresenter {
+    fun provideMainPresenter(constants: Constants,
+                             aRepo: AuthRepository,
+                             uRepo: UserProfileRepository): IntMainPresenter {
         return MainPresenter(constants, aRepo, uRepo)
     }
 
     @Provides
     @Singleton
-    fun provideMyProfilePresenter(utils: Utilities, sharedPrefs: SharedPreferences,
-                                  uRepo: UserProfileRepository, constants: Constants): IntMyProfilePresenter {
+    fun provideMyProfilePresenter(utils: Utilities,
+                                  sharedPrefs: SharedPreferences,
+                                  uRepo: UserProfileRepository,
+                                  constants: Constants): IntMyProfilePresenter {
         return MyProfilePresenter(uRepo, constants, utils, sharedPrefs)
     }
 
     @Provides
     @Singleton
-    fun provideSettingsPresenter(utils: Utilities, sharedPrefs: SharedPreferences, repo: AuthRepository,
+    fun provideSettingsPresenter(utils: Utilities,
+                                 sharedPrefs: SharedPreferences,
+                                 repo: AuthRepository,
                                  constants: Constants): IntSettingsPresenter {
         return SettingPresenter(repo, constants, utils, sharedPrefs)
     }
 
     @Provides
-    @Nullable
     @Singleton
-    fun provideChecklistsPresenter(utils: Utilities, sharedPrefs: SharedPreferences, constants: Constants): IntChecklistsPresenter? {
+    fun provideChecklistsPresenter(constants: Constants,
+                                   utils: Utilities,
+                                   sharedPrefs: SharedPreferences): IntChecklistsPresenter? {
         return ChecklistsPresenter(constants, utils, sharedPrefs)
     }
 
     @Provides
     @Singleton
-    fun provideToDoListPresenter(constants: Constants, utils: Utilities, sharedPrefs: SharedPreferences):
-                                IntToDoListPresenter {
-        return ToDoListPresenter(constants, utils, sharedPrefs)
+    fun provideToDoListPresenter(constants: Constants,
+                                 utils: Utilities,
+                                 sharedPrefs: SharedPreferences):
+                                 IntToDoListPresenter {
+        return ToDoListPresenter(constants, utils,sharedPrefs)
     }
 
     @Provides
     @Singleton
-    fun provideMyConnectionsPresenter(constants: Constants, utils: Utilities, sharedPrefs: SharedPreferences,
-                                      cRepo: IntConnectionsRepository, uRepo: UserProfileRepository):
+    fun provideMyConnectionsPresenter(constants: Constants,
+                                      utils: Utilities,
+                                      sharedPrefs: SharedPreferences,
+                                      cRepo: IntConnectionsRepository,
+                                      uRepo: UserProfileRepository):
                                       IntMyConnectionsPresenter {
         return MyConnectionsPresenter(constants, cRepo, uRepo, utils, sharedPrefs)
     }
