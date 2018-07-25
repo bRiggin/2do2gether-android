@@ -1,7 +1,10 @@
 package com.rbiggin.a2do2gether.ui.login
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 
 import android.support.v4.app.Fragment
@@ -59,6 +62,8 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
         loginViewPager.adapter = mSectionsPagerAdapter
 
         presenter.onViewWillShow()
+
+        createNotificationChannel()
     }
 
     override fun onDestroy() {
@@ -198,6 +203,18 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
 
         override fun getCount(): Int {
             return constants.NUMBER_OF_LOGIN_FRAGMENTS
+        }
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.notification_channel_name)
+            val description = getString(R.string.notification_channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(getString(R.string.notification_channel_id), name, importance)
+            channel.description = description
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager!!.createNotificationChannel(channel)
         }
     }
 }

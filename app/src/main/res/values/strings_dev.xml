@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_channel_id">2do2getherNotifications</string>
+    <string name="notification_channel_name">notificationChannel</string>
+    <string name="notification_channel_description">notification2Do2gether</string>
+</resources>
