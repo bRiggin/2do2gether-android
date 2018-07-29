@@ -51,6 +51,7 @@ dependencies {
     implementation 'com.ryanjeffreybrooks:indefinitepagerindicator:1.0.8'
     implementation 'com.github.florent37:expansionpanel:1.1.1'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.6.+'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 }
 
 

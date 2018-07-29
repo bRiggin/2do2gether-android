@@ -41,6 +41,7 @@
     <string name="connection_requests">Connection Requests</string>
     <string name="connections_search_hint">Search for other users nickname&#8230;</string>
     <string name="connections_no_users_found">No users found with that nickname&#8230;</string>
+    <string name="connection_request_submitted">Your connection request has been submitted</string>
     <string name="connections_user_not_public">Unable to search for new connections, user profile not public. This could be because you haven\'t populated your profile or because your settings are set to private.</string>
 
 

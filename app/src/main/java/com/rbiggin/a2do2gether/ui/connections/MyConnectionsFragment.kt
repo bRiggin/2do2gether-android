@@ -22,9 +22,9 @@ import kotlinx.android.synthetic.main.fragment_my_connections.*
 /**
  * Fragment that allows user to control the people they're connected to.
  */
-class MyConnectionsFragment : BaseFragment(), IntMyConnectionsFragment,
-                                              IntMainListener,
-                                              IntMyConnectionsRecyclerButton{
+class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
+                                              MyConnectionsPresenter.Button,
+                                              IntMainListener{
 
     /** Injected Presenter instance */
     @Inject lateinit var presenter: IntMyConnectionsPresenter
@@ -36,16 +36,13 @@ class MyConnectionsFragment : BaseFragment(), IntMyConnectionsFragment,
     @Inject lateinit var utilities: Utilities
 
     /** ... */
-    private lateinit var mLinearLayoutManager: LinearLayoutManager
+    private lateinit var mSearchLayoutManager: LinearLayoutManager
+    private lateinit var mPendingLayoutManager: LinearLayoutManager
 
     /**
      * Companion object to provide access to newInstance.
      */
     companion object {
-        /**
-         * @param id ID handed to Fragment.
-         * @return A new instance of fragment: AddressFragment.
-         */
         fun newInstance(id: Int): MyConnectionsFragment {
             val fragment = MyConnectionsFragment()
             val args = Bundle()
@@ -55,50 +52,37 @@ class MyConnectionsFragment : BaseFragment(), IntMyConnectionsFragment,
         }
     }
 
-    /**
-     * onAttach
-     */
     override fun onAttach(context: Context?) {
         (context?.applicationContext as MyApplication).daggerComponent.inject(this)
         super.onAttach(context)
     }
 
-    /**
-     * onCreateView
-     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_my_connections, container, false)
     }
 
-    /**
-     * onStart
-     */
     override fun onStart() {
         super.onStart()
 
         presenter.setView(this)
         presenter.onViewWillShow()
 
-        mLinearLayoutManager = LinearLayoutManager(mContext)
-        myConnectionsSearchRv.layoutManager = mLinearLayoutManager
+        mSearchLayoutManager = LinearLayoutManager(mContext)
+        mPendingLayoutManager = LinearLayoutManager(mContext)
+        myConnectionsSearchRv.layoutManager = mSearchLayoutManager
+        pendingConnectionsRv.layoutManager = mPendingLayoutManager
 
         searchBtn.setOnClickListener {
             presenter.onSearchButtonPressed(myConnectionsSearchEt.text.toString())
         }
     }
 
-    /**
-     * onDestroy
-     */
     override fun onDestroy() {
         super.onDestroy()
         presenter.onViewWillHide()
     }
 
-    /**
-     * onDisplayView
-     */
     override fun onDisplayView(view: Constants.MyConnectionView) {
         when(view){
             constants.connectionsMainView() -> {
@@ -113,47 +97,42 @@ class MyConnectionsFragment : BaseFragment(), IntMyConnectionsFragment,
         }
     }
 
-    /**
-     * Display Search Result
-     */
     override fun onDisplaySearchResults(result: ArrayList<UserConnectionSearch>) {
         mContext?.let{
             myConnectionsSearchRv.adapter = ConnectionSearchAdapter(result, it, constants, this)
         }
     }
 
-    /**
-     * Display Connection Requests
-     */
     override fun onDisplayConnectionRequests(requests: ArrayList<UserConnectionRequest>) {
-        pendingConnectionsRecyclerView.adapter = ConnectionRequestsAdapter(requests, constants, this)
+        pendingConnectionsRv.adapter = ConnectionRequestsAdapter(requests, constants, this)
     }
 
-    /**
-     * onClearSearchView
-     */
     override fun onClearSearchView() {
         myConnectionsSearchEt.text.clear()
         myConnectionsSearchRv.adapter = null
     }
 
-    /**
-     * onDisplayDialogMessage
-     */
     override fun onDisplayDialogMessage(message_id: Int, message: String?) {
         var dialogMessage = getString(R.string.error_unknown)
         message?.let{ dialogMessage = message }
 
         val messageString: String = when (message_id){
-            constants.ERROR_NICKNAME_STRUCTURE_ERROR -> {getString(R.string.nickname_error, constants.NUMBER_OF_CHARACTERS_IN_NICKNAME)}
-            constants.ERROR_USER_NOT_PUBLIC -> {getString(R.string.connections_user_not_public)}
+            constants.ERROR_NICKNAME_STRUCTURE_ERROR -> {
+                getString(R.string.nickname_error, constants.NUMBER_OF_CHARACTERS_IN_NICKNAME)
+            }
+            constants.ERROR_USER_NOT_PUBLIC -> {
+                getString(R.string.connections_user_not_public)
+            }
+            constants.DB_CONNECTION_REQUEST_SUBMITTED -> {
+                getString(R.string.connection_request_submitted)
+            }
             else -> { getString(R.string.error_unknown)
                 throw IllegalArgumentException("MyConnectionsFragment, onDisplayDialogMessage: An " +
                         "unknown error has been handed to this function. Error ID: $message_id")
             }
 
         }
-        utilities.showOKDialog(activity as Context, getString(R.string.app_name), messageString!!)
+        utilities.showOKDialog(activity as Context, getString(R.string.app_name), messageString)
     }
 
     /**

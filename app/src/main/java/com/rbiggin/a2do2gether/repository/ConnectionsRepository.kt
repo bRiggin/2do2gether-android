@@ -40,6 +40,7 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
      */
     override fun detachPresenter() {
         mFragmentListener = null
+
     }
 
     /**
@@ -142,18 +143,17 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
      * Handle Pending Connection Details
      */
     private fun handlePendingConnectionDetails(data: DataSnapshot){
-        val first_name = data.child(constants.FB_FIRST_NAME).value.toString()
-        val second_name = data.child(constants.FB_SECOND_NAME).value.toString()
+        val firstName = data.child(constants.FB_FIRST_NAME).value.toString()
+        val secondName = data.child(constants.FB_SECOND_NAME).value.toString()
         val nickname = data.child(constants.FB_NICKNAME).value.toString()
         val uid = data.key.toString()
-        val request = UserConnectionRequest(first_name, second_name, nickname, uid)
+        val request = UserConnectionRequest(firstName, secondName, nickname, uid)
         if (!mConnectionRequests.contains(request)){
             mConnectionRequests.add(request)
             mFragmentListener?.onPendingConnectionResults(mConnectionRequests)
         } else {
             //todo could check if details have been updated.
         }
-
     }
 
 

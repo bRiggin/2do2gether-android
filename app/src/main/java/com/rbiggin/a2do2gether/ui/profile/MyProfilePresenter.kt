@@ -54,7 +54,8 @@ class MyProfilePresenter @Inject constructor(private val userRepo: IntUserReposi
     override fun onUpdateUserDetailsButtonPressed(fName: String, sName: String, nName: String) {
         if (fName.trim().isEmpty() || sName.trim().isEmpty() || nName.trim().isEmpty()){
             mFragment?.onDisplayDialogMessage(constants.ERROR_PROFILE_DETAILS_BLANK, null)
-        } else if (nName.trim().length < constants.NUMBER_OF_CHARACTERS_IN_NICKNAME) {
+        } else if (nName.trim().length < constants.NUMBER_OF_CHARACTERS_IN_NICKNAME ||
+                nName.trim().contains(" ")) {
             mFragment?.onDisplayDialogMessage(constants.ERROR_NICKNAME_STRUCTURE_ERROR, null)
         }
         else {
@@ -63,9 +64,6 @@ class MyProfilePresenter @Inject constructor(private val userRepo: IntUserReposi
         }
     }
 
-    /**
-     * Write User Details Result
-     */
     override fun onWriteUserDetailsResult(success: Boolean, errorMessage: String?) {
         if (success){
             Log.d(tag, "User's profile details have been successfully written to database.")
@@ -75,9 +73,6 @@ class MyProfilePresenter @Inject constructor(private val userRepo: IntUserReposi
         }
     }
 
-    /**
-     * Upload Profile Picture
-     */
     override fun uploadProfilePicture(image: Bitmap?, cropActivityErrorOccurred: Boolean, errorMessage: Exception?) {
         if (cropActivityErrorOccurred){
             mFragment?.onDisplayDialogMessage(constants.ERROR_IMAGE_CROPPING_ACTIVITY_EXCEPTION,

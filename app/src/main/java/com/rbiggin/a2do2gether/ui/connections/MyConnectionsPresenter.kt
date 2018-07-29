@@ -5,6 +5,7 @@ import com.rbiggin.a2do2gether.model.UserConnectionRequest
 import com.rbiggin.a2do2gether.model.UserConnectionSearch
 import com.rbiggin.a2do2gether.repository.*
 import com.rbiggin.a2do2gether.ui.base.BasePresenter
+import com.rbiggin.a2do2gether.ui.base.IntBaseFragment
 import com.rbiggin.a2do2gether.utils.Constants
 import com.rbiggin.a2do2gether.utils.Utilities
 import javax.inject.Inject
@@ -26,9 +27,6 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
     /**  */
     private var isProcessingBol: Boolean = false
 
-    /**
-     * View Will Show
-     */
     override fun onViewWillShow() {
         mFragment?.onDisplayView(constants.connectionsMainView())
         currentView = constants.connectionsMainView()
@@ -39,17 +37,11 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
         }
     }
 
-    /**
-     * View Will Hide
-     */
     override fun onViewWillHide() {
         super.onViewWillHide()
         connectionsRepo.detachPresenter()
     }
 
-    /**
-     * Plus Button Pressed
-     */
     override fun onPlusButtonPressed() {
         if (currentView == constants.connectionsMainView()){
             if (userRepo.isUserDiscoverable()){
@@ -62,9 +54,6 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
         }
     }
 
-    /**
-     * Search Button Pressed
-     */
     override fun onSearchButtonPressed(searchString: String) {
         if (!isProcessingBol){
             if (!mFragment?.hasNetworkConnection()!!){
@@ -83,15 +72,14 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
         }
     }
 
-
-
-    /**
-     *
-     */
     override fun onRecyclerViewButtonPressed(type: Constants.ConnectionsActionType, targetUid: String) {
         when (type){
             constants.connectionsActionRequest() -> {
                 connectionsRepo.submitConnectionRequest(targetUid)
+                mFragment?.onClearSearchView()
+                mFragment?.onDisplayDialogMessage(constants.DB_CONNECTION_REQUEST_SUBMITTED, null)
+                mFragment?.onDisplayView(constants.connectionsMainView())
+                currentView = constants.connectionsMainView()
             }
             constants.connectionsActionAccept() -> {
 
@@ -105,9 +93,6 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
         }
     }
 
-    /**
-     * Search Results
-     */
     override fun onSearchResults(users: ArrayList<UserConnectionSearch>) {
         isProcessing(false)
         if (!users.isEmpty()){
@@ -117,9 +102,6 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
         }
     }
 
-    /**
-     * Pending Connection Results
-     */
     override fun onPendingConnectionResults(requests: ArrayList<UserConnectionRequest>) {
         if (!requests.isEmpty()){
             mFragment?.onDisplayConnectionRequests(requests)
@@ -128,9 +110,6 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
         }
     }
 
-    /**
-     * Main Activity Back Pressed
-     */
     override fun onMainActivityBackPressed(): Boolean {
         return when (currentView){
             constants.connectionsMainView() -> {
@@ -145,9 +124,6 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
         }
     }
 
-    /**
-     * Is Processing
-     */
     private fun isProcessing(processing: Boolean){
         if (processing){
             isProcessingBol = true
@@ -156,5 +132,23 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
             isProcessingBol = false
             mFragment?.displayProgressSpinner(false)
         }
+    }
+
+    interface View: IntBaseFragment{
+        fun onDisplayView(view: Constants.MyConnectionView)
+
+        fun onDisplaySearchResults(result: ArrayList<UserConnectionSearch>)
+
+        fun onDisplayConnectionRequests(requests: ArrayList<UserConnectionRequest>)
+
+        fun onClearSearchView()
+
+        fun displayNoResultsFound(show: Boolean)
+
+        fun displayProgressSpinner(show: Boolean)
+    }
+
+    interface Button {
+        fun onRecyclerViewButtonClicked(type: Constants.ConnectionsActionType, targetUid: String)
     }
 }

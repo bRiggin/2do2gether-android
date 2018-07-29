@@ -86,4 +86,8 @@ class SettingsFragment : BaseFragment(), IntSettingsFragment {
         startActivity(intent)
         activity?.finish()
     }
+
+    override fun onDisplayDialogMessage(message_id: Int, message: String?) {
+        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

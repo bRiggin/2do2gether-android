@@ -166,6 +166,9 @@ object Constants {
     /** ... */
     const val DB_WRITE_USER_DETAILS_UNSUCCESSFUL: Int = 600002
 
+    /** ... */
+    const val DB_CONNECTION_REQUEST_SUBMITTED: Int = 600003
+
     /**
      *
      * Fragment IDs

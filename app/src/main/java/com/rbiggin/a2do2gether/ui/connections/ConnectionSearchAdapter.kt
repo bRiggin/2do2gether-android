@@ -11,18 +11,17 @@ import com.rbiggin.a2do2gether.utils.Constants
 import com.rbiggin.a2do2gether.utils.inflate
 import kotlinx.android.synthetic.main.row_item_connections_search.view.*
 
-/**
- * ConnectionSearchAdapter
- */
 class ConnectionSearchAdapter(private val searchResults: ArrayList<UserConnectionSearch>,
                               private val appContext: Context,
                               private val constants: Constants,
-                              private val listener: IntMyConnectionsRecyclerButton)
+                              private val listener: MyConnectionsPresenter.Button)
                               : RecyclerView.Adapter<ConnectionSearchAdapter.ItemHolder>(){
 
-    /**
-     * onBindViewHolder
-     */
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
+        val inflatedView = parent.inflate(R.layout.row_item_connections_search, false)
+        return ItemHolder(inflatedView, appContext, constants, listener)
+    }
+
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         val item = searchResults[position]
         val firstName = item.firstName
@@ -34,27 +33,13 @@ class ConnectionSearchAdapter(private val searchResults: ArrayList<UserConnectio
         holder.setupButton(item.type)
     }
 
-    /**
-     * onCreateViewHolder
-     */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
-        val inflatedView = parent.inflate(R.layout.row_item_connections_search, false)
-        return ItemHolder(inflatedView, appContext, constants, listener)
-    }
-
-    /**
-     * getItemCount
-     */
     override fun getItemCount(): Int {
         return searchResults.size
     }
 
-    /**
-     * ItemHolder
-     */
     class ItemHolder(v: View, mContext: Context,
                      private val constants: Constants,
-                     private val listener: IntMyConnectionsRecyclerButton)
+                     private val listener: MyConnectionsPresenter.Button)
         : RecyclerView.ViewHolder(v), View.OnClickListener {
 
         private var view: View = v

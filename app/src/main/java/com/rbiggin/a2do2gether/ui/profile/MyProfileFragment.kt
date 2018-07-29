@@ -162,7 +162,7 @@ class MyProfileFragment : BaseFragment(), IntMyProfileFragment {
     override fun onLaunchImageCropActivity() {
         CropImage.activity().
                 setGuidelines(CropImageView.Guidelines.ON).
-                setCropShape(CropImageView.CropShape.RECTANGLE).
+                setCropShape(CropImageView.CropShape.OVAL).
                 setAspectRatio(1,1).
                 start(context!!, this)
     }
