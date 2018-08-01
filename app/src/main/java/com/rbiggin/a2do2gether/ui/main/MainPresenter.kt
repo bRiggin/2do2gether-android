@@ -10,7 +10,8 @@ import javax.inject.Inject
  */
 class MainPresenter @Inject constructor(private val constants: Constants,
                                         private val authRepo: IntAuthRepository,
-                                        private val userRepo: IntUserRepositoryActivity) :
+                                        private val userRepo: IntUserRepositoryActivity,
+                                        private val connectionsRepository: IntConnectionsRepository) :
                                         IntMainPresenter,
                                         IntAuthRepositoryListener,
                                         IntUserRepositoryOnChangeListener {
@@ -21,17 +22,11 @@ class MainPresenter @Inject constructor(private val constants: Constants,
     /** Current Fragment */
     private var currentFragment: Constants.FragmentType? = null
 
-    /**
-     * Set View
-     */
     override fun setView(mainActivity: IntMainActivity) {
         mActivity = mainActivity
 
     }
 
-    /**
-     * View Will Show
-     */
     override fun onViewWillShow(email: String) {
         var profilePicture: Bitmap?
         mActivity?.setupActivity(email)
@@ -39,11 +34,9 @@ class MainPresenter @Inject constructor(private val constants: Constants,
         mActivity?.launchFragment(constants.fragmentTypeToDo(), false)
         currentFragment = constants.fragmentTypeToDo()
 
-        userRepo.onSetActivity(this)
+        setupRepositories()
 
-        authRepo.setup(this)
         authRepo.userId()?.let {
-            userRepo.setup(it)
             profilePicture = mActivity?.getProfilePicture(it)
 
             if (profilePicture == null){
@@ -86,9 +79,16 @@ class MainPresenter @Inject constructor(private val constants: Constants,
         }
     }
 
-    /**
-     * Back Pressed
-     */
+    private fun setupRepositories() {
+        userRepo.setActivity(this)
+
+        authRepo.setup(this)
+        authRepo.userId()?.let {
+            userRepo.setup(it)
+            connectionsRepository.setup(it)
+        }
+    }
+
     override fun onBackPressed() {
         if (currentFragment != constants.fragmentTypeToDo()){
             mActivity?.updateActionBar(constants.fragmentTypeToDo())
@@ -97,38 +97,23 @@ class MainPresenter @Inject constructor(private val constants: Constants,
         }
     }
 
-    /**
-     * Is Current Fragment Different?
-     */
     private fun isCurrentFragmentDifferent(selectedType: Constants.FragmentType): Boolean {
         return currentFragment != selectedType
     }
 
-    /**
-     * View will Hide
-     */
     override fun onViewWillHide() {
         mActivity = null
     }
 
-    /**
-     * User Details Changed
-     */
     override fun onUserDetailsChanged(userName: String) {
         mActivity?.updateUsersName(userName)
     }
 
-    /**
-     * Profile Picture Changed
-     */
     override fun onProfilePictureChanged(image: Bitmap) {
         mActivity?.updateProfilePicture(image)
         authRepo.userId()?.let { mActivity?.saveProfilePicture(image, it) } ?: throw ExceptionInInitializerError()
     }
 
-    /**
-     * Auth State Change
-     */
     override fun onAuthStateChange(response_id: Int, message: String?) {
         // Not relevant to Main Activity
     }

@@ -31,7 +31,7 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideConnectionsRepository(fbDatabase: IntFirebaseDatabase,
-                                     constants: Constants): IntConnectionsRepository {
+                                     constants: Constants): ConnectionsRepository {
         return ConnectionsRepository(fbDatabase, constants)
     }
 }

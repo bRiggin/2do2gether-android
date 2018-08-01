@@ -61,7 +61,7 @@ class SettingsFragment : BaseFragment(), IntSettingsFragment {
     override fun onResume() {
         super.onResume()
 
-        presenter.setView(this)
+        presenter.onViewAttached(this)
         presenter.onViewWillShow()
 
         logout_btn.setOnClickListener {

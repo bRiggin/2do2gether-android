@@ -142,9 +142,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    /**
-     * Handles menu drawer items pushes.
-     */
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val backStackCount = supportFragmentManager.backStackEntryCount
         when (item.itemId) {
@@ -168,9 +165,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    /**
-     * Launch Fragment
-     */
     override fun launchFragment(type: Constants.FragmentType, toBackStack: Boolean){
         val fragment = when(type){
             constants.fragmentTypeToDo() -> {

@@ -50,7 +50,7 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
     /**
      * Sets activity listener (Main Activity)
      */
-    override fun onSetActivity(listener: IntUserRepositoryOnChangeListener) {
+    override fun setActivity(listener: IntUserRepositoryOnChangeListener) {
         mActivityListener = listener
     }
 

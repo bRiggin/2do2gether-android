@@ -39,8 +39,9 @@ class PresenterModule {
     @Singleton
     fun provideMainPresenter(constants: Constants,
                              aRepo: AuthRepository,
-                             uRepo: UserProfileRepository): IntMainPresenter {
-        return MainPresenter(constants, aRepo, uRepo)
+                             uRepo: UserProfileRepository,
+                             cRepo: ConnectionsRepository): IntMainPresenter {
+        return MainPresenter(constants, aRepo, uRepo, cRepo)
     }
 
     @Provides
@@ -83,9 +84,9 @@ class PresenterModule {
     fun provideMyConnectionsPresenter(constants: Constants,
                                       utils: Utilities,
                                       sharedPrefs: SharedPreferences,
-                                      cRepo: IntConnectionsRepository,
+                                      cRepo: ConnectionsRepository,
                                       uRepo: UserProfileRepository):
-                                      IntMyConnectionsPresenter {
+                                      MyConnectionsPresenter {
         return MyConnectionsPresenter(constants, cRepo, uRepo, utils, sharedPrefs)
     }
 }

@@ -72,7 +72,7 @@ class MyProfileFragment : BaseFragment(), IntMyProfileFragment {
     override fun onResume() {
         super.onResume()
 
-        presenter.setView(this)
+        presenter.onViewAttached(this)
 
         presenter.onViewWillShow()
 
