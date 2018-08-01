@@ -29,7 +29,7 @@ interface IntUserRepositoryFragment {
  * Defines User Repository calls from Activity
  */
 interface IntUserRepositoryActivity {
-    fun onSetActivity(listener: IntUserRepositoryOnChangeListener)
+    fun setActivity(listener: IntUserRepositoryOnChangeListener)
 
     fun setup(uid: String)
 

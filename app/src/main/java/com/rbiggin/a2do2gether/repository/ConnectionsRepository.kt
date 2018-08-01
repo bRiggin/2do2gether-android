@@ -4,10 +4,17 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.rbiggin.a2do2gether.firebase.IntFirebaseDatabase
 import com.rbiggin.a2do2gether.firebase.IntFirebaseDatabaseListener
+import com.rbiggin.a2do2gether.model.PendingRequests
 import com.rbiggin.a2do2gether.model.UserConnectionRequest
 import com.rbiggin.a2do2gether.model.UserConnectionSearch
 import com.rbiggin.a2do2gether.utils.Constants
+import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 /**
  * Handles the storage and update of user's connections
@@ -16,44 +23,26 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
                                                 private val constants: Constants) :
                                                 IntConnectionsRepository,
                                                 IntFirebaseDatabaseListener {
-    /** Fragment Listener */
-    private var mFragmentListener: IntConnectionsRepositoryListener? = null
-
     /** Database Reference */
     private var mDatabase: DatabaseReference? = null
 
     /** ... */
     private lateinit var mUid: String
 
+    val pendingRequestsSubject = BehaviorSubject.create<ArrayList<UserConnectionRequest>>()
+
+    private val connectionSearchSubject : PublishSubject<ArrayList<UserConnectionSearch>> = PublishSubject.create()
+
     /** ... */
     private val mConnectionRequests: ArrayList<UserConnectionRequest> = ArrayList()
 
-    /**
-     * Set Fragment
-     */
-    override fun setPresenter(listener: IntConnectionsRepositoryListener) {
-        mFragmentListener = listener
+    override fun presenterDetatched() {
+        //todo remove disposables
     }
 
-    /**
-     * Detach Fragment
-     */
-    override fun detachPresenter() {
-        mFragmentListener = null
-
-    }
-
-    /**
-     * Setup
-     */
     override fun setup(uid: String) {
-        if (mFragmentListener == null){
-            throw ExceptionInInitializerError("ConnectionsRepository, setup: Cannot setup connections" +
-                    "repository without first having set \"mFragmentListener: IntConnectionsRepositoryListener\"")
-        } else{
-            mDatabase = com.google.firebase.database.FirebaseDatabase.getInstance().reference
-            mUid = uid
-        }
+        mDatabase = com.google.firebase.database.FirebaseDatabase.getInstance().reference
+        mUid = uid
     }
 
     /**
@@ -123,7 +112,7 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
                 users.add(UserConnectionSearch(first_name, second_name, nickname, uid, type))
             }
         }
-        mFragmentListener?.onSearchResults(users)
+        connectionSearchSubject.onNext(users)
     }
 
     /**
@@ -150,12 +139,15 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
         val request = UserConnectionRequest(firstName, secondName, nickname, uid)
         if (!mConnectionRequests.contains(request)){
             mConnectionRequests.add(request)
-            mFragmentListener?.onPendingConnectionResults(mConnectionRequests)
+            pendingRequestsSubject.onNext(mConnectionRequests)
         } else {
             //todo could check if details have been updated.
         }
     }
 
+    fun connectionSearchResults(): Subject<ArrayList<UserConnectionSearch>>{
+        return  connectionSearchSubject
+    }
 
     /**
      * Submit Connection Request
@@ -168,5 +160,11 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
         mDatabase?.let {
             databaseApi.doWrite(it, path, connectionRequest)
         } ?: throw ExceptionInInitializerError()
+    }
+
+    interface User{
+        fun onPendingConnectionRequestsChanged(): Disposable
+
+        fun onConnectionSearchResultsChanged()
     }
 }

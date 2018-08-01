@@ -8,9 +8,8 @@ import com.rbiggin.a2do2gether.model.UserDetails
  * Defines Connections Repository calls
  */
 interface IntConnectionsRepository {
-    fun setPresenter(listener: IntConnectionsRepositoryListener)
 
-    fun detachPresenter()
+    fun presenterDetatched()
 
     fun setup(uid: String)
 

@@ -3,6 +3,7 @@ package com.rbiggin.a2do2gether.ui.connections
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +28,7 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
                                               IntMainListener{
 
     /** Injected Presenter instance */
-    @Inject lateinit var presenter: IntMyConnectionsPresenter
+    @Inject lateinit var presenter: MyConnectionsPresenter
 
     /** Injected Presenter instance */
     @Inject lateinit var constants: Constants
@@ -57,6 +58,11 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
         super.onAttach(context)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        presenter.onViewAttached(this)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_my_connections, container, false)
@@ -64,8 +70,6 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
 
     override fun onStart() {
         super.onStart()
-
-        presenter.setView(this)
         presenter.onViewWillShow()
 
         mSearchLayoutManager = LinearLayoutManager(mContext)
@@ -78,9 +82,15 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        presenter.onViewWillHide()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        presenter.onViewWillHide()
+        presenter.onViewDetached()
+
     }
 
     override fun onDisplayView(view: Constants.MyConnectionView) {
