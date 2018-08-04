@@ -17,7 +17,7 @@ import javax.inject.Inject
  */
 class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: ConnectionsRepository,
                                                  private val userRepo: UserProfileRepository,
-                                                 utilities: Utilities,
+                                                 private val utilities: Utilities,
                                                  sharedPreferences: SharedPreferences) :
                                                  BasePresenter<MyConnectionsFragment>(sharedPreferences, utilities),
                                                  IntMyConnectionsPresenter,
@@ -35,7 +35,8 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
                 //.distinctUntilChanged()
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe{it ->
-                    fragment.onDisplayConnectionRequests(it)
+                    val requests = utilities.hashMapToArray(it) as ArrayList<UserConnectionRequest>
+                    fragment.onDisplayConnectionRequests(requests)
                 })
 
     }

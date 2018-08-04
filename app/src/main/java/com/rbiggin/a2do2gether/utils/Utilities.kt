@@ -141,4 +141,12 @@ class Utilities {
             }
         }
     }
+
+    fun hashMapToArray(map: HashMap<*, *>): ArrayList<Any>{
+        val array : ArrayList<Any> = ArrayList()
+        for ((_, item) in map) {
+            array.add(item)
+        }
+        return array
+    }
 }
