@@ -30,9 +30,6 @@ class MyProfileFragment : BaseFragment(), IntMyProfileFragment {
     /** injected instance of Constants. */
     @Inject lateinit var utilities: Utilities
 
-    /** injected instance of Constants. */
-    @Inject lateinit var constants: Constants
-
     /**
      * Companion object to provide access to newInstance.
      */
@@ -122,14 +119,14 @@ class MyProfileFragment : BaseFragment(), IntMyProfileFragment {
         message?.let{ dialogMessage = message }
 
         val messageString: String = when (message_id){
-            constants.ERROR_IMAGE_CROPPING_ACTIVITY_EXCEPTION -> { dialogMessage }
-            constants.STORAGE_PROFILE_UPLOAD_SUCCESSFUL -> {getString(R.string.upload_profile_picture_success)}
-            constants.STORAGE_PROFILE_UPLOAD_UNSUCCESSFUL -> {dialogMessage}
-            constants.DB_WRITE_USER_DETAILS_SUCCESSFUL -> {getString(R.string.upload_profile_details_success)}
-            constants.DB_WRITE_USER_DETAILS_UNSUCCESSFUL -> {dialogMessage}
-            constants.ERROR_PROFILE_PICTURE_NO_NETWORK_CONNECTION -> {getString(R.string.upload_profile_no_network)}
-            constants.ERROR_PROFILE_DETAILS_BLANK -> {getString(R.string.error_missing_field)}
-            constants.ERROR_NICKNAME_STRUCTURE_ERROR -> {getString(R.string.nickname_error, constants.NUMBER_OF_CHARACTERS_IN_NICKNAME)}
+            Constants.ERROR_IMAGE_CROPPING_ACTIVITY_EXCEPTION -> { dialogMessage }
+            Constants.STORAGE_PROFILE_UPLOAD_SUCCESSFUL -> {getString(R.string.upload_profile_picture_success)}
+            Constants.STORAGE_PROFILE_UPLOAD_UNSUCCESSFUL -> {dialogMessage}
+            Constants.DB_WRITE_USER_DETAILS_SUCCESSFUL -> {getString(R.string.upload_profile_details_success)}
+            Constants.DB_WRITE_USER_DETAILS_UNSUCCESSFUL -> {dialogMessage}
+            Constants.ERROR_PROFILE_PICTURE_NO_NETWORK_CONNECTION -> {getString(R.string.upload_profile_no_network)}
+            Constants.ERROR_PROFILE_DETAILS_BLANK -> {getString(R.string.error_missing_field)}
+            Constants.ERROR_NICKNAME_STRUCTURE_ERROR -> {getString(R.string.nickname_error, Constants.NUMBER_OF_CHARACTERS_IN_NICKNAME)}
             else -> {
                 throw IllegalArgumentException("MyConnectionsFragment, onDisplayDialogMessage: An " +
                         "unknown error has been handed to this function. Error ID: $message_id")

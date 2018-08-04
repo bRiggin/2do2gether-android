@@ -6,4 +6,4 @@ data class UserConnectionSearch(var firstName: String,
                                 var secondName: String,
                                 var nickname: String,
                                 var uid: String,
-                                var type: Constants.ConnectionsSearchResultType)
+                                var type: Constants.ConnectionsSearchResult)

@@ -13,13 +13,12 @@ import kotlinx.android.synthetic.main.row_item_connections_search.view.*
 
 class ConnectionSearchAdapter(private val searchResults: ArrayList<UserConnectionSearch>,
                               private val appContext: Context,
-                              private val constants: Constants,
                               private val listener: MyConnectionsPresenter.Button)
                               : RecyclerView.Adapter<ConnectionSearchAdapter.ItemHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val inflatedView = parent.inflate(R.layout.row_item_connections_search, false)
-        return ItemHolder(inflatedView, appContext, constants, listener)
+        return ItemHolder(inflatedView, appContext, listener)
     }
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
@@ -38,7 +37,6 @@ class ConnectionSearchAdapter(private val searchResults: ArrayList<UserConnectio
     }
 
     class ItemHolder(v: View, mContext: Context,
-                     private val constants: Constants,
                      private val listener: MyConnectionsPresenter.Button)
         : RecyclerView.ViewHolder(v), View.OnClickListener {
 
@@ -63,7 +61,7 @@ class ConnectionSearchAdapter(private val searchResults: ArrayList<UserConnectio
                 R.id.connectUserBtn -> {
                     if (onClickEnabled){
                         uid?.apply {
-                            listener.onRecyclerViewButtonClicked(constants.connectionsActionRequest(),
+                            listener.onRecyclerViewButtonClicked(Constants.ConnectionsActionType.CONNECTION_REQUEST,
                                     this)
                         }
                     }
@@ -99,19 +97,19 @@ class ConnectionSearchAdapter(private val searchResults: ArrayList<UserConnectio
         /**
          * setupButton
          */
-        fun setupButton(type: Constants.ConnectionsSearchResultType){
+        fun setupButton(type: Constants.ConnectionsSearchResult){
             when (type){
-                constants.searchResultSelf() -> {
+                Constants.ConnectionsSearchResult.SELF -> {
                     onClickEnabled = false
                     view.connectUserBtn.background = disabledButton
                     view.connectUserBtn.text = selfString
                 }
-                constants.searchResultExistingConneciton() -> {
+                Constants.ConnectionsSearchResult.EXISTING_CONNECTION -> {
                     onClickEnabled = false
                     view.connectUserBtn.background = disabledButton
                     view.connectUserBtn.text = existingString
                 }
-                constants.searchResultNewConnection() -> {
+                Constants.ConnectionsSearchResult.NEW_CONNECTION -> {
                     onClickEnabled = true
                     view.connectUserBtn.background = enabledButton
                 }

@@ -9,7 +9,7 @@ interface IntMainPresenter {
 
     fun onViewWillHide()
 
-    fun onNavDrawerItemSelected(type: Constants.FragmentType, backStackCount: Int)
+    fun onNavDrawerItemSelected(type: Constants.Fragment, backStackCount: Int)
 
     fun onBackPressed()
 }

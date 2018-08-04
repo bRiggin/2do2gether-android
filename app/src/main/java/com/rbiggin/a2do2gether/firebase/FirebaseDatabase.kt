@@ -15,7 +15,7 @@ object FirebaseDatabase : IntFirebaseDatabase {
      * Do Read
      */
     override fun doRead(dbRef: DatabaseReference, path: String,
-                        listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApiType) {
+                        listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApi) {
         val mReference = dbRef.child(path)
 
         val postListener = object : ValueEventListener {
@@ -33,7 +33,7 @@ object FirebaseDatabase : IntFirebaseDatabase {
      * Do Equal to Read
      */
     override fun doEqualToRead(dbRef: DatabaseReference, path: String, sortBy: String, equalTo: String,
-                               listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApiType) {
+                               listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApi) {
         val mReference = dbRef.child(path).orderByChild(sortBy).equalTo(equalTo)
         mReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -45,7 +45,7 @@ object FirebaseDatabase : IntFirebaseDatabase {
         })
     }
 
-    override fun doSortByRead(dbRef: DatabaseReference, path: String, searchValue: String, listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApiType) {
+    override fun doSortByRead(dbRef: DatabaseReference, path: String, searchValue: String, listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApi) {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -53,7 +53,7 @@ object FirebaseDatabase : IntFirebaseDatabase {
      * Do Write
      */
     override fun doWrite(dbRef: DatabaseReference, path: String, data: HashMap<String, Any>,
-                listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApiType){
+                listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApi){
         val mReference = dbRef.child(path)
         mReference.updateChildren(data).addOnSuccessListener{
             listener?.onDatabaseResult(type, null, true, null)

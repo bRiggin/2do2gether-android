@@ -9,10 +9,9 @@ import javax.inject.Inject
 /**
  * Insert class/object/interface/file description...
  */
-class ToDoListPresenter @Inject constructor(private val constants: Constants,
-                                            utilities: Utilities,
+class ToDoListPresenter @Inject constructor(utilities: Utilities,
                                             sharedPreferences: SharedPreferences) :
-                                            BasePresenter<ToDoListFragment>(sharedPreferences, utilities, constants),
+                                            BasePresenter<ToDoListFragment>(sharedPreferences, utilities),
                                             IntToDoListPresenter{
     /**
      *

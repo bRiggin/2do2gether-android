@@ -3,7 +3,6 @@ package com.rbiggin.a2do2gether.ui.connections
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,9 +28,6 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
 
     /** Injected Presenter instance */
     @Inject lateinit var presenter: MyConnectionsPresenter
-
-    /** Injected Presenter instance */
-    @Inject lateinit var constants: Constants
 
     /** injected instance of Constants. */
     @Inject lateinit var utilities: Utilities
@@ -93,12 +89,12 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
 
     }
 
-    override fun onDisplayView(view: Constants.MyConnectionView) {
+    override fun onDisplayView(view: Constants.MyConnection) {
         when(view){
-            constants.connectionsMainView() -> {
+            Constants.MyConnection.MAIN_VIEW -> {
                 myConnectionsViewFlipper.displayedChild = myConnectionsViewFlipper.indexOfChild(myConnectionsMainView)
             }
-            constants.connectionsSearchView() -> {
+            Constants.MyConnection.SEARCH_VIEW -> {
                 myConnectionsViewFlipper.displayedChild = myConnectionsViewFlipper.indexOfChild(myConnectionsSearchView)
             }
             else -> {
@@ -109,12 +105,12 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
 
     override fun onDisplaySearchResults(result: ArrayList<UserConnectionSearch>) {
         mContext?.let{
-            myConnectionsSearchRv.adapter = ConnectionSearchAdapter(result, it, constants, this)
+            myConnectionsSearchRv.adapter = ConnectionSearchAdapter(result, it, this)
         }
     }
 
     override fun onDisplayConnectionRequests(requests: ArrayList<UserConnectionRequest>) {
-        pendingConnectionsRv.adapter = ConnectionRequestsAdapter(requests, constants, this)
+        pendingConnectionsRv.adapter = ConnectionRequestsAdapter(requests, this)
     }
 
     override fun onClearSearchView() {
@@ -127,13 +123,13 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
         message?.let{ dialogMessage = message }
 
         val messageString: String = when (message_id){
-            constants.ERROR_NICKNAME_STRUCTURE_ERROR -> {
-                getString(R.string.nickname_error, constants.NUMBER_OF_CHARACTERS_IN_NICKNAME)
+            Constants.ERROR_NICKNAME_STRUCTURE_ERROR -> {
+                getString(R.string.nickname_error, Constants.NUMBER_OF_CHARACTERS_IN_NICKNAME)
             }
-            constants.ERROR_USER_NOT_PUBLIC -> {
+            Constants.ERROR_USER_NOT_PUBLIC -> {
                 getString(R.string.connections_user_not_public)
             }
-            constants.DB_CONNECTION_REQUEST_SUBMITTED -> {
+            Constants.DB_CONNECTION_REQUEST_SUBMITTED -> {
                 getString(R.string.connection_request_submitted)
             }
             else -> { getString(R.string.error_unknown)
@@ -149,7 +145,7 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
      *
      */
     override fun menuItemPressed(item: Constants.MenuBarItem) {
-        if (item == constants.menuBarItemPlus()){
+        if (item == Constants.MenuBarItem.PLUS){
             presenter.onPlusButtonPressed()
         } else {
             throw IllegalArgumentException("MyConnectionsFragment, menuItemPressed: function handed illegal item: $item.")

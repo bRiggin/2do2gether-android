@@ -13,9 +13,6 @@ import javax.inject.Inject
 
 class IdService : FirebaseInstanceIdService() {
 
-    /** Injected Presenter instance */
-    @Inject lateinit var constants: Constants
-
     /** Injected Utilities instance */
     @Inject lateinit var utilities: Utilities
 
@@ -42,7 +39,7 @@ class IdService : FirebaseInstanceIdService() {
      * Save FCM Token
      */
     private fun saveFcmToken(token: String){
-        sharedPreferences.edit().putString(utilities.encode(constants.SP_FCM_TOKEN),
+        sharedPreferences.edit().putString(utilities.encode(Constants.SP_FCM_TOKEN),
                                            utilities.encode(token)).apply()
     }
 }

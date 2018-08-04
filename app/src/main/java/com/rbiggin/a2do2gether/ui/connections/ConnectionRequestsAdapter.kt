@@ -10,13 +10,12 @@ import com.rbiggin.a2do2gether.utils.inflate
 import kotlinx.android.synthetic.main.row_item_connection_request.view.*
 
 class ConnectionRequestsAdapter (private val requests: ArrayList<UserConnectionRequest>,
-                                 private val constants: Constants,
                                  private val listener: MyConnectionsPresenter.Button)
                                  : RecyclerView.Adapter<ConnectionRequestsAdapter.ItemHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val inflatedView = parent.inflate(R.layout.row_item_connection_request, false)
-        return ItemHolder(inflatedView, constants, listener)
+        return ItemHolder(inflatedView, listener)
     }
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
@@ -34,7 +33,6 @@ class ConnectionRequestsAdapter (private val requests: ArrayList<UserConnectionR
     }
 
     class ItemHolder(private val view: View,
-                     private val constants: Constants,
                      private val listener: MyConnectionsPresenter.Button):
                      RecyclerView.ViewHolder(view), View.OnClickListener {
 
@@ -62,12 +60,12 @@ class ConnectionRequestsAdapter (private val requests: ArrayList<UserConnectionR
             when (v.id){
                 R.id.requestAcceptBtn -> {
                     uid?.let {
-                        listener.onRecyclerViewButtonClicked(constants.connectionsActionAccept(), it)
+                        listener.onRecyclerViewButtonClicked(Constants.ConnectionsActionType.ACCEPT_CONNECTION_REQUEST, it)
                     }
                 }
                 R.id.requestRejectBtn -> {
                     uid?.let {
-                        listener.onRecyclerViewButtonClicked(constants.connectionsActionAccept(), it)
+                        listener.onRecyclerViewButtonClicked(Constants.ConnectionsActionType.REJECT_CONNECTION_REQUEST, it)
                     }
                 }
                 else -> {

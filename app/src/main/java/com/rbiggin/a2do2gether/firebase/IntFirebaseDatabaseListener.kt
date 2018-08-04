@@ -7,5 +7,5 @@ import com.rbiggin.a2do2gether.utils.Constants
  * Defines callbacks from Firebase database API calls
  */
 interface IntFirebaseDatabaseListener {
-    fun onDatabaseResult(type: Constants.DatabaseApiType, data: DataSnapshot?, success: Boolean, message: String?)
+    fun onDatabaseResult(type: Constants.DatabaseApi, data: DataSnapshot?, success: Boolean, message: String?)
 }

@@ -6,5 +6,5 @@ import com.rbiggin.a2do2gether.utils.Constants
  * Defines callbacks from Firebase Auth API calls
  */
 interface IntFirebaseAuthListener {
-    fun apiResult(type: Constants.AuthApiType, success: Boolean, message: String?)
+    fun apiResult(type: Constants.Auth, success: Boolean, message: String?)
 }

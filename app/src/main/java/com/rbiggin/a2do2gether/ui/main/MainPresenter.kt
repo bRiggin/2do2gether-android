@@ -8,8 +8,7 @@ import javax.inject.Inject
 /**
  * Main Presenter
  */
-class MainPresenter @Inject constructor(private val constants: Constants,
-                                        private val authRepo: IntAuthRepository,
+class MainPresenter @Inject constructor(private val authRepo: IntAuthRepository,
                                         private val userRepo: IntUserRepositoryActivity,
                                         private val connectionsRepository: IntConnectionsRepository) :
                                         IntMainPresenter,
@@ -20,7 +19,7 @@ class MainPresenter @Inject constructor(private val constants: Constants,
     private var mActivity: IntMainActivity? = null
 
     /** Current Fragment */
-    private var currentFragment: Constants.FragmentType? = null
+    private var currentFragment: Constants.Fragment? = null
 
     override fun setView(mainActivity: IntMainActivity) {
         mActivity = mainActivity
@@ -30,9 +29,9 @@ class MainPresenter @Inject constructor(private val constants: Constants,
     override fun onViewWillShow(email: String) {
         var profilePicture: Bitmap?
         mActivity?.setupActivity(email)
-        mActivity?.updateActionBar(constants.fragmentTypeToDo())
-        mActivity?.launchFragment(constants.fragmentTypeToDo(), false)
-        currentFragment = constants.fragmentTypeToDo()
+        mActivity?.updateActionBar(Constants.Fragment.TODO)
+        mActivity?.launchFragment(Constants.Fragment.TODO, false)
+        currentFragment = Constants.Fragment.TODO
 
         setupRepositories()
 
@@ -57,18 +56,18 @@ class MainPresenter @Inject constructor(private val constants: Constants,
      * - First back press takes user back to 2do lists.
      * - Second back pressed kills apps.
      */
-    override fun onNavDrawerItemSelected(type: Constants.FragmentType, backStackCount: Int) {
+    override fun onNavDrawerItemSelected(type: Constants.Fragment, backStackCount: Int) {
         if (isCurrentFragmentDifferent(type)){
             mActivity?.updateActionBar(type)
             if (backStackCount == 1 && type != currentFragment){
                 mActivity?.popBackStack()
             }
             when(type){
-                constants.fragmentTypeToDo() -> {
+                Constants.Fragment.TODO -> {
                     mActivity?.popBackStack()
                 }
-                constants.fragmentTypeChecklists(), constants.fragmentTypeConnections(),
-                constants.fragmentTypeProfile(), constants.fragmentTypeSettings() -> {
+                Constants.Fragment.CHECKLIST, Constants.Fragment.MY_CONNECTIONS,
+                Constants.Fragment.MY_PROFILE, Constants.Fragment.SETTINGS -> {
                     mActivity?.launchFragment(type, true)
                 }
                 else -> {
@@ -90,14 +89,14 @@ class MainPresenter @Inject constructor(private val constants: Constants,
     }
 
     override fun onBackPressed() {
-        if (currentFragment != constants.fragmentTypeToDo()){
-            mActivity?.updateActionBar(constants.fragmentTypeToDo())
-            mActivity?.updateNavigationDrawer(constants.fragmentTypeToDo())
-            currentFragment = constants.fragmentTypeToDo()
+        if (currentFragment != Constants.Fragment.TODO){
+            mActivity?.updateActionBar(Constants.Fragment.TODO)
+            mActivity?.updateNavigationDrawer(Constants.Fragment.TODO)
+            currentFragment = Constants.Fragment.TODO
         }
     }
 
-    private fun isCurrentFragmentDifferent(selectedType: Constants.FragmentType): Boolean {
+    private fun isCurrentFragmentDifferent(selectedType: Constants.Fragment): Boolean {
         return currentFragment != selectedType
     }
 

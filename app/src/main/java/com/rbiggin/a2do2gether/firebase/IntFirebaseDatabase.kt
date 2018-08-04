@@ -8,16 +8,16 @@ import com.rbiggin.a2do2gether.utils.Constants
  */
 interface IntFirebaseDatabase {
     fun doRead(dbRef: DatabaseReference, path: String, listener: IntFirebaseDatabaseListener?,
-               type: Constants.DatabaseApiType)
+               type: Constants.DatabaseApi)
 
     fun doEqualToRead(dbRef: DatabaseReference, path: String, sortBy: String, equalTo: String,
-                      listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApiType)
+                      listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApi)
 
     fun doSortByRead(dbRef: DatabaseReference, path: String, searchValue: String,
-                      listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApiType)
+                      listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApi)
 
     fun doWrite(dbRef: DatabaseReference, path: String, data: HashMap<String, Any>,
-                listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApiType)
+                listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApi)
 
     fun doWrite(dbRef: DatabaseReference, path: String, data: HashMap<String, Any>)
 

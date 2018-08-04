@@ -10,10 +10,9 @@ import javax.inject.Inject
 /**
  * Presenter responsible for the Checklists Fragment
  */
-class ChecklistsPresenter @Inject constructor(private val constants: Constants,
-                                              utilities: Utilities,
+class ChecklistsPresenter @Inject constructor(utilities: Utilities,
                                               sharedPreferences: SharedPreferences) :
-                                              BasePresenter<ChecklistsFragment>(sharedPreferences, utilities, constants),
+                                              BasePresenter<ChecklistsFragment>(sharedPreferences, utilities),
                                               IntChecklistsPresenter{
     /**
      * View Will Show

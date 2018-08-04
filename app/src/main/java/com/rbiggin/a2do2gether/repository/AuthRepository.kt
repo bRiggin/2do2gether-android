@@ -16,8 +16,7 @@ import javax.inject.Inject
 class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
                                          private val sharedPrefs: SharedPreferences,
                                          private val fbDatabaseApi: IntFirebaseDatabase,
-                                         private val utilities: Utilities,
-                                         private val constants: Constants) :
+                                         private val utilities: Utilities) :
                      IntAuthRepository, IntFirebaseAuthListener, com.google.firebase.auth.FirebaseAuth.AuthStateListener{
 
     /** User model data class */
@@ -75,33 +74,33 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
      * Create Account
      */
     override fun createAccount(email: String, password: String) {
-        authApi.createAccount(mAuth, this, email, password, constants.authApiCreateAccount())
+        authApi.createAccount(mAuth, this, email, password, Constants.Auth.CREATE_ACCOUNT)
     }
 
     /**
      * Login
      */
     override fun login(email: String, password: String) {
-        authApi.login(mAuth, this, email, password, constants.authApiLogin())
+        authApi.login(mAuth, this, email, password, Constants.Auth.LOGIN)
     }
 
     /**
      * Send Password Reset
      */
     override fun sendPasswordReset(email: String) {
-        authApi.sendRestEmail(mAuth, this, email, constants.authApiResetPassword())
+        authApi.sendRestEmail(mAuth, this, email, Constants.Auth.RESET_PASSWORD)
     }
 
     /**
      * Update FCM Token
      */
     override fun updateFcmToken() {
-        val currentFcmToken = sharedPrefs.getString(utilities.encode(constants.SP_FCM_TOKEN), "false")
+        val currentFcmToken = sharedPrefs.getString(utilities.encode(Constants.SP_FCM_TOKEN), "false")
         if (currentFcmToken != "false"){
             val decodedToken = utilities.decode(currentFcmToken)
             user?.firebaseUser?.uid?.let {
                 val data = hashMapOf(it to decodedToken as Any)
-                mDatabase?.let { fbDatabaseApi.doWrite(it, constants.FB_FCM_TOKENS, data) }
+                mDatabase?.let { fbDatabaseApi.doWrite(it, Constants.FB_FCM_TOKENS, data) }
             }
         }
     }
@@ -111,7 +110,7 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
      */
     override fun storeUid() {
         user?.firebaseUser?.uid?.let {
-            sharedPrefs.edit().putString(utilities.encode(constants.SP_UID),
+            sharedPrefs.edit().putString(utilities.encode(Constants.SP_UID),
                     utilities.encode(it)).apply()
         }
     }
@@ -119,42 +118,42 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
     /**
      * API Result
      */
-    override fun apiResult(type: Constants.AuthApiType, success: Boolean, message: String?) {
+    override fun apiResult(type: Constants.Auth, success: Boolean, message: String?) {
         val errorMessage = message ?: "Undefined Error"
         when (type) {
-            constants.authApiCreateAccount() -> {
+            Constants.Auth.CREATE_ACCOUNT -> {
                 when (success) {
                     true -> {
                         user?.firebaseUser = mAuth?.currentUser
-                        mActivieListener?.onAuthCommandResult(constants.AUTH_CREATE_ACCOUNT_SUCCESSFUL, null)
+                        mActivieListener?.onAuthCommandResult(Constants.AUTH_CREATE_ACCOUNT_SUCCESSFUL, null)
                     }
                     false -> {
-                        mActivieListener?.onAuthCommandResult(constants.AUTH_CREATE_ACCOUNT_UNSUCCESSFUL, errorMessage)
+                        mActivieListener?.onAuthCommandResult(Constants.AUTH_CREATE_ACCOUNT_UNSUCCESSFUL, errorMessage)
                     }
                 }
             }
-            constants.authApiLogin() -> {
+            Constants.Auth.LOGIN -> {
                 when (success) {
                     true -> {
                         user?.firebaseUser = mAuth?.currentUser
-                        mActivieListener?.onAuthCommandResult(constants.AUTH_LOGIN_SUCCESSFUL, null)
+                        mActivieListener?.onAuthCommandResult(Constants.AUTH_LOGIN_SUCCESSFUL, null)
                     }
                     false -> {
-                        mActivieListener?.onAuthCommandResult(constants.AUTH_LOGIN_FAILED, errorMessage)
+                        mActivieListener?.onAuthCommandResult(Constants.AUTH_LOGIN_FAILED, errorMessage)
                     }
                 }
             }
-            constants.authApiResetPassword() -> {
+            Constants.Auth.RESET_PASSWORD -> {
                 when (success) {
                     true -> {
-                        mActivieListener?.onAuthCommandResult(constants.AUTH_PASSWORD_RESET_SUCCESSFUL, null)
+                        mActivieListener?.onAuthCommandResult(Constants.AUTH_PASSWORD_RESET_SUCCESSFUL, null)
                     }
                     false -> {
-                        mActivieListener?.onAuthCommandResult(constants.AUTH_PASSWORD_RESET_UNSUCCESSFUL, errorMessage)
+                        mActivieListener?.onAuthCommandResult(Constants.AUTH_PASSWORD_RESET_UNSUCCESSFUL, errorMessage)
                     }
                 }
             }
-            constants.authApiLogout() -> {
+            Constants.Auth.LOGOUT -> {
                 when (success) {
                     true -> {
 
@@ -188,9 +187,9 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
     override fun onAuthStateChanged(auth: com.google.firebase.auth.FirebaseAuth) {
         user = User(auth.currentUser)
         if (auth.currentUser == null){
-            mListener?.onAuthStateChange(constants.AUTH_STATE_LOGGED_OUT, "user logged out")
+            mListener?.onAuthStateChange(Constants.AUTH_STATE_LOGGED_OUT, "user logged out")
         } else {
-            mListener?.onAuthStateChange(constants.AUTH_STATE_LOGGED_IN, "user logged in")
+            mListener?.onAuthStateChange(Constants.AUTH_STATE_LOGGED_IN, "user logged in")
         }
     }
 }

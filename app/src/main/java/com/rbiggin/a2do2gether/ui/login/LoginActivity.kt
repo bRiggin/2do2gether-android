@@ -34,9 +34,6 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
     @Inject lateinit var presenter: IntLoginPresenter
 
     /** injected instance of Constants. */
-    @Inject lateinit var constants: Constants
-
-    /** injected instance of Constants. */
     @Inject lateinit var utilities: Utilities
 
     /** Instance of inner class: SectionsPagerAdapter. */
@@ -53,7 +50,7 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
         setContentView(R.layout.activity_login)
 
         (application as MyApplication).daggerComponent.inject(this)
-        TAG = constants.LOGIN_ACTIVITY_TAG
+        TAG = Constants.LOGIN_ACTIVITY_TAG
 
         presenter.setView(this)
 
@@ -79,15 +76,15 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
         message?.let{ dialogMessage = message }
 
         val messageString: String = when (message_id){
-            constants.ERROR_BLANK_EMAIL_STRING -> { getString(R.string.error_blank_email) }
-            constants.ERROR_BLANK_PASSWORD_STRING -> { getString(R.string.error_blank_password) }
-            constants.ERROR_MISSING_PASSWORD -> { getString(R.string.error_missing_password) }
-            constants.ERROR_PASSWORDS_DO_NOT_MATCH -> { getString(R.string.error_password_mismatch) }
-            constants.AUTH_LOGIN_FAILED -> { dialogMessage }
-            constants.AUTH_PASSWORD_RESET_SUCCESSFUL -> { getString(R.string.password_reset_successful) }
-            constants.AUTH_PASSWORD_RESET_UNSUCCESSFUL -> { dialogMessage}
-            constants.AUTH_CREATE_ACCOUNT_SUCCESSFUL -> { getString(R.string.create_account_successful)}
-            constants.AUTH_CREATE_ACCOUNT_UNSUCCESSFUL -> { dialogMessage }
+            Constants.ERROR_BLANK_EMAIL_STRING -> { getString(R.string.error_blank_email) }
+            Constants.ERROR_BLANK_PASSWORD_STRING -> { getString(R.string.error_blank_password) }
+            Constants.ERROR_MISSING_PASSWORD -> { getString(R.string.error_missing_password) }
+            Constants.ERROR_PASSWORDS_DO_NOT_MATCH -> { getString(R.string.error_password_mismatch) }
+            Constants.AUTH_LOGIN_FAILED -> { dialogMessage }
+            Constants.AUTH_PASSWORD_RESET_SUCCESSFUL -> { getString(R.string.password_reset_successful) }
+            Constants.AUTH_PASSWORD_RESET_UNSUCCESSFUL -> { dialogMessage}
+            Constants.AUTH_CREATE_ACCOUNT_SUCCESSFUL -> { getString(R.string.create_account_successful)}
+            Constants.AUTH_CREATE_ACCOUNT_UNSUCCESSFUL -> { dialogMessage }
             else -> { getString(R.string.error_unknown) }
         }
         utilities.showOKDialog(this, getString(R.string.app_name), messageString!!)
@@ -99,7 +96,7 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
     override fun displayFunctionalDialog(type_id: Int) {
         Log.w(TAG, "displayFunctionalDialog called from presenter with ID: $type_id")
         val lambda: () -> Unit = when(type_id){
-            constants.DIALOG_FORGOT_PASSWORD -> {
+            Constants.DIALOG_FORGOT_PASSWORD -> {
                 { presenter.sendPasswordReset() }
             } else -> {
                 {}
@@ -115,13 +112,13 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
      */
     override fun displayFragment(fragment_id: Int) {
         when(fragment_id){
-            constants.REGISTER_FRAGMENT_ID -> {
+            Constants.REGISTER_FRAGMENT_ID -> {
                 loginViewPager.currentItem = 0
             }
-            constants.ADDRESS_FRAGMENT_ID -> {
+            Constants.ADDRESS_FRAGMENT_ID -> {
                 loginViewPager.currentItem = 1
             }
-            constants.PASSWORD_FRAGMENT_ID -> {
+            Constants.PASSWORD_FRAGMENT_ID -> {
                 loginViewPager.currentItem = 2
             }
         }
@@ -133,13 +130,13 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
     override fun onBackPressed() {
         when (loginViewPager.currentItem){
             0 -> {
-                presenter.backPressedInFragment(constants.REGISTER_FRAGMENT_ID)
+                presenter.backPressedInFragment(Constants.REGISTER_FRAGMENT_ID)
             }
             1 -> {
                 super.onBackPressed()
             }
             2 -> {
-                presenter.backPressedInFragment(constants.PASSWORD_FRAGMENT_ID)
+                presenter.backPressedInFragment(Constants.PASSWORD_FRAGMENT_ID)
             }
             else -> {
                 super.onBackPressed()
@@ -190,19 +187,19 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
         override fun getItem(position: Int): Fragment {
             return when(position){
                 0 -> {
-                    CreateAccountFragment.newInstance(constants.REGISTER_FRAGMENT_ID)
+                    CreateAccountFragment.newInstance(Constants.REGISTER_FRAGMENT_ID)
                 } 1 -> {
-                    LandingFragment.newInstance(constants.ADDRESS_FRAGMENT_ID)
+                    LandingFragment.newInstance(Constants.ADDRESS_FRAGMENT_ID)
                 } 2 -> {
-                    PasswordFragment.newInstance(constants.PASSWORD_FRAGMENT_ID)
+                    PasswordFragment.newInstance(Constants.PASSWORD_FRAGMENT_ID)
                 } else -> {
-                    LandingFragment.newInstance(constants.ADDRESS_FRAGMENT_ID)
+                    LandingFragment.newInstance(Constants.ADDRESS_FRAGMENT_ID)
                 }
             }
         }
 
         override fun getCount(): Int {
-            return constants.NUMBER_OF_LOGIN_FRAGMENTS
+            return Constants.NUMBER_OF_LOGIN_FRAGMENTS
         }
     }
 

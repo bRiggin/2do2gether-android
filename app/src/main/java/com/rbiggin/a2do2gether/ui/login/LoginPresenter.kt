@@ -11,8 +11,7 @@ import javax.inject.Inject
 /**
  * Presenter responsible for the Login Activity
  */
-class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository,
-                                         private val constants: Constants) :
+class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository) :
                                          IntLoginPresenter, IntAuthRepositoryActiveListener{
 
     /** Instance Login Activity Interface */
@@ -28,7 +27,7 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
     private var isProcessingBol: Boolean = false
 
     /** Logging tag */
-    private val tag = constants.LOGIN_PRESENTER_TAG
+    private val tag = Constants.LOGIN_PRESENTER_TAG
 
     /**
      * Initialise presenter
@@ -54,7 +53,7 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
      * Called form activity. Where all required logic for loading activity is performed
      */
     override fun onViewWillShow() {
-        mLoginActivity?.displayFragment(constants.ADDRESS_FRAGMENT_ID)
+        mLoginActivity?.displayFragment(Constants.ADDRESS_FRAGMENT_ID)
         if (authRepo.isUserLoggedIn()) {
             enterMainActivity()
         }
@@ -77,11 +76,11 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
         if (!isProcessingBol) {
             email?.let {
                 if (email.isEmpty()) {
-                    mLoginActivity?.displayDialogMessage(constants.ERROR_BLANK_EMAIL_STRING, null)
+                    mLoginActivity?.displayDialogMessage(Constants.ERROR_BLANK_EMAIL_STRING, null)
                     reference.clearViews()
                 } else {
                     tempEmail = email
-                    mLoginActivity?.displayFragment(constants.PASSWORD_FRAGMENT_ID)
+                    mLoginActivity?.displayFragment(Constants.PASSWORD_FRAGMENT_ID)
                     reference.clearViews()
                 }
             }
@@ -93,7 +92,7 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
      */
     override fun newAccountBtnPressed(reference: IntLoginFragmentCallbacks) {
         if (!isProcessingBol) {
-            mLoginActivity?.displayFragment(constants.REGISTER_FRAGMENT_ID)
+            mLoginActivity?.displayFragment(Constants.REGISTER_FRAGMENT_ID)
             reference.clearViews()
         }
     }
@@ -107,19 +106,19 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
             isProcessing(true)
             if (password_one.isEmpty() || password_two.isEmpty()) {
                 isProcessing(false)
-                mLoginActivity?.displayDialogMessage(constants.ERROR_MISSING_PASSWORD, null)
+                mLoginActivity?.displayDialogMessage(Constants.ERROR_MISSING_PASSWORD, null)
                 reference.clearViews(false, true, true)
             } else if (email.isEmpty()){
                 isProcessing(false)
-                mLoginActivity?.displayDialogMessage(constants.ERROR_BLANK_EMAIL_STRING, null)
+                mLoginActivity?.displayDialogMessage(Constants.ERROR_BLANK_EMAIL_STRING, null)
                 reference.clearViews(true, false, false)
             }
             else if (password_one != password_two) {
                 isProcessing(false)
-                mLoginActivity?.displayDialogMessage(constants.ERROR_PASSWORDS_DO_NOT_MATCH, null)
+                mLoginActivity?.displayDialogMessage(Constants.ERROR_PASSWORDS_DO_NOT_MATCH, null)
                 reference.clearViews(false, true, true)
             } else {
-                mLoginActivity?.displayFragment(constants.ADDRESS_FRAGMENT_ID)
+                mLoginActivity?.displayFragment(Constants.ADDRESS_FRAGMENT_ID)
                 authRepo.createAccount(email, password_one)
                 tempPassword = password_one
                 tempEmail = email
@@ -137,7 +136,7 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
             isProcessing(true)
             if (password.isEmpty()) {
                 isProcessing(false)
-                mLoginActivity?.displayDialogMessage(constants.ERROR_BLANK_PASSWORD_STRING, null)
+                mLoginActivity?.displayDialogMessage(Constants.ERROR_BLANK_PASSWORD_STRING, null)
             } else {
                 isProcessing(true)
                 authRepo.login(tempEmail, password)
@@ -150,7 +149,7 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
      */
     override fun passwordForgotten() {
         if (!isProcessingBol) {
-            mLoginActivity?.displayFunctionalDialog(constants.DIALOG_FORGOT_PASSWORD)
+            mLoginActivity?.displayFunctionalDialog(Constants.DIALOG_FORGOT_PASSWORD)
         }
     }
 
@@ -159,7 +158,7 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
      */
     override fun sendPasswordReset() {
         if (!isProcessingBol) {
-            mLoginActivity?.displayFragment(constants.ADDRESS_FRAGMENT_ID)
+            mLoginActivity?.displayFragment(Constants.ADDRESS_FRAGMENT_ID)
             isProcessing(true)
             authRepo.sendPasswordReset(tempEmail)
         }
@@ -170,25 +169,25 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
      */
     override fun onAuthCommandResult(response_id: Int, message: String?) {
         isProcessing(false)
-        mLoginActivity?.displayFragment(constants.ADDRESS_FRAGMENT_ID)
+        mLoginActivity?.displayFragment(Constants.ADDRESS_FRAGMENT_ID)
         when(response_id){
-            constants.AUTH_LOGIN_SUCCESSFUL -> {
+            Constants.AUTH_LOGIN_SUCCESSFUL -> {
                 enterMainActivity()
             }
-            constants.AUTH_LOGIN_FAILED -> {
-                mLoginActivity?.displayDialogMessage(constants.AUTH_LOGIN_FAILED, message)
+            Constants.AUTH_LOGIN_FAILED -> {
+                mLoginActivity?.displayDialogMessage(Constants.AUTH_LOGIN_FAILED, message)
             }
-            constants.AUTH_CREATE_ACCOUNT_SUCCESSFUL -> {
+            Constants.AUTH_CREATE_ACCOUNT_SUCCESSFUL -> {
                 authRepo.login(tempEmail, tempPassword)
             }
-            constants.AUTH_CREATE_ACCOUNT_UNSUCCESSFUL -> {
-                mLoginActivity?.displayDialogMessage(constants.AUTH_CREATE_ACCOUNT_UNSUCCESSFUL, message)
+            Constants.AUTH_CREATE_ACCOUNT_UNSUCCESSFUL -> {
+                mLoginActivity?.displayDialogMessage(Constants.AUTH_CREATE_ACCOUNT_UNSUCCESSFUL, message)
             }
-            constants.AUTH_PASSWORD_RESET_SUCCESSFUL -> {
-                mLoginActivity?.displayDialogMessage(constants.AUTH_PASSWORD_RESET_SUCCESSFUL, null)
+            Constants.AUTH_PASSWORD_RESET_SUCCESSFUL -> {
+                mLoginActivity?.displayDialogMessage(Constants.AUTH_PASSWORD_RESET_SUCCESSFUL, null)
             }
-            constants.AUTH_PASSWORD_RESET_UNSUCCESSFUL -> {
-                mLoginActivity?.displayDialogMessage(constants.AUTH_PASSWORD_RESET_UNSUCCESSFUL, message)
+            Constants.AUTH_PASSWORD_RESET_UNSUCCESSFUL -> {
+                mLoginActivity?.displayDialogMessage(Constants.AUTH_PASSWORD_RESET_UNSUCCESSFUL, message)
             }
         }
     }
@@ -206,14 +205,14 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
     override fun backPressedInFragment(fragment_id: Int) {
         Log.d(tag, "Presenter notified of back press. Fragment ID: $fragment_id")
         when(fragment_id){
-            constants.REGISTER_FRAGMENT_ID -> {
-                mLoginActivity?.displayFragment(constants.ADDRESS_FRAGMENT_ID)
+            Constants.REGISTER_FRAGMENT_ID -> {
+                mLoginActivity?.displayFragment(Constants.ADDRESS_FRAGMENT_ID)
             }
-            constants.ADDRESS_FRAGMENT_ID ->{
+            Constants.ADDRESS_FRAGMENT_ID ->{
                 Log.w(tag, "Fragment ID: $fragment_id, should never notify presenter.")
             }
-            constants.PASSWORD_FRAGMENT_ID -> {
-                mLoginActivity?.displayFragment(constants.ADDRESS_FRAGMENT_ID)
+            Constants.PASSWORD_FRAGMENT_ID -> {
+                mLoginActivity?.displayFragment(Constants.ADDRESS_FRAGMENT_ID)
             }
             else -> {
                 Log.w(tag, "Fragment ID: $fragment_id, not recognised.")

@@ -12,10 +12,9 @@ import javax.inject.Inject
  * Insert class/object/interface/file description...
  */
 class SettingPresenter @Inject constructor(private val authRepo: IntAuthRepository,
-                                           private val constants: Constants,
                                            utilities: Utilities,
                                            sharedPreferences: SharedPreferences) :
-                                           BasePresenter<SettingsFragment>(sharedPreferences, utilities, constants),
+                                           BasePresenter<SettingsFragment>(sharedPreferences, utilities),
                                            IntSettingsPresenter,
                                            IntAuthRepositoryListener{
     /**
@@ -45,7 +44,7 @@ class SettingPresenter @Inject constructor(private val authRepo: IntAuthReposito
      *
      */
     override fun onAuthStateChange(response_id: Int, message: String?) {
-        if (response_id == constants.AUTH_STATE_LOGGED_OUT){
+        if (response_id == Constants.AUTH_STATE_LOGGED_OUT){
             mFragment?.launchLoginActivity()
         }
     }

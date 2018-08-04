@@ -1,8 +1,6 @@
 package com.rbiggin.a2do2gether.ui.main
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.widget.ImageView
 import com.rbiggin.a2do2gether.utils.Constants
 
 /**
@@ -11,11 +9,11 @@ import com.rbiggin.a2do2gether.utils.Constants
 interface IntMainActivity {
     fun setupActivity(email: String)
 
-    fun updateActionBar(type: Constants.FragmentType)
+    fun updateActionBar(type: Constants.Fragment)
 
-    fun updateNavigationDrawer(type: Constants.FragmentType)
+    fun updateNavigationDrawer(type: Constants.Fragment)
 
-    fun launchFragment(type: Constants.FragmentType, toBackStack: Boolean)
+    fun launchFragment(type: Constants.Fragment, toBackStack: Boolean)
 
     fun updateProfilePicture(image: Bitmap)
 

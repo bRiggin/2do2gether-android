@@ -50,8 +50,8 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
      */
     override fun connectionSearchSubmitted(searchString: String) {
         mDatabase?.let {
-            databaseApi.doEqualToRead(it, constants.FB_USER_PROFILE, constants.FB_NICKNAME,
-                                      searchString, this, constants.dbApiFindUsers())
+            databaseApi.doEqualToRead(it, Constants.FB_USER_PROFILE, Constants.FB_NICKNAME,
+                                      searchString, this, Constants.DatabaseApi.FIND_USERS)
         }
     }
 
@@ -60,27 +60,27 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
      */
     override fun getPendingConnectionRequests(uid: String) {
         mDatabase?.let {
-            databaseApi.doRead(it, "${constants.FB_CONNECTION_REQUEST}/$uid", this,
-                    constants.dbApiFindPendingConnections())
+            databaseApi.doRead(it, "${Constants.FB_CONNECTION_REQUEST}/$uid", this,
+                    Constants.DatabaseApi.FIND_PENDING_CONNECTIONS)
         }
     }
 
     /**
      * Database Read Result
      */
-    override fun onDatabaseResult(type: Constants.DatabaseApiType, data: DataSnapshot?, success: Boolean, message: String?) {
+    override fun onDatabaseResult(type: Constants.DatabaseApi, data: DataSnapshot?, success: Boolean, message: String?) {
         when (type){
-            constants.dbApiFindUsers() -> {
+            Constants.DatabaseApi.FIND_USERS -> {
                 if (success){
                     data?.let { handleConnectionSearchResults(data) }
                 }
             }
-            constants.dbApiFindPendingConnections() -> {
+            Constants.DatabaseApi.FIND_PENDING_CONNECTIONS -> {
                 if (success){
                     data?.let { handlePendingConnectionsResults(data) }
                 }
             }
-            constants.dbApiReadUserDetails() -> {
+            Constants.DatabaseApi.READ_USER_DETAILS -> {
                 if (success){
                     data?.let { handlePendingConnectionDetails(data) }
                 }

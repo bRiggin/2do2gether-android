@@ -36,9 +36,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     /** injected instance of Activity's presenter. */
     @Inject lateinit var presenter: IntMainPresenter
 
-    /** injected instance of Constants. */
-    @Inject lateinit var constants: Constants
-
     /** Activity's logging TAG */
     private lateinit var tag: String
 
@@ -56,14 +53,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         presenter.setView(this)
         presenter.onViewWillShow(intent.getStringExtra("email"))
 
-        tag = constants.MAIN_ACTIVITY_TAG
+        tag = Constants.MAIN_ACTIVITY_TAG
     }
 
     /**
      * Setup Activity
      */
     override fun setupActivity(email: String){
-        setSupportActionBar(findViewById(R.id.customToolbar))
+        setSupportActionBar(findViewById(R.id.appToolbar))
 
         supportActionBar?.setDisplayShowCustomEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -73,15 +70,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         supportActionBar?.customView = view
 
-        val toggle = ActionBarDrawerToggle(this, drawerLayout, customToolbar, R.string.password, R.string.enter)
+        val toggle = ActionBarDrawerToggle(this, drawerLayout, appToolbar, R.string.password, R.string.enter)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        navigationView.setNavigationItemSelectedListener(this)
+        navigationDrawer.setNavigationItemSelectedListener(this)
 
-        navigationView.menu.getItem(0).setChecked(true)
-        navigationView.setCheckedItem(R.id.drawer_to_do_lists)
-        navigationView.getHeaderView(0).findViewById<TextView>(R.id.drawerSubHeading).text = email
+        navigationDrawer.menu.getItem(0).setChecked(true)
+        navigationDrawer.setCheckedItem(R.id.drawer_to_do_lists)
+        navigationDrawer.getHeaderView(0).findViewById<TextView>(R.id.drawerSubHeading).text = email
     }
 
     /**
@@ -126,13 +123,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (currentFragment is IntMainListener) {
             when (item.itemId) {
                 R.id.action_share -> {
-                    currentFragment.menuItemPressed(constants.menuBarItemSharePublish())
+                    currentFragment.menuItemPressed(Constants.MenuBarItem.SHARE_PUBLISH)
                 }
                 R.id.action_add -> {
-                    currentFragment.menuItemPressed(constants.menuBarItemPlus())
+                    currentFragment.menuItemPressed(Constants.MenuBarItem.PLUS)
                 }
                 R.id.action_delete -> {
-                    currentFragment.menuItemPressed(constants.menuBarItemDelete())
+                    currentFragment.menuItemPressed(Constants.MenuBarItem.DELETE)
                 }
                 else -> {
                     return super.onOptionsItemSelected(item)
@@ -142,45 +139,47 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val backStackCount = supportFragmentManager.backStackEntryCount
         when (item.itemId) {
             R.id.drawer_to_do_lists -> {
-                presenter.onNavDrawerItemSelected(constants.fragmentTypeToDo(), backStackCount)
+                presenter.onNavDrawerItemSelected(Constants.Fragment.TODO, backStackCount)
             }
             R.id.drawer_checklists -> {
-                presenter.onNavDrawerItemSelected(constants.fragmentTypeChecklists(), backStackCount)
+                presenter.onNavDrawerItemSelected(Constants.Fragment.CHECKLIST, backStackCount)
             }
             R.id.drawer_my_connections -> {
-                presenter.onNavDrawerItemSelected(constants.fragmentTypeConnections(), backStackCount)
+                presenter.onNavDrawerItemSelected(Constants.Fragment.MY_CONNECTIONS, backStackCount)
             }
             R.id.drawer_my_profile -> {
-                presenter.onNavDrawerItemSelected(constants.fragmentTypeProfile(), backStackCount)
+                presenter.onNavDrawerItemSelected(Constants.Fragment.MY_PROFILE, backStackCount)
             }
             R.id.drawer_settings -> {
-                presenter.onNavDrawerItemSelected(constants.fragmentTypeSettings(), backStackCount)
+                presenter.onNavDrawerItemSelected(Constants.Fragment.SETTINGS, backStackCount)
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
-    override fun launchFragment(type: Constants.FragmentType, toBackStack: Boolean){
+    override fun launchFragment(type: Constants.Fragment, toBackStack: Boolean){
         val fragment = when(type){
-            constants.fragmentTypeToDo() -> {
-                ToDoListFragment.newInstance(constants.TODOLIST_FRAGMENT_ID)
+            Constants.Fragment.TODO -> {
+                ToDoListFragment.newInstance(Constants.TODOLIST_FRAGMENT_ID)
             }
-            constants.fragmentTypeChecklists() -> {
-                ChecklistsFragment.newInstance(constants.CHECKLIST_FRAGMENT_ID)
+            Constants.Fragment.CHECKLIST -> {
+                ChecklistsFragment.newInstance(Constants.CHECKLIST_FRAGMENT_ID)
             }
-            constants.fragmentTypeConnections() -> {
-                MyConnectionsFragment.newInstance(constants.MY_CONNECTIONS_FRAGMENT_ID)
+            Constants.Fragment.MY_CONNECTIONS -> {
+                MyConnectionsFragment.newInstance(Constants.MY_CONNECTIONS_FRAGMENT_ID)
             }
-            constants.fragmentTypeProfile() -> {
-               MyProfileFragment.newInstance(constants.MY_PROFILE_FRAGMENT_ID)
+            Constants.Fragment.MY_PROFILE -> {
+               MyProfileFragment.newInstance(Constants.MY_PROFILE_FRAGMENT_ID)
             }
-            constants.fragmentTypeSettings() -> {
-                SettingsFragment.newInstance(constants.SETTINGS_FRAGMENT_ID)
+            Constants.Fragment.SETTINGS -> {
+                SettingsFragment.newInstance(Constants.SETTINGS_FRAGMENT_ID)
             }
             else -> {
                 throw IllegalArgumentException("Main Activity, launchFragment: has been supplied with an illegal input.")
@@ -204,23 +203,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     /**
      * Update Action Bar
      */
-    override fun updateActionBar(type: Constants.FragmentType) {
+    override fun updateActionBar(type: Constants.Fragment) {
         setupMenuBarItems(type)
         val view = supportActionBar?.customView?.findViewById(R.id.action_bar_title_view) as TextView
         val heading = when(type){
-            constants.fragmentTypeToDo() -> {
+            Constants.Fragment.TODO -> {
                 getString(R.string.to_do_lists)
             }
-            constants.fragmentTypeChecklists() -> {
+            Constants.Fragment.CHECKLIST -> {
                 getString(R.string.checklists)
             }
-            constants.fragmentTypeConnections() -> {
+            Constants.Fragment.MY_CONNECTIONS -> {
                 getString(R.string.my_connections)
             }
-            constants.fragmentTypeProfile() -> {
+            Constants.Fragment.MY_PROFILE -> {
                 getString(R.string.my_profile)
             }
-            constants.fragmentTypeSettings() -> {
+            Constants.Fragment.SETTINGS -> {
                 getString(R.string.settings)
             }
             else -> {
@@ -234,47 +233,47 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
      * Update Profile Picture
      */
     override fun updateProfilePicture(image: Bitmap) {
-        navigationView.getHeaderView(0).findViewById<ImageView>(R.id.drawerImageView).setImageBitmap(image)
+        navigationDrawer.getHeaderView(0).findViewById<ImageView>(R.id.drawerImageView).setImageBitmap(image)
     }
 
     /**
      * Update User Name
      */
     override fun updateUsersName(name: String) {
-        navigationView.getHeaderView(0).findViewById<TextView>(R.id.drawerHeading).text = name
+        navigationDrawer.getHeaderView(0).findViewById<TextView>(R.id.drawerHeading).text = name
     }
 
     /**
      * Setup Menu Bar Items
      */
-    private fun setupMenuBarItems(type: Constants.FragmentType){
+    private fun setupMenuBarItems(type: Constants.Fragment){
         val addView = mMenu?.getItem(0)
         val deleteView = mMenu?.getItem(1)
         val shareView = mMenu?.getItem(2)
         when(type) {
-            constants.fragmentTypeToDo() -> {
+            Constants.Fragment.TODO -> {
                 addView?.setVisible(true)
                 deleteView?.setVisible(true)
                 shareView?.setVisible(true)
                 shareView?.icon = ResourcesCompat.getDrawable(resources, R.drawable.icon_share, null)
             }
-            constants.fragmentTypeChecklists() -> {
+            Constants.Fragment.CHECKLIST -> {
                 addView?.setVisible(true)
                 deleteView?.setVisible(true)
                 shareView?.setVisible(true)
                 shareView?.icon = ResourcesCompat.getDrawable(resources, R.drawable.icon_publish, null)
             }
-            constants.fragmentTypeConnections() -> {
+            Constants.Fragment.MY_CONNECTIONS -> {
                 addView?.setVisible(true)
                 deleteView?.setVisible(false)
                 shareView?.setVisible(false)
             }
-            constants.fragmentTypeProfile() -> {
+            Constants.Fragment.MY_PROFILE -> {
                 addView?.setVisible(false)
                 deleteView?.setVisible(false)
                 shareView?.setVisible(false)
             }
-            constants.fragmentTypeSettings() -> {
+            Constants.Fragment.SETTINGS -> {
                 addView?.setVisible(false)
                 deleteView?.setVisible(false)
                 shareView?.setVisible(false)
@@ -285,25 +284,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    /**
-     * Update Navigation Drawer
-     */
-    override fun updateNavigationDrawer(type: Constants.FragmentType) {
+    override fun updateNavigationDrawer(type: Constants.Fragment) {
         when(type) {
-            constants.fragmentTypeToDo() -> {
-                navigationView.setCheckedItem(R.id.drawer_to_do_lists)
+            Constants.Fragment.TODO -> {
+                navigationDrawer.setCheckedItem(R.id.drawer_to_do_lists)
             }
-            constants.fragmentTypeChecklists() -> {
-                navigationView.setCheckedItem(R.id.drawer_checklists)
+            Constants.Fragment.CHECKLIST -> {
+                navigationDrawer.setCheckedItem(R.id.drawer_checklists)
             }
-            constants.fragmentTypeConnections() -> {
-                navigationView.setCheckedItem(R.id.drawer_my_connections)
+            Constants.Fragment.MY_CONNECTIONS -> {
+                navigationDrawer.setCheckedItem(R.id.drawer_my_connections)
             }
-            constants.fragmentTypeProfile() -> {
-                navigationView.setCheckedItem(R.id.drawer_my_profile)
+            Constants.Fragment.MY_PROFILE -> {
+                navigationDrawer.setCheckedItem(R.id.drawer_my_profile)
             }
-            constants.fragmentTypeSettings() -> {
-                navigationView.setCheckedItem(R.id.drawer_settings)
+            Constants.Fragment.SETTINGS -> {
+                navigationDrawer.setCheckedItem(R.id.drawer_settings)
             }
             else -> {
                 throw IllegalArgumentException("Main Activity, updateNavigationDrawer: has been supplied with an illegal input.")

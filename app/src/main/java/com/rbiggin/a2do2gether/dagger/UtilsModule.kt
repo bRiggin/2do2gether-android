@@ -12,11 +12,6 @@ import javax.inject.Singleton
 
 @Module
 class UtilsModule {
-    @Provides
-    @Singleton
-    fun provideConstants(): Constants {
-        return Constants
-    }
 
     @Provides
     @Singleton

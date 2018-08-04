@@ -11,8 +11,7 @@ import io.reactivex.disposables.Disposable
  * Base class to be subclassed by all fragment presenters
  */
 abstract class BasePresenter<T> (private val sharedPreferences: SharedPreferences,
-                                 private val utilities: Utilities,
-                                 private val constants: Constants): IntBasePresenter<T> {
+                                 private val utilities: Utilities): IntBasePresenter<T> {
 
     private val attachedDisposables: CompositeDisposable = CompositeDisposable()
     private val visibleDisposables: CompositeDisposable = CompositeDisposable()
@@ -62,7 +61,7 @@ abstract class BasePresenter<T> (private val sharedPreferences: SharedPreference
     }
 
     fun getUid(): String?{
-        val encodedUid = sharedPreferences.getString(utilities.encode(constants.SP_UID), null)
+        val encodedUid = sharedPreferences.getString(utilities.encode(Constants.SP_UID), null)
         return encodedUid?.let { utilities.decode(encodedUid) }
     }
 }

@@ -30,63 +30,56 @@ import javax.inject.Singleton
 class PresenterModule {
     @Provides
     @Singleton
-    fun provideLoginPresenter(repo: AuthRepository,
-                              constants: Constants): IntLoginPresenter {
-        return LoginPresenter(repo, constants)
+    fun provideLoginPresenter(repo: AuthRepository): IntLoginPresenter {
+        return LoginPresenter(repo)
     }
 
     @Provides
     @Singleton
-    fun provideMainPresenter(constants: Constants,
-                             aRepo: AuthRepository,
+    fun provideMainPresenter(aRepo: AuthRepository,
                              uRepo: UserProfileRepository,
                              cRepo: ConnectionsRepository): IntMainPresenter {
-        return MainPresenter(constants, aRepo, uRepo, cRepo)
+        return MainPresenter(aRepo, uRepo, cRepo)
     }
 
     @Provides
     @Singleton
     fun provideMyProfilePresenter(utils: Utilities,
                                   sharedPrefs: SharedPreferences,
-                                  uRepo: UserProfileRepository,
-                                  constants: Constants): IntMyProfilePresenter {
-        return MyProfilePresenter(uRepo, constants, utils, sharedPrefs)
+                                  uRepo: UserProfileRepository): IntMyProfilePresenter {
+        return MyProfilePresenter(uRepo, utils, sharedPrefs)
     }
 
     @Provides
     @Singleton
     fun provideSettingsPresenter(utils: Utilities,
                                  sharedPrefs: SharedPreferences,
-                                 repo: AuthRepository,
-                                 constants: Constants): IntSettingsPresenter {
-        return SettingPresenter(repo, constants, utils, sharedPrefs)
+                                 repo: AuthRepository): IntSettingsPresenter {
+        return SettingPresenter(repo, utils, sharedPrefs)
     }
 
     @Provides
     @Singleton
-    fun provideChecklistsPresenter(constants: Constants,
-                                   utils: Utilities,
+    fun provideChecklistsPresenter(utils: Utilities,
                                    sharedPrefs: SharedPreferences): IntChecklistsPresenter? {
-        return ChecklistsPresenter(constants, utils, sharedPrefs)
+        return ChecklistsPresenter(utils, sharedPrefs)
     }
 
     @Provides
     @Singleton
-    fun provideToDoListPresenter(constants: Constants,
-                                 utils: Utilities,
+    fun provideToDoListPresenter(utils: Utilities,
                                  sharedPrefs: SharedPreferences):
                                  IntToDoListPresenter {
-        return ToDoListPresenter(constants, utils,sharedPrefs)
+        return ToDoListPresenter(utils,sharedPrefs)
     }
 
     @Provides
     @Singleton
-    fun provideMyConnectionsPresenter(constants: Constants,
-                                      utils: Utilities,
+    fun provideMyConnectionsPresenter(utils: Utilities,
                                       sharedPrefs: SharedPreferences,
                                       cRepo: ConnectionsRepository,
                                       uRepo: UserProfileRepository):
                                       MyConnectionsPresenter {
-        return MyConnectionsPresenter(constants, cRepo, uRepo, utils, sharedPrefs)
+        return MyConnectionsPresenter(cRepo, uRepo, utils, sharedPrefs)
     }
 }

@@ -1,7 +1,6 @@
 package com.rbiggin.a2do2gether.ui.connections
 
 import android.content.SharedPreferences
-import io.reactivex.schedulers.Schedulers
 import com.rbiggin.a2do2gether.model.UserConnectionRequest
 import com.rbiggin.a2do2gether.model.UserConnectionSearch
 import com.rbiggin.a2do2gether.repository.*
@@ -16,16 +15,15 @@ import javax.inject.Inject
 /**
  * Presenter responsible for the My Connections Fragment
  */
-class MyConnectionsPresenter @Inject constructor(private val constants: Constants,
-                                                 private val connectionsRepo: ConnectionsRepository,
+class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: ConnectionsRepository,
                                                  private val userRepo: UserProfileRepository,
                                                  utilities: Utilities,
                                                  sharedPreferences: SharedPreferences) :
-                                                 BasePresenter<MyConnectionsFragment>(sharedPreferences, utilities, constants),
+                                                 BasePresenter<MyConnectionsFragment>(sharedPreferences, utilities),
                                                  IntMyConnectionsPresenter,
                                                  ConnectionsRepository.User{
     /** Current view in view flipper */
-    private var currentView: Constants.MyConnectionView? = null
+    private var currentView: Constants.MyConnection? = null
 
     /**  */
     private var isProcessingBol: Boolean = false
@@ -43,8 +41,8 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
     }
 
     override fun onViewWillShow() {
-        mFragment?.onDisplayView(constants.connectionsMainView())
-        currentView = constants.connectionsMainView()
+        mFragment?.onDisplayView(Constants.MyConnection.MAIN_VIEW)
+        currentView = Constants.MyConnection.MAIN_VIEW
         getUid()?.let {
             connectionsRepo.setup(it)
             connectionsRepo.getPendingConnectionRequests(it)
@@ -57,12 +55,12 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
     }
 
     override fun onPlusButtonPressed() {
-        if (currentView == constants.connectionsMainView()){
+        if (currentView == Constants.MyConnection.MAIN_VIEW){
             if (userRepo.isUserDiscoverable()){
-                mFragment?.onDisplayView(constants.connectionsSearchView())
-                currentView = constants.connectionsSearchView()
+                mFragment?.onDisplayView(Constants.MyConnection.SEARCH_VIEW)
+                currentView = Constants.MyConnection.SEARCH_VIEW
             } else {
-                mFragment?.onDisplayDialogMessage(constants.ERROR_USER_NOT_PUBLIC, null)
+                mFragment?.onDisplayDialogMessage(Constants.ERROR_USER_NOT_PUBLIC, null)
             }
 
         }
@@ -72,10 +70,10 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
         if (!isProcessingBol){
             if (!mFragment?.hasNetworkConnection()!!){
                 //todo display error message
-            } else if(searchString.length < constants.NUMBER_OF_CHARACTERS_IN_NICKNAME ||
+            } else if(searchString.length < Constants.NUMBER_OF_CHARACTERS_IN_NICKNAME ||
                     searchString.contains(" ")){
                 mFragment?.onClearSearchView()
-                mFragment?.onDisplayDialogMessage(constants.ERROR_NICKNAME_STRUCTURE_ERROR, null)
+                mFragment?.onDisplayDialogMessage(Constants.ERROR_NICKNAME_STRUCTURE_ERROR, null)
 
             }
             else {
@@ -88,17 +86,17 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
 
     override fun onRecyclerViewButtonPressed(type: Constants.ConnectionsActionType, targetUid: String) {
         when (type){
-            constants.connectionsActionRequest() -> {
+            Constants.ConnectionsActionType.CONNECTION_REQUEST -> {
                 connectionsRepo.submitConnectionRequest(targetUid)
                 mFragment?.onClearSearchView()
-                mFragment?.onDisplayDialogMessage(constants.DB_CONNECTION_REQUEST_SUBMITTED, null)
-                mFragment?.onDisplayView(constants.connectionsMainView())
-                currentView = constants.connectionsMainView()
+                mFragment?.onDisplayDialogMessage(Constants.DB_CONNECTION_REQUEST_SUBMITTED, null)
+                mFragment?.onDisplayView(Constants.MyConnection.MAIN_VIEW)
+                currentView = Constants.MyConnection.MAIN_VIEW
             }
-            constants.connectionsActionAccept() -> {
+            Constants.ConnectionsActionType.ACCEPT_CONNECTION_REQUEST -> {
 
             }
-            constants.connectionsActionReject() -> {
+            Constants.ConnectionsActionType.REJECT_CONNECTION_REQUEST -> {
 
             }
             else -> {
@@ -136,13 +134,13 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
 
     override fun onMainActivityBackPressed(): Boolean {
         return when (currentView){
-            constants.connectionsMainView() -> {
+            Constants.MyConnection.MAIN_VIEW -> {
                 true
             } else -> {
-                mFragment?.onDisplayView(constants.connectionsMainView())
+                mFragment?.onDisplayView(Constants.MyConnection.MAIN_VIEW)
                 mFragment?.onClearSearchView()
                 mFragment?.displayNoResultsFound(false)
-                currentView = constants.connectionsMainView()
+                currentView = Constants.MyConnection.MAIN_VIEW
                 false
             }
         }
@@ -159,7 +157,7 @@ class MyConnectionsPresenter @Inject constructor(private val constants: Constant
     }
 
     interface View: IntBaseFragment{
-        fun onDisplayView(view: Constants.MyConnectionView)
+        fun onDisplayView(view: Constants.MyConnection)
 
         fun onDisplaySearchResults(result: ArrayList<UserConnectionSearch>)
 

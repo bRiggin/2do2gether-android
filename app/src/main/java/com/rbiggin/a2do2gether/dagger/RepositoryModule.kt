@@ -17,21 +17,20 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideAuthRepository(fbAuth: FirebaseAuth, sharedPrefs: SharedPreferences,
-                              api: IntFirebaseDatabase, utils: Utilities, constants: Constants): IntAuthRepository {
-        return AuthRepository(fbAuth, sharedPrefs, api, utils, constants)
+                              api: IntFirebaseDatabase, utils: Utilities): IntAuthRepository {
+        return AuthRepository(fbAuth, sharedPrefs, api, utils)
     }
 
     @Provides
     @Singleton
     fun provideUserRepository(fbDatabase: IntFirebaseDatabase, fbStorage: IntFirebaseStorage,
-                              constants: Constants, utilities: Utilities): UserProfileRepository {
-        return UserProfileRepository(fbDatabase, fbStorage, constants, utilities)
+                              utilities: Utilities): UserProfileRepository {
+        return UserProfileRepository(fbDatabase, fbStorage, utilities)
     }
 
     @Provides
     @Singleton
-    fun provideConnectionsRepository(fbDatabase: IntFirebaseDatabase,
-                                     constants: Constants): ConnectionsRepository {
-        return ConnectionsRepository(fbDatabase, constants)
+    fun provideConnectionsRepository(fbDatabase: IntFirebaseDatabase): ConnectionsRepository {
+        return ConnectionsRepository(fbDatabase)
     }
 }

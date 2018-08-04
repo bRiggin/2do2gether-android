@@ -20,7 +20,6 @@ import com.rbiggin.a2do2gether.utils.Utilities
  */
 class UserProfileRepository @Inject constructor(private val databaseApi: IntFirebaseDatabase,
                                                 private val storageApi: IntFirebaseStorage,
-                                                private val constants: Constants,
                                                 private val utilities: Utilities) :
                                                 IntUserRepositoryActivity,
                                                 IntUserRepositoryFragment,
@@ -45,7 +44,7 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
     private var mStorageRef: StorageReference? = null
 
     /** Logging TAG */
-    private val tag = constants.USER_REPOSITORY_TAG
+    private val tag = Constants.USER_REPOSITORY_TAG
 
     /**
      * Sets activity listener (Main Activity)
@@ -72,7 +71,7 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
             user = UserDetails("", "", "", uid, false)
             mDatabase = com.google.firebase.database.FirebaseDatabase.getInstance().reference
             mDatabase?.let {
-                databaseApi.doRead(it, uid, this, constants.dbApiReadUserDetails())
+                databaseApi.doRead(it, uid, this, Constants.DatabaseApi.READ_USER_DETAILS)
             } ?: throw ExceptionInInitializerError()
 
             mStorage = FirebaseStorage.getInstance()
@@ -99,16 +98,16 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
     /**
      * Database Result
      */
-    override fun onDatabaseResult(type: Constants.DatabaseApiType, data: DataSnapshot?, success: Boolean, message: String?) {
+    override fun onDatabaseResult(type: Constants.DatabaseApi, data: DataSnapshot?, success: Boolean, message: String?) {
         when (type){
-            constants.dbApiWriteUserDetails() -> {
+            Constants.DatabaseApi.WRITE_USER_DETAILS -> {
                 if (success){
                     mFragmentListener?.onWriteUserDetailsResult(true, null)
                 } else {
                     mFragmentListener?.onWriteUserDetailsResult(false, message)
                 }
             }
-            constants.dbApiReadUserDetails() -> {
+            Constants.DatabaseApi.READ_USER_DETAILS -> {
                 data?.apply { handleUserDetailsResult(data) }
             } else -> {
                 //todo throw a cheeky exception, or not?
@@ -145,7 +144,7 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
         val path = "/user_profile/${user?.uid}"
 
         mDatabase?.let {
-            databaseApi.doWrite(it, path, newDetails, this, constants.dbApiWriteUserDetails())
+            databaseApi.doWrite(it, path, newDetails, this, Constants.DatabaseApi.WRITE_USER_DETAILS)
         } ?: throw ExceptionInInitializerError()
     }
 
@@ -228,8 +227,8 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
      */
     override fun getUsersName() {
         mDatabase?.let {
-            val path = "${constants.FB_USER_PROFILE}/${user?.uid}"
-            databaseApi.doRead(it, path, this, constants.dbApiReadUserDetails())
+            val path = "${Constants.FB_USER_PROFILE}/${user?.uid}"
+            databaseApi.doRead(it, path, this, Constants.DatabaseApi.READ_USER_DETAILS)
         } ?: throw ExceptionInInitializerError()
     }
 
