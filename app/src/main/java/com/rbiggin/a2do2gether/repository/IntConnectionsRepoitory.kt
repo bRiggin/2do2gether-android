@@ -9,15 +9,17 @@ import com.rbiggin.a2do2gether.model.UserDetails
  */
 interface IntConnectionsRepository {
 
-    fun presenterDetatched()
-
     fun setup(uid: String)
+
+    fun presenterDetached()
+
+    fun setupConnectionWatchers()
 
     fun connectionSearchSubmitted(searchString: String)
 
     fun submitConnectionRequest(targetUid: String)
 
-    fun getPendingConnectionRequests(uid: String)
+    fun onConnectionRequestResponse(uid: String, accepted: Boolean)
 }
 
 /**

@@ -43,23 +43,5 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-            <Button
-                android:id="@+id/requestRejectBtn"
-                android:layout_margin="8dp"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:background="@drawable/icon_delete_button"/>
-            <Button style="@style/TextViewStyle"
-                android:id="@+id/requestAcceptBtn"
-                android:layout_margin="8dp"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:background="@drawable/icon_tick"/>
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

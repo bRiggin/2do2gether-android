@@ -21,5 +21,7 @@ interface IntFirebaseDatabase {
 
     fun doWrite(dbRef: DatabaseReference, path: String, data: HashMap<String, Any>)
 
+    fun doDelete(dbRef: DatabaseReference, path: String)
+
     fun doPushWrite(dbRef: DatabaseReference, path: String, data: ArrayList<Any>)
 }

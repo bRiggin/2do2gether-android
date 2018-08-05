@@ -49,9 +49,6 @@ object FirebaseDatabase : IntFirebaseDatabase {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    /**
-     * Do Write
-     */
     override fun doWrite(dbRef: DatabaseReference, path: String, data: HashMap<String, Any>,
                 listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApi){
         val mReference = dbRef.child(path)
@@ -62,21 +59,20 @@ object FirebaseDatabase : IntFirebaseDatabase {
         }
     }
 
-    /**
-     * Do Write
-     */
     override fun doWrite(dbRef: DatabaseReference, path: String, data: HashMap<String, Any>){
         val mReference = dbRef.child(path)
         mReference.updateChildren(data)
     }
 
-    /**
-     * Do Push Write
-     */
     override fun doPushWrite(dbRef: DatabaseReference, path: String, data: ArrayList<Any>) {
         val mReference = dbRef.child(path)
         for (item in data){
             mReference.push().setValue(item)
         }
+    }
+
+    override fun doDelete(dbRef: DatabaseReference, path: String) {
+        val mReference = dbRef.child(path)
+        mReference.removeValue()
     }
 }

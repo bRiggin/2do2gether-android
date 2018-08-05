@@ -11,6 +11,7 @@ import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.application.MyApplication
 import com.rbiggin.a2do2gether.model.UserConnectionRequest
 import com.rbiggin.a2do2gether.model.UserConnectionSearch
+import com.rbiggin.a2do2gether.model.UserDetails
 import com.rbiggin.a2do2gether.ui.base.BaseFragment
 import com.rbiggin.a2do2gether.ui.main.IntMainListener
 import com.rbiggin.a2do2gether.utils.Constants
@@ -92,10 +93,10 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
     override fun onDisplayView(view: Constants.MyConnection) {
         when(view){
             Constants.MyConnection.MAIN_VIEW -> {
-                myConnectionsViewFlipper.displayedChild = myConnectionsViewFlipper.indexOfChild(myConnectionsMainView)
+                myConnectionsLayoutFlipper.displayedChild = myConnectionsLayoutFlipper.indexOfChild(myConnectionsMainView)
             }
             Constants.MyConnection.SEARCH_VIEW -> {
-                myConnectionsViewFlipper.displayedChild = myConnectionsViewFlipper.indexOfChild(myConnectionsSearchView)
+                myConnectionsLayoutFlipper.displayedChild = myConnectionsLayoutFlipper.indexOfChild(myConnectionsSearchView)
             }
             else -> {
                 throw IllegalArgumentException("MyConnectionsFragment, displayView: function handed illegal view: $view.")
@@ -103,14 +104,33 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
         }
     }
 
+    override fun onDisplayConnections(connections: ArrayList<UserDetails>) {
+        if (connections.isEmpty()){
+            connectionsViewFlipper.displayedChild = connectionsViewFlipper.indexOfChild(noConnectionsView)
+        } else {
+            connectionsViewFlipper.displayedChild = connectionsViewFlipper.indexOfChild(myConnectionsRv)
+            myConnectionsRv.adapter = ConnectionAdapter(connections, this)
+        }
+    }
+
     override fun onDisplaySearchResults(result: ArrayList<UserConnectionSearch>) {
         mContext?.let{
-            myConnectionsSearchRv.adapter = ConnectionSearchAdapter(result, it, this)
+            if (result.isEmpty()){
+                searchViewFlipper.displayedChild = searchViewFlipper.indexOfChild(noResultsView)
+            } else {
+                searchViewFlipper.displayedChild = searchViewFlipper.indexOfChild(myConnectionsSearchRv)
+                myConnectionsSearchRv.adapter = ConnectionSearchAdapter(result, it, this, this)
+            }
         }
     }
 
     override fun onDisplayConnectionRequests(requests: ArrayList<UserConnectionRequest>) {
-        pendingConnectionsRv.adapter = ConnectionRequestsAdapter(requests, this)
+        if (requests.isEmpty()){
+            requestsViewFlipper.displayedChild = requestsViewFlipper.indexOfChild(noRequestsView)
+        } else {
+            requestsViewFlipper.displayedChild = requestsViewFlipper.indexOfChild(pendingConnectionsRv)
+            pendingConnectionsRv.adapter = ConnectionRequestsAdapter(requests, this, this)
+        }
     }
 
     override fun onClearSearchView() {
@@ -166,14 +186,14 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
 
     /**
      * Display No Results Found
-     */
+     *
     override fun displayNoResultsFound(show: Boolean) {
         if (show) {
             connectionsNoResultsFound.visibility = View.VISIBLE
         } else {
             connectionsNoResultsFound.visibility = View.GONE
         }
-    }
+    }*/
 
     /**
      * Hide keyboard

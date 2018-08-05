@@ -5,15 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ViewFlipper
-        android:id="@+id/myConnectionsViewFlipper"
+        android:id="@+id/myConnectionsLayoutFlipper"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
             android:id="@+id/myConnectionsMainView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
             <TextView
                 style="@style/TextViewStyle"
                 android:layout_width="match_parent"
@@ -21,16 +20,31 @@
                 android:text="@string/connections"
                 android:gravity="center"
                 android:textSize="16sp"
-                android:paddingBottom="16dp"/>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/myConnectionsRecyclerView"
+                android:padding="16dp"/>
+            <ViewFlipper
+                android:id="@+id/connectionsViewFlipper"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
                 android:background="@drawable/layout_container"
-                android:padding="16dp">
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
+                <TextView
+                    android:id="@+id/noConnectionsView"
+                    style="@style/TextViewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/no_connections"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:textSize="16sp"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/myConnectionsRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </android.support.v7.widget.RecyclerView>
+            </ViewFlipper>
 
-            </android.support.v7.widget.RecyclerView>
             <TextView style="@style/TextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -38,15 +52,30 @@
                 android:gravity="center"
                 android:textSize="16sp"
                 android:padding="16dp"/>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/pendingConnectionsRv"
+            <ViewFlipper
+                android:id="@+id/requestsViewFlipper"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
                 android:background="@drawable/layout_container"
-                android:padding="16dp">
-
-            </android.support.v7.widget.RecyclerView>
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="32dp">
+                <TextView
+                    android:id="@+id/noRequestsView"
+                    style="@style/TextViewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/no_pending_connections"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:textSize="16sp"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/pendingConnectionsRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </android.support.v7.widget.RecyclerView>
+            </ViewFlipper>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/myConnectionsSearchView"
@@ -56,13 +85,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom">
+                android:layout_gravity="center_vertical">
                 <EditText
                     android:id="@+id/myConnectionsSearchEt"
                     style="@style/EditTextStyle"
                     android:layout_width="0dp"
                     android:layout_weight="2"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:inputType="text"
                     android:maxLines="1"
                     android:background="@drawable/layout_edit_text"
@@ -76,14 +105,31 @@
                     android:text="@string/enter"
                     android:textAllCaps="false"/>
             </LinearLayout>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/myConnectionsSearchRv"
+            <ViewFlipper
+                android:id="@+id/searchViewFlipper"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
                 android:background="@drawable/layout_container"
-                android:layout_margin="16dp"
-                android:padding="16dp"/>
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
+                <TextView
+                    android:id="@+id/noResultsView"
+                    style="@style/TextViewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/no_profile_found"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:textSize="16sp"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/myConnectionsSearchRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </android.support.v7.widget.RecyclerView>
+            </ViewFlipper>
         </LinearLayout>
     </ViewFlipper>
 
@@ -96,20 +142,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/connectionsNoResultsFound"
-        style="@style/TextViewStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:text="@string/connections_no_users_found"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>

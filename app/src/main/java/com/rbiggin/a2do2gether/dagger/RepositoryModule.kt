@@ -1,5 +1,6 @@
 package com.rbiggin.a2do2gether.dagger
 
+import android.content.Context
 import android.content.SharedPreferences
 import com.rbiggin.a2do2gether.firebase.*
 import com.rbiggin.a2do2gether.repository.*
@@ -30,7 +31,8 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideConnectionsRepository(fbDatabase: IntFirebaseDatabase): ConnectionsRepository {
+    fun provideConnectionsRepository(fbDatabase: IntFirebaseDatabase)
+            : ConnectionsRepository {
         return ConnectionsRepository(fbDatabase)
     }
 }

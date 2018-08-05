@@ -61,6 +61,8 @@ class MyProfileFragment : BaseFragment(), IntMyProfileFragment {
     override fun onAttach(context: Context?) {
         (context?.applicationContext as MyApplication).daggerComponent.inject(this)
         super.onAttach(context)
+
+        presenter.onViewAttached(this)
     }
 
     /**
@@ -68,8 +70,6 @@ class MyProfileFragment : BaseFragment(), IntMyProfileFragment {
      */
     override fun onResume() {
         super.onResume()
-
-        presenter.onViewAttached(this)
 
         presenter.onViewWillShow()
 
@@ -86,13 +86,18 @@ class MyProfileFragment : BaseFragment(), IntMyProfileFragment {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        presenter.onViewWillHide()
+
+    }
+
     /**
      *
      */
     override fun onDestroy() {
         super.onDestroy()
-        presenter.onViewWillHide()
-
+        presenter.onViewDetached()
     }
 
     /**

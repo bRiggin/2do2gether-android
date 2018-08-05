@@ -2,16 +2,16 @@ package com.rbiggin.a2do2gether.repository
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
+import com.rbiggin.a2do2gether.firebase.FirebaseReadEqualWatcher
 import com.rbiggin.a2do2gether.firebase.FirebaseReadWatcher
 import com.rbiggin.a2do2gether.firebase.IntFirebaseDatabase
 import com.rbiggin.a2do2gether.firebase.IntFirebaseDatabaseListener
 import com.rbiggin.a2do2gether.model.UserConnectionRequest
 import com.rbiggin.a2do2gether.model.UserConnectionSearch
+import com.rbiggin.a2do2gether.model.UserDetails
 import com.rbiggin.a2do2gether.utils.Constants
-import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -22,6 +22,7 @@ import kotlin.collections.HashMap
 class ConnectionsRepository @Inject constructor(private val databaseApi: IntFirebaseDatabase) :
                                                 IntConnectionsRepository,
                                                 IntFirebaseDatabaseListener,
+                                                FirebaseReadEqualWatcher.Listener,
                                                 FirebaseReadWatcher.Listener{
     /** Database Reference */
     private var mDatabase: DatabaseReference? = null
@@ -29,21 +30,47 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
     /** ... */
     private lateinit var mUid: String
 
+    private val connectionsMap: HashMap<String, FirebaseReadWatcher> = HashMap()
+    private var connectionsWatcher: FirebaseReadWatcher? = null
     private val pendingRequestsMap: HashMap<String, FirebaseReadWatcher> = HashMap()
+    private var pendingRequestsWatcher: FirebaseReadWatcher? = null
+    private var searchResultWatcher: FirebaseReadEqualWatcher? = null
+
 
     val pendingRequestsSubject: BehaviorSubject<HashMap<String, UserConnectionRequest>>
             = BehaviorSubject.create<HashMap<String, UserConnectionRequest>>()
 
-    private val connectionSearchSubject: PublishSubject<ArrayList<UserConnectionSearch>> = PublishSubject.create()
+    val connectionsSubject: BehaviorSubject<HashMap<String, UserDetails>>
+            = BehaviorSubject.create<HashMap<String, UserDetails>>()
 
-    /** ... */
+    val connectionSearchSubject: PublishSubject<ArrayList<UserConnectionSearch>> = PublishSubject.create()
+
     private val mConnectionRequests: HashMap<String, UserConnectionRequest> = HashMap()
+    private val mConnections: HashMap<String,UserDetails> = HashMap()
 
-    override fun presenterDetatched() {
+    override fun presenterDetached() {
+        clearConnectionsMap()
+        connectionsWatcher?.detachListener()
+        connectionsWatcher = null
+        clearPendingRequestMap()
+        pendingRequestsWatcher?.detachListener()
+        pendingRequestsWatcher = null
+        searchResultWatcher?.detachListener()
+        searchResultWatcher = null
+    }
+
+    private fun clearPendingRequestMap(){
         for ((_, reader) in pendingRequestsMap) {
             reader.detachListener()
         }
         pendingRequestsMap.clear()
+    }
+
+    private fun clearConnectionsMap(){
+        for ((_, reader) in connectionsMap) {
+            reader.detachListener()
+        }
+        connectionsMap.clear()
     }
 
     override fun setup(uid: String) {
@@ -56,6 +83,16 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
      */
     override fun connectionSearchSubmitted(searchString: String) {
         mDatabase?.let {
+            val id = Constants.DatabaseApi.FIND_USERS.toString()
+            mDatabase?.let {
+                searchResultWatcher = FirebaseReadEqualWatcher(it, Constants.FB_USER_PROFILE,
+                                                       Constants.FB_NICKNAME, searchString,
+                                                       Constants.DatabaseApi.FIND_PENDING_CONNECTIONS,
+                                                       this)
+            }
+        }
+
+        mDatabase?.let {
             databaseApi.doEqualToRead(it, Constants.FB_USER_PROFILE, Constants.FB_NICKNAME,
                                       searchString, this, Constants.DatabaseApi.FIND_USERS)
         }
@@ -64,14 +101,14 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
     /**
      * Get Pending Connection Requests
      */
-    override fun getPendingConnectionRequests(uid: String) {
+    override fun setupConnectionWatchers() {
         mDatabase?.let {
-            val id = Constants.DatabaseApi.FIND_PENDING_CONNECTIONS.toString()
-            mDatabase?.let {
-                val watcher = FirebaseReadWatcher(it, "${Constants.FB_CONNECTION_REQUEST}/$uid",
-                        Constants.DatabaseApi.FIND_PENDING_CONNECTIONS, this)
-                pendingRequestsMap.put(id, watcher)
-            }
+            pendingRequestsWatcher = FirebaseReadWatcher(it, "${Constants.FB_CONNECTION_REQUEST}/$mUid",
+                    Constants.DatabaseApi.FIND_PENDING_CONNECTIONS, this)
+
+            connectionsWatcher = FirebaseReadWatcher(it, "${Constants.FB_CONNECTIONS}/$mUid",
+                    Constants.DatabaseApi.FIND_CONNECTIONS, this)
+
         }
     }
 
@@ -123,12 +160,28 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
         connectionSearchSubject.onNext(users)
     }
 
-    /**
-     * Handle Pending Connections Results
-     */
     private fun handlePendingConnectionsResults(data: DataSnapshot){
+        mConnectionRequests.clear()
+        pendingRequestsSubject.onNext(mConnectionRequests)
+        clearPendingRequestMap()
+
         for (foundRequest in data.children){
             val uid = foundRequest.key.toString()
+            mDatabase?.let {
+                val watcher = FirebaseReadWatcher(it, "${Constants.FB_USER_PROFILE}/$uid",
+                        Constants.DatabaseApi.READ_CONNECTION_REQUEST_DETAILS, this)
+                pendingRequestsMap.put(uid, watcher)
+            }
+        }
+    }
+
+    private fun handleConnectionsResults(data: DataSnapshot){
+        mConnections.clear()
+        connectionsSubject.onNext(mConnections)
+        clearConnectionsMap()
+
+        for (foundConnection in data.children){
+            val uid = foundConnection.value.toString()
             mDatabase?.let {
                 val watcher = FirebaseReadWatcher(it, "${Constants.FB_USER_PROFILE}/$uid",
                         Constants.DatabaseApi.READ_USER_DETAILS, this)
@@ -148,17 +201,54 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
                     pendingRequestsSubject.onError(Throwable())
                 }
             }
-            Constants.DatabaseApi.READ_USER_DETAILS -> {
+            Constants.DatabaseApi.READ_CONNECTION_REQUEST_DETAILS -> {
                 if (success){
                     snapshot?.let { handlePendingConnectionDetails(snapshot) }
+                }
+            }
+            Constants.DatabaseApi.FIND_CONNECTIONS -> {
+                if (success){
+                    snapshot?.let { handleConnectionsResults(snapshot) }
+                }
+            }
+            Constants.DatabaseApi.READ_USER_DETAILS -> {
+                if (success){
+                    snapshot?.let { handleConnectionsDetails(snapshot) }
                 }
             }
         }
     }
 
-    /**
-     * Handle Pending Connection Details
-     */
+    override fun onReadEqualWatcherValueEvent(snapshot: DataSnapshot?, success: Boolean,
+                                              errorMessage: String?, type: Constants.DatabaseApi) {
+        when (type){
+            Constants.DatabaseApi.FIND_USERS -> {
+                if (success){
+                    snapshot?.let { handleConnectionSearchResults(snapshot) }
+                } else {
+                    //todo add data to throwable
+                    connectionSearchSubject.onError(Throwable())
+                }
+            }
+        }
+    }
+
+    private fun handleConnectionsDetails(data: DataSnapshot){
+        val firstName = data.child(Constants.FB_FIRST_NAME).value.toString()
+        val secondName = data.child(Constants.FB_SECOND_NAME).value.toString()
+        val nickname = data.child(Constants.FB_NICKNAME).value.toString()
+        val uid = data.key.toString()
+        val connection = UserDetails(firstName, secondName, nickname, uid, true)
+        if (!mConnections.contains(uid)){
+            mConnections[uid] = connection
+            connectionsSubject.onNext(mConnections)
+        } else {
+            mConnections.remove(uid)
+            mConnections[uid] = connection
+            connectionsSubject.onNext(mConnections)
+        }
+    }
+
     private fun handlePendingConnectionDetails(data: DataSnapshot){
         val firstName = data.child(Constants.FB_FIRST_NAME).value.toString()
         val secondName = data.child(Constants.FB_SECOND_NAME).value.toString()
@@ -175,6 +265,19 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
         }
     }
 
+    override fun onConnectionRequestResponse(uid: String, accepted: Boolean) {
+        val connectionResponse = hashMapOf(uid to true as Any)
+
+        val path = "${Constants.FB_CONNECTION_REQUEST}/$mUid"
+
+        mDatabase?.let {
+            if (accepted){
+                databaseApi.doWrite(it, path, connectionResponse)
+            }
+
+            databaseApi.doDelete(it, path)
+        } ?: throw ExceptionInInitializerError()
+    }
 
     /**
      * Submit Connection Request
@@ -187,11 +290,5 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
         mDatabase?.let {
             databaseApi.doWrite(it, path, connectionRequest)
         } ?: throw ExceptionInInitializerError()
-    }
-
-    interface User{
-        fun onPendingConnectionRequestsChanged(): Disposable
-
-        fun onConnectionSearchResultsChanged()
     }
 }

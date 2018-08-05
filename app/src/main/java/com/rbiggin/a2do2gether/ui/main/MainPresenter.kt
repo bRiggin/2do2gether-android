@@ -80,7 +80,6 @@ class MainPresenter @Inject constructor(private val authRepo: IntAuthRepository,
 
     private fun setupRepositories() {
         userRepo.setActivity(this)
-
         authRepo.setup(this)
         authRepo.userId()?.let {
             userRepo.setup(it)

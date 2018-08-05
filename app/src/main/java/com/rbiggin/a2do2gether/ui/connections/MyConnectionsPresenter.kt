@@ -3,13 +3,14 @@ package com.rbiggin.a2do2gether.ui.connections
 import android.content.SharedPreferences
 import com.rbiggin.a2do2gether.model.UserConnectionRequest
 import com.rbiggin.a2do2gether.model.UserConnectionSearch
+import com.rbiggin.a2do2gether.model.UserDetails
 import com.rbiggin.a2do2gether.repository.*
 import com.rbiggin.a2do2gether.ui.base.BasePresenter
 import com.rbiggin.a2do2gether.ui.base.IntBaseFragment
 import com.rbiggin.a2do2gether.utils.Constants
 import com.rbiggin.a2do2gether.utils.Utilities
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -20,39 +21,50 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
                                                  private val utilities: Utilities,
                                                  sharedPreferences: SharedPreferences) :
                                                  BasePresenter<MyConnectionsFragment>(sharedPreferences, utilities),
-                                                 IntMyConnectionsPresenter,
-                                                 ConnectionsRepository.User{
-    /** Current view in view flipper */
+                                                 IntMyConnectionsPresenter{
     private var currentView: Constants.MyConnection? = null
 
-    /**  */
     private var isProcessingBol: Boolean = false
 
     override fun onViewAttached(fragment: MyConnectionsFragment) {
         super.onViewAttached(fragment)
 
-        disposeOnViewWillDetach(connectionsRepo.pendingRequestsSubject
-                //.distinctUntilChanged()
+        disposeOnViewWillDetach(connectionsRepo.connectionsSubject
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe{it ->
+                .subscribe{
+                    val connections = utilities.hashMapToArray(it) as ArrayList<UserDetails>
+                    fragment.onDisplayConnections(connections)
+                })
+
+        disposeOnViewWillDetach(connectionsRepo.pendingRequestsSubject
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe{
                     val requests = utilities.hashMapToArray(it) as ArrayList<UserConnectionRequest>
                     fragment.onDisplayConnectionRequests(requests)
                 })
 
+        disposeOnViewWillDetach(connectionsRepo.connectionSearchSubject
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe{
+                    isProcessing(false)
+                    if (!it.isEmpty()){
+                        mFragment?.onDisplaySearchResults(it)
+                    } else {
+                        mFragment?.onDisplaySearchResults(ArrayList())
+                    }
+                })
     }
+
 
     override fun onViewWillShow() {
         mFragment?.onDisplayView(Constants.MyConnection.MAIN_VIEW)
         currentView = Constants.MyConnection.MAIN_VIEW
-        getUid()?.let {
-            connectionsRepo.setup(it)
-            connectionsRepo.getPendingConnectionRequests(it)
-        }
+        connectionsRepo.setupConnectionWatchers()
     }
 
     override fun onViewWillHide() {
         super.onViewWillHide()
-        connectionsRepo.presenterDetatched()
+        connectionsRepo.presenterDetached()
     }
 
     override fun onPlusButtonPressed() {
@@ -75,10 +87,8 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
                     searchString.contains(" ")){
                 mFragment?.onClearSearchView()
                 mFragment?.onDisplayDialogMessage(Constants.ERROR_NICKNAME_STRUCTURE_ERROR, null)
-
-            }
-            else {
-                mFragment?.displayNoResultsFound(false)
+            }else {
+                //mFragment?.displayNoResultsFound(false)
                 connectionsRepo.connectionSearchSubmitted(searchString)
                 isProcessing(true)
             }
@@ -95,43 +105,16 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
                 currentView = Constants.MyConnection.MAIN_VIEW
             }
             Constants.ConnectionsActionType.ACCEPT_CONNECTION_REQUEST -> {
-
+                connectionsRepo.onConnectionRequestResponse(targetUid, true)
             }
             Constants.ConnectionsActionType.REJECT_CONNECTION_REQUEST -> {
-
+                connectionsRepo.onConnectionRequestResponse(targetUid, false)
             }
             else -> {
                 //todo throw exception
             }
         }
     }
-
-    override fun onPendingConnectionRequestsChanged(): Disposable{
-        TODO()
-    }
-
-    override fun onConnectionSearchResultsChanged() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-
-
-    /**override fun onSearchResults(users: ArrayList<UserConnectionSearch>) {
-        isProcessing(false)
-        if (!users.isEmpty()){
-            mFragment?.onDisplaySearchResults(users)
-        } else {
-            mFragment?.displayNoResultsFound(true)
-        }
-    }
-
-    override fun onPendingConnectionResults(requests: ArrayList<UserConnectionRequest>) {
-        if (!requests.isEmpty()){
-            mFragment?.onDisplayConnectionRequests(requests)
-        } else {
-            //mFragment?.displayNoResultsFound(true)
-        }
-    }*/
 
     override fun onMainActivityBackPressed(): Boolean {
         return when (currentView){
@@ -140,7 +123,7 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
             } else -> {
                 mFragment?.onDisplayView(Constants.MyConnection.MAIN_VIEW)
                 mFragment?.onClearSearchView()
-                mFragment?.displayNoResultsFound(false)
+                //mFragment?.displayNoResultsFound(false)
                 currentView = Constants.MyConnection.MAIN_VIEW
                 false
             }
@@ -158,15 +141,19 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
     }
 
     interface View: IntBaseFragment{
+        //fun onPendingConnectionRequestsChanged(): Disposable
+
+        //fun onConnectionSearchResultsChanged(): Disposable
+
         fun onDisplayView(view: Constants.MyConnection)
+
+        fun onDisplayConnections(connections: ArrayList<UserDetails>)
 
         fun onDisplaySearchResults(result: ArrayList<UserConnectionSearch>)
 
         fun onDisplayConnectionRequests(requests: ArrayList<UserConnectionRequest>)
 
         fun onClearSearchView()
-
-        fun displayNoResultsFound(show: Boolean)
 
         fun displayProgressSpinner(show: Boolean)
     }

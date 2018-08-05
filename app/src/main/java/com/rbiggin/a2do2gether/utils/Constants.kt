@@ -24,6 +24,7 @@ class Constants {
          */
         const val FB_USER_PROFILE: String = "user_profile"
         const val FB_CONNECTION_REQUEST: String = "connection_requests"
+        const val FB_CONNECTIONS: String = "connections"
         const val FB_FCM_TOKENS: String = "fcm_tokens"
         const val FB_FIRST_NAME: String = "first_name"
         const val FB_SECOND_NAME: String = "second_name"
@@ -128,9 +129,11 @@ class Constants {
 
     enum class DatabaseApi {
         READ_USER_DETAILS,
+        READ_CONNECTION_REQUEST_DETAILS,
         WRITE_USER_DETAILS,
         FIND_USERS,
-        FIND_PENDING_CONNECTIONS;
+        FIND_PENDING_CONNECTIONS,
+        FIND_CONNECTIONS;
     }
 
     enum class MyConnection {

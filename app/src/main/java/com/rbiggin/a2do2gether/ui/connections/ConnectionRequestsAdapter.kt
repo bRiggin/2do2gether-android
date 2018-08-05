@@ -8,14 +8,20 @@ import com.rbiggin.a2do2gether.model.UserConnectionRequest
 import com.rbiggin.a2do2gether.utils.Constants
 import com.rbiggin.a2do2gether.utils.inflate
 import kotlinx.android.synthetic.main.row_item_connection_request.view.*
+import com.firebase.ui.storage.images.FirebaseImageLoader
+import com.bumptech.glide.Glide
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+
 
 class ConnectionRequestsAdapter (private val requests: ArrayList<UserConnectionRequest>,
-                                 private val listener: MyConnectionsPresenter.Button)
+                                 private val listener: MyConnectionsPresenter.Button,
+                                 private val fragment: MyConnectionsFragment)
                                  : RecyclerView.Adapter<ConnectionRequestsAdapter.ItemHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val inflatedView = parent.inflate(R.layout.row_item_connection_request, false)
-        return ItemHolder(inflatedView, listener)
+        return ItemHolder(inflatedView, listener, fragment)
     }
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
@@ -33,11 +39,14 @@ class ConnectionRequestsAdapter (private val requests: ArrayList<UserConnectionR
     }
 
     class ItemHolder(private val view: View,
-                     private val listener: MyConnectionsPresenter.Button):
+                     private val listener: MyConnectionsPresenter.Button,
+                     private val fragment: MyConnectionsFragment):
                      RecyclerView.ViewHolder(view), View.OnClickListener {
 
         private var uid: String? = null
-
+        private var path: StorageReference? = null
+        private val mStorage = FirebaseStorage.getInstance()
+        private val mStorageRef = mStorage.reference
 
         init {
             view.requestAcceptBtn.setOnClickListener(this)
@@ -54,6 +63,19 @@ class ConnectionRequestsAdapter (private val requests: ArrayList<UserConnectionR
 
         fun setUid(uid: String){
             this.uid = uid
+            this.path = mStorageRef.child("profile_pictures/${this.uid}.jpg")
+            this.path?.let {
+                setImage(it)
+            }
+
+        }
+
+        private fun setImage(reference: StorageReference){
+            Glide.with(fragment)
+                    .using(FirebaseImageLoader())
+                    .load(reference)
+                    .error(R.drawable.profile_default)
+                    .into(view.userProfileImage)
         }
 
         override fun onClick(v: View) {
