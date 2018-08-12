@@ -150,9 +150,8 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
                 var type = Constants.ConnectionsSearchResult.NEW_CONNECTION
                 if (mUid == foundUser.key.toString()){
                     type = Constants.ConnectionsSearchResult.SELF
-                }
-                if (false){
-                    //todo look for already connected
+                } else if (mConnections.containsKey(foundUser.key.toString())) {
+                    type = Constants.ConnectionsSearchResult.EXISTING_CONNECTION
                 }
                 users.add(UserConnectionSearch(firstName, secondName, nickname, uid, type))
             }

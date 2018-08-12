@@ -4,11 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.graphics.Bitmap
-import android.content.ContextWrapper
-import android.graphics.BitmapFactory
-import java.io.*
-
 
 /**
  * Base class to be subclassed by all fragments
