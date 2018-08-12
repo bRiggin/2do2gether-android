@@ -6,10 +6,35 @@ import com.google.firebase.messaging.RemoteMessage
 import com.rbiggin.a2do2gether.R
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.SharedPreferences
 import com.rbiggin.a2do2gether.ui.main.MainActivity
 import android.support.v4.app.NotificationManagerCompat
+import com.rbiggin.a2do2gether.application.MyApplication
+import com.rbiggin.a2do2gether.utils.Constants
+import com.rbiggin.a2do2gether.utils.Utilities
+import javax.inject.Inject
 
 class MessagingService : FirebaseMessagingService() {
+
+    @Inject
+    lateinit var utilities: Utilities
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
+
+    override fun onCreate() {
+        super.onCreate()
+        (application as MyApplication).daggerComponent.inject(this)
+    }
+
+    override fun onNewToken(token: String?) {
+        super.onNewToken(token)
+        token?.let {
+            saveFcmToken(it)
+        }
+
+    }
+
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
         super.onMessageReceived(remoteMessage)
 
@@ -30,5 +55,10 @@ class MessagingService : FirebaseMessagingService() {
         val notificationManager = NotificationManagerCompat.from(this)
 
         notificationManager.notify(123456789, mBuilder.build())
+    }
+
+    private fun saveFcmToken(token: String){
+        sharedPreferences.edit().putString(utilities.encode(Constants.SP_FCM_TOKEN),
+                utilities.encode(token)).apply()
     }
 }
