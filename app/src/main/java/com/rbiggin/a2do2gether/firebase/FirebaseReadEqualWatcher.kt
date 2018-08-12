@@ -13,7 +13,7 @@ class FirebaseReadEqualWatcher(dbRef: DatabaseReference,
                                type: Constants.DatabaseApi,
                                private var listener: FirebaseReadEqualWatcher.Listener?) {
 
-    private lateinit var mReference: DatabaseReference
+    private val mReference: DatabaseReference? = null
     private lateinit var mValuerEventListener: ValueEventListener
 
     init{
@@ -34,7 +34,7 @@ class FirebaseReadEqualWatcher(dbRef: DatabaseReference,
     }
 
     fun detachListener(){
-        mReference.removeEventListener(mValuerEventListener)
+        mReference?.removeEventListener(mValuerEventListener)
         listener = null
     }
 

@@ -22,6 +22,8 @@ interface IntAuthRepository{
 
     fun updateFcmToken()
 
+    fun removeFcmToken()
+
     fun storeUid()
 
     fun detach()

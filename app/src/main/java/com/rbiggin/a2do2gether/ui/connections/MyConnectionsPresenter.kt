@@ -20,8 +20,8 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
                                                  private val userRepo: UserProfileRepository,
                                                  private val utilities: Utilities,
                                                  sharedPreferences: SharedPreferences) :
-                                                 BasePresenter<MyConnectionsFragment>(sharedPreferences, utilities),
-                                                 IntMyConnectionsPresenter{
+        BasePresenter<MyConnectionsFragment>(sharedPreferences, utilities),
+        IntMyConnectionsPresenter {
     private var currentView: Constants.MyConnection? = null
 
     private var isProcessingBol: Boolean = false
@@ -31,23 +31,23 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
 
         disposeOnViewWillDetach(connectionsRepo.connectionsSubject
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe{
+                .subscribe {
                     val connections = utilities.hashMapToArray(it) as ArrayList<UserDetails>
                     fragment.onDisplayConnections(connections)
                 })
 
         disposeOnViewWillDetach(connectionsRepo.pendingRequestsSubject
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe{
+                .subscribe {
                     val requests = utilities.hashMapToArray(it) as ArrayList<UserConnectionRequest>
                     fragment.onDisplayConnectionRequests(requests)
                 })
 
         disposeOnViewWillDetach(connectionsRepo.connectionSearchSubject
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe{
+                .subscribe {
                     isProcessing(false)
-                    if (!it.isEmpty()){
+                    if (!it.isEmpty()) {
                         mFragment?.onDisplaySearchResults(it)
                     } else {
                         mFragment?.onDisplaySearchResults(ArrayList())
@@ -68,8 +68,8 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
     }
 
     override fun onPlusButtonPressed() {
-        if (currentView == Constants.MyConnection.MAIN_VIEW){
-            if (userRepo.isUserDiscoverable()){
+        if (currentView == Constants.MyConnection.MAIN_VIEW) {
+            if (userRepo.isUserDiscoverable()) {
                 mFragment?.onDisplayView(Constants.MyConnection.SEARCH_VIEW)
                 currentView = Constants.MyConnection.SEARCH_VIEW
             } else {
@@ -80,14 +80,14 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
     }
 
     override fun onSearchButtonPressed(searchString: String) {
-        if (!isProcessingBol){
-            if (!mFragment?.hasNetworkConnection()!!){
+        if (!isProcessingBol) {
+            if (!mFragment?.hasNetworkConnection()!!) {
                 //todo display error message
-            } else if(searchString.length < Constants.NUMBER_OF_CHARACTERS_IN_NICKNAME ||
-                    searchString.contains(" ")){
+            } else if (searchString.length < Constants.NUMBER_OF_CHARACTERS_IN_NICKNAME ||
+                    searchString.contains(" ")) {
                 mFragment?.onClearSearchView()
                 mFragment?.onDisplayDialogMessage(Constants.ERROR_NICKNAME_STRUCTURE_ERROR, null)
-            }else {
+            } else {
                 //mFragment?.displayNoResultsFound(false)
                 connectionsRepo.connectionSearchSubmitted(searchString)
                 isProcessing(true)
@@ -96,7 +96,7 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
     }
 
     override fun onRecyclerViewButtonPressed(type: Constants.ConnectionsActionType, targetUid: String) {
-        when (type){
+        when (type) {
             Constants.ConnectionsActionType.CONNECTION_REQUEST -> {
                 connectionsRepo.submitConnectionRequest(targetUid)
                 mFragment?.onClearSearchView()
@@ -117,10 +117,11 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
     }
 
     override fun onMainActivityBackPressed(): Boolean {
-        return when (currentView){
+        return when (currentView) {
             Constants.MyConnection.MAIN_VIEW -> {
                 true
-            } else -> {
+            }
+            else -> {
                 mFragment?.onDisplayView(Constants.MyConnection.MAIN_VIEW)
                 mFragment?.onClearSearchView()
                 //mFragment?.displayNoResultsFound(false)
@@ -130,8 +131,8 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
         }
     }
 
-    private fun isProcessing(processing: Boolean){
-        if (processing){
+    private fun isProcessing(processing: Boolean) {
+        if (processing) {
             isProcessingBol = true
             mFragment?.displayProgressSpinner(true)
         } else {
@@ -140,7 +141,7 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
         }
     }
 
-    interface View: IntBaseFragment{
+    interface View : IntBaseFragment {
         //fun onPendingConnectionRequestsChanged(): Disposable
 
         //fun onConnectionSearchResultsChanged(): Disposable

@@ -14,13 +14,13 @@ class SettingPresenter @Inject constructor(private val authRepo: IntAuthReposito
                                            BasePresenter<SettingsFragment>(sharedPreferences, utilities),
                                            IntSettingsPresenter,
                                            IntAuthRepositoryListener{
-
     override fun onViewWillShow() {
         authRepo.setup(this)
     }
 
     override fun logout() {
         authRepo.logout()
+        authRepo.removeFcmToken()
     }
 
     override fun onViewWillHide() {

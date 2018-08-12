@@ -36,6 +36,7 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
     /** ... */
     private lateinit var mSearchLayoutManager: LinearLayoutManager
     private lateinit var mPendingLayoutManager: LinearLayoutManager
+    private lateinit var mConnectionsLayoutManager: LinearLayoutManager
 
     /**
      * Companion object to provide access to newInstance.
@@ -71,8 +72,10 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
 
         mSearchLayoutManager = LinearLayoutManager(mContext)
         mPendingLayoutManager = LinearLayoutManager(mContext)
+        mConnectionsLayoutManager = LinearLayoutManager(mContext)
         myConnectionsSearchRv.layoutManager = mSearchLayoutManager
         pendingConnectionsRv.layoutManager = mPendingLayoutManager
+        myConnectionsRv.layoutManager = mConnectionsLayoutManager
 
         searchBtn.setOnClickListener {
             presenter.onSearchButtonPressed(myConnectionsSearchEt.text.toString())
@@ -97,9 +100,6 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
             }
             Constants.MyConnection.SEARCH_VIEW -> {
                 myConnectionsLayoutFlipper.displayedChild = myConnectionsLayoutFlipper.indexOfChild(myConnectionsSearchView)
-            }
-            else -> {
-                throw IllegalArgumentException("MyConnectionsFragment, displayView: function handed illegal view: $view.")
             }
         }
     }

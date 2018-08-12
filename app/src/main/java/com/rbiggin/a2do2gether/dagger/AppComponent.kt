@@ -1,15 +1,13 @@
 package com.rbiggin.a2do2gether.dagger
 
 import com.rbiggin.a2do2gether.application.AppModule
-import com.rbiggin.a2do2gether.notification.IdService
+import com.rbiggin.a2do2gether.notification.MessagingService
 import com.rbiggin.a2do2gether.ui.base.BaseFragment
 import com.rbiggin.a2do2gether.ui.connections.MyConnectionsFragment
 import com.rbiggin.a2do2gether.ui.login.LoginActivity
-import com.rbiggin.a2do2gether.ui.login.LoginPresenter
 import com.rbiggin.a2do2gether.ui.login.fragments.MasterFragment
 import com.rbiggin.a2do2gether.ui.main.MainActivity
 import com.rbiggin.a2do2gether.ui.profile.MyProfileFragment
-import com.rbiggin.a2do2gether.ui.profile.MyProfilePresenter
 import com.rbiggin.a2do2gether.ui.settings.SettingsFragment
 import com.rbiggin.a2do2gether.ui.todo.ToDoListFragment
 import dagger.Component
@@ -38,5 +36,5 @@ interface AppComponent {
 
     fun inject(target: ToDoListFragment){}
 
-    fun inject(target: IdService){}
+    fun inject(target: MessagingService){}
 }
