@@ -14,17 +14,10 @@ import javax.inject.Inject
 
 import kotlinx.android.synthetic.main.fragment_settings.*
 
-/**
- * Fragment for logout/ preferences/ notifications etc
- */
 class SettingsFragment : BaseFragment(), IntSettingsFragment {
 
-    /** Injected Presenter instance */
-    @Inject lateinit var presenter: IntSettingsPresenter
+    @Inject lateinit var presenter: SettingsPresenter
 
-    /**
-     * Companion object to provide access to newInstance.
-     */
     companion object {
         /**
          * @param id ID handed to Fragment.
@@ -39,29 +32,23 @@ class SettingsFragment : BaseFragment(), IntSettingsFragment {
         }
     }
 
-    /**
-     * onAttach
-     */
     override fun onAttach(context: Context?) {
         (context?.applicationContext as MyApplication).daggerComponent.inject(this)
         super.onAttach(context)
     }
 
-    /**
-     * onCreateView
-     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
-    /**
-     * onResume
-     */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        presenter.onViewAttached(this)
+    }
+
     override fun onResume() {
         super.onResume()
-
-        presenter.onViewAttached(this)
         presenter.onViewWillShow()
 
         logout_btn.setOnClickListener {
@@ -69,18 +56,16 @@ class SettingsFragment : BaseFragment(), IntSettingsFragment {
         }
     }
 
-    /**
-     *
-     */
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
         presenter.onViewWillHide()
-
     }
 
-    /**
-     *
-     */
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onViewDetached()
+    }
+
     override fun launchLoginActivity() {
         val intent = Intent(activity, LoginActivity::class.java)
         startActivity(intent)

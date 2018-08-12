@@ -47,7 +47,7 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
     private val tag = Constants.USER_REPOSITORY_TAG
 
     /**
-     * Sets activity listener (Main Activity)
+     * Sets activity listener (MainPresenter Activity)
      */
     override fun setActivity(listener: IntUserRepositoryOnChangeListener) {
         mActivityListener = listener
@@ -61,7 +61,7 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
     }
 
     /**
-     * Initialise repository, called from Main Activity
+     * Initialise repository, called from MainPresenter Activity
      */
     override fun setup(uid: String) {
         if (mActivityListener == null){
@@ -205,7 +205,7 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
     }
 
     /**
-     * Get Profile Picture For Main Activity
+     * Get Profile Picture For MainPresenter Activity
      */
     override fun getProfilePictureForMainActivity() {
         getProfilePicture()

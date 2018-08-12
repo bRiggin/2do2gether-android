@@ -8,17 +8,16 @@ import com.rbiggin.a2do2gether.utils.Constants
 import com.rbiggin.a2do2gether.utils.Utilities
 import javax.inject.Inject
 
-class SettingPresenter @Inject constructor(private val authRepo: IntAuthRepository,
-                                           utilities: Utilities,
-                                           sharedPreferences: SharedPreferences) :
+class SettingsPresenter @Inject constructor(private val authRepo: IntAuthRepository,
+                                            utilities: Utilities,
+                                            sharedPreferences: SharedPreferences) :
                                            BasePresenter<SettingsFragment>(sharedPreferences, utilities),
-                                           IntSettingsPresenter,
-                                           IntAuthRepositoryListener{
+        IntAuthRepositoryListener{
     override fun onViewWillShow() {
         authRepo.setup(this)
     }
 
-    override fun logout() {
+    fun logout() {
         authRepo.logout()
         authRepo.removeFcmToken()
     }
@@ -30,7 +29,7 @@ class SettingPresenter @Inject constructor(private val authRepo: IntAuthReposito
 
     override fun onAuthStateChange(response_id: Int, message: String?) {
         if (response_id == Constants.AUTH_STATE_LOGGED_OUT){
-            mFragment?.launchLoginActivity()
+            view?.launchLoginActivity()
         }
     }
 }

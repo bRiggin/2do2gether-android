@@ -91,7 +91,7 @@ class ConnectionRequestsAdapter (private val requests: ArrayList<UserConnectionR
                     }
                 }
                 else -> {
-                    throw IllegalArgumentException("Unrecognised button view.id handed to onClick in ConnectionRequestAdapter")
+                    throw IllegalArgumentException("Unrecognised button View.id handed to onClick in ConnectionRequestAdapter")
                 }
             }
         }

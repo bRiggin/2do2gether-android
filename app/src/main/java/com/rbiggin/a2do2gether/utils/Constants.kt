@@ -96,19 +96,19 @@ class Constants {
          * Logging tag strings
          */
         const val LOGIN_ACTIVITY_TAG: String = "Login Activity"
-        const val LOGIN_PRESENTER_TAG: String = "Login Presenter"
-        const val MAIN_ACTIVITY_TAG: String = "Main Activity"
-        const val MAIN_PRESENTER_TAG: String = "Main Presenter"
+        const val LOGIN_PRESENTER_TAG: String = "Login Interface"
+        const val MAIN_ACTIVITY_TAG: String = "MainPresenter Activity"
+        const val MAIN_PRESENTER_TAG: String = "MainPresenter Interface"
         const val TODO_ACTIVITY_TAG: String = "ToDoLists Activity"
-        const val TODO_PRESENTER_TAG: String = "ToDoLists Presenter"
+        const val TODO_PRESENTER_TAG: String = "ToDoLists Interface"
         const val CHECKLISTS_ACTIVITY_TAG: String = "Checklists Activity"
-        const val CHECKLISTS_PRESENTER_TAG: String = "Checklists Presenter"
+        const val CHECKLISTS_PRESENTER_TAG: String = "Checklists Interface"
         const val CONNECTIONS_ACTIVITY_TAG: String = "My Connections Activity"
-        const val CONNECTIONS_PRESENTER_TAG: String = "My Connections Presenter"
+        const val CONNECTIONS_PRESENTER_TAG: String = "My Connections Interface"
         const val PROFILE_ACTIVITY_TAG: String = "My Profile Activity"
-        const val PROFILE_PRESENTER_TAG: String = "My Profile Presenter"
+        const val PROFILE_PRESENTER_TAG: String = "My Profile Interface"
         const val SETTINGS_ACTIVITY_TAG: String = "Setting Activity"
-        const val SETTINGS_PRESENTER_TAG: String = "Setting Presenter"
+        const val SETTINGS_PRESENTER_TAG: String = "Setting Interface"
         const val USER_REPOSITORY_TAG = "User Repository"
     }
 

@@ -38,7 +38,7 @@ class ZeeOldRecyclerAdapter(private val toDoLists: ArrayList<String>,
          * your View, so it can access the ImageView and TextView as an extension property. Kotlin
          * Android Extensions plugin adds in hidden caching functions and fields so that views are
          * not constantly queried. */
-        private var view: View = v
+        private var View: View = v
         private var animation: Drawable = appContext.getDrawable(R.drawable.animation_tick)
         //private var photo: Photo? = null
         /** 3 Initialized the View.OnClickListener. */
@@ -53,8 +53,8 @@ class ZeeOldRecyclerAdapter(private val toDoLists: ArrayList<String>,
         override fun onClick(v: View) {
             when (v.id){
                 R.id.toDoItemBtn -> {
-                    view.toDoItemBtn.setImageDrawable(animation)
-                    val drawable = view.toDoItemBtn.drawable as AnimatedVectorDrawable
+                    View.toDoItemBtn.setImageDrawable(animation)
+                    val drawable = View.toDoItemBtn.drawable as AnimatedVectorDrawable
                     drawable.start()
                 }
                 else -> {
@@ -68,7 +68,7 @@ class ZeeOldRecyclerAdapter(private val toDoLists: ArrayList<String>,
         }
 
         fun bindPhoto(photo: String) {
-            view.toDoItem.text = photo
+            View.toDoItem.text = photo
         }
 
         companion object {

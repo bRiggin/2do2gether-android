@@ -9,10 +9,10 @@ import javax.inject.Inject
 
 
 /**
- * Presenter responsible for the Login Activity
+ * Interface responsible for the Login Activity
  */
 class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository) :
-                                         IntLoginPresenter, IntAuthRepositoryActiveListener{
+                                         IntAuthRepositoryActiveListener{
 
     /** Instance Login Activity Interface */
     private var mLoginActivity: IntLoginActivity? = null
@@ -39,12 +39,12 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
     /**
      * Called form activity and provides login activity interface
      */
-    override fun setView(loginActivity: IntLoginActivity) {
+    fun setView(loginActivity: IntLoginActivity) {
         mLoginActivity = loginActivity
         setup()
     }
 
-    override fun onViewWillHide() {
+    fun onViewWillHide() {
         authRepo.detach()
         mLoginActivity = null
     }
@@ -52,7 +52,7 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
     /**
      * Called form activity. Where all required logic for loading activity is performed
      */
-    override fun onViewWillShow() {
+    fun onViewWillShow() {
         mLoginActivity?.displayFragment(Constants.ADDRESS_FRAGMENT_ID)
         if (authRepo.isUserLoggedIn()) {
             enterMainActivity()
@@ -60,7 +60,7 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
     }
 
     /**
-     * Enter Main Activity
+     * Enter MainPresenter Activity
      */
     private fun enterMainActivity(){
         authRepo.storeUid()
@@ -72,7 +72,7 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
     /**
      * User submitted email address to login with
      */
-    override fun emailSubmitted(email: String?, reference: IntLoginFragmentCallbacks) {
+    fun emailSubmitted(email: String?, reference: IntLoginFragmentCallbacks) {
         if (!isProcessingBol) {
             email?.let {
                 if (email.isEmpty()) {
@@ -90,7 +90,7 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
     /**
      * User requested to create new account with provided email address.
      */
-    override fun newAccountBtnPressed(reference: IntLoginFragmentCallbacks) {
+    fun newAccountBtnPressed(reference: IntLoginFragmentCallbacks) {
         if (!isProcessingBol) {
             mLoginActivity?.displayFragment(Constants.REGISTER_FRAGMENT_ID)
             reference.clearViews()
@@ -100,7 +100,7 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
     /**
      * User submitted new password to create account with.
      */
-    override fun createNewAccount(email: String, password_one: String, password_two: String,
+    fun createNewAccount(email: String, password_one: String, password_two: String,
                                   reference: IntLoginFragmentCallbacks) {
         if (!isProcessingBol) {
             isProcessing(true)
@@ -131,7 +131,7 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
     /**
      * User submitted password to create account with.
      */
-    override fun loginWithPassword(password: String, reference: IntLoginFragmentCallbacks) {
+    fun loginWithPassword(password: String) {
         if (!isProcessingBol) {
             isProcessing(true)
             if (password.isEmpty()) {
@@ -147,7 +147,7 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
     /**
      * User has forgotten the password to their account.
      */
-    override fun passwordForgotten() {
+    fun passwordForgotten() {
         if (!isProcessingBol) {
             mLoginActivity?.displayFunctionalDialog(Constants.DIALOG_FORGOT_PASSWORD)
         }
@@ -156,7 +156,7 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
     /**
      * Instructs repo to send a reset password email to user.
      */
-    override fun sendPasswordReset() {
+    fun sendPasswordReset() {
         if (!isProcessingBol) {
             mLoginActivity?.displayFragment(Constants.ADDRESS_FRAGMENT_ID)
             isProcessing(true)
@@ -202,8 +202,8 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
     /**
      * User has pressed back within login activity.
      */
-    override fun backPressedInFragment(fragment_id: Int) {
-        Log.d(tag, "Presenter notified of back press. Fragment ID: $fragment_id")
+    fun backPressedInFragment(fragment_id: Int) {
+        Log.d(tag, "Interface notified of back press. Fragment ID: $fragment_id")
         when(fragment_id){
             Constants.REGISTER_FRAGMENT_ID -> {
                 mLoginActivity?.displayFragment(Constants.ADDRESS_FRAGMENT_ID)

@@ -45,7 +45,7 @@ class PasswordFragment : MasterFragment(), IntLoginFragmentCallbacks {
     override fun onResume() {
         super.onResume()
         password_login_btn.setOnClickListener {
-            presenter.loginWithPassword(password_password_et.text.toString(), this)
+            presenter.loginWithPassword(password_password_et.text.toString())
             clearViews()
         }
 

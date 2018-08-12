@@ -2,6 +2,7 @@ package com.rbiggin.a2do2gether.ui.main
 
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -19,6 +20,7 @@ import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.application.MyApplication
 import com.rbiggin.a2do2gether.ui.checklists.ChecklistsFragment
 import com.rbiggin.a2do2gether.ui.connections.MyConnectionsFragment
+import com.rbiggin.a2do2gether.ui.login.LoginActivity
 import com.rbiggin.a2do2gether.ui.profile.MyProfileFragment
 import com.rbiggin.a2do2gether.ui.settings.SettingsFragment
 import com.rbiggin.a2do2gether.ui.todo.ToDoListFragment
@@ -29,36 +31,48 @@ import java.io.*
 import javax.inject.Inject
 
 /**
- * Main activity that all primary fragments are contained within.
+ * MainPresenter activity that all primary fragments are contained within.
  */
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
-                                          IntMainActivity{
-    /** injected instance of Activity's presenter. */
-    @Inject lateinit var presenter: IntMainPresenter
+                                          MainPresenter.View{
 
-    /** Activity's logging TAG */
+    @Inject lateinit var presenter: MainPresenter
+
     private lateinit var tag: String
 
-    /** Activity's menu */
     private var mMenu: Menu? = null
 
-    /**
-     * onCreate
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         (application as MyApplication).daggerComponent.inject(this)
 
-        presenter.setView(this)
-        presenter.onViewWillShow(intent.getStringExtra("email"))
+        presenter.onViewAttached(this)
 
         tag = Constants.MAIN_ACTIVITY_TAG
     }
 
-    /**
-     * Setup Activity
-     */
+    override fun onResume() {
+        super.onResume()
+        presenter.onViewWillShow()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        presenter.onViewWillHide()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onViewDetached()
+    }
+
+    override fun launchLoginActivity() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
     override fun setupActivity(email: String){
         setSupportActionBar(findViewById(R.id.appToolbar))
 
@@ -182,7 +196,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 SettingsFragment.newInstance(Constants.SETTINGS_FRAGMENT_ID)
             }
             else -> {
-                throw IllegalArgumentException("Main Activity, launchFragment: has been supplied with an illegal input.")
+                throw IllegalArgumentException("MainPresenter Activity, launchFragment: has been supplied with an illegal input.")
             }
         }
         val transaction = supportFragmentManager.beginTransaction()
@@ -223,7 +237,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 getString(R.string.settings)
             }
             else -> {
-                throw IllegalArgumentException("Main Activity, updateActionBar: has been supplied with an illegal input.")
+                throw IllegalArgumentException("MainPresenter Activity, updateActionBar: has been supplied with an illegal input.")
             }
         }
         view.text = heading
@@ -279,7 +293,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 shareView?.setVisible(false)
             }
             else -> {
-                throw IllegalArgumentException("Main Activity, setupMenuBarItem: has been supplied with an illegal input.")
+                throw IllegalArgumentException("MainPresenter Activity, setupMenuBarItem: has been supplied with an illegal input.")
             }
         }
     }
@@ -302,7 +316,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 navigationDrawer.setCheckedItem(R.id.drawer_settings)
             }
             else -> {
-                throw IllegalArgumentException("Main Activity, updateNavigationDrawer: has been supplied with an illegal input.")
+                throw IllegalArgumentException("MainPresenter Activity, updateNavigationDrawer: has been supplied with an illegal input.")
             }
         }
     }

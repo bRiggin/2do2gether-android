@@ -27,7 +27,7 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
                                               MyConnectionsPresenter.Button,
                                               IntMainListener{
 
-    /** Injected Presenter instance */
+    /** Injected Interface instance */
     @Inject lateinit var presenter: MyConnectionsPresenter
 
     /** injected instance of Constants. */

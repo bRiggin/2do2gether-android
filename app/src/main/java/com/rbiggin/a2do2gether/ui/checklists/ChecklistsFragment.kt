@@ -8,15 +8,15 @@ import android.view.ViewGroup
 import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.application.MyApplication
 import com.rbiggin.a2do2gether.ui.base.BaseFragment
-import com.rbiggin.a2do2gether.ui.settings.IntChecklistsPresenter
+import com.rbiggin.a2do2gether.ui.settings.ChecklistsPresenter
 import javax.inject.Inject
 
 /**
  * Allow user to edit/update their private checklists
  */
 class ChecklistsFragment : BaseFragment() {
-    /** Injected Presenter instance */
-    @Inject lateinit var presenter: IntChecklistsPresenter
+    /** Injected Interface instance */
+    @Inject lateinit var presenter: ChecklistsPresenter
 
     /**
      * Companion object to provide access to newInstance.
@@ -56,7 +56,7 @@ class ChecklistsFragment : BaseFragment() {
      */
     override fun onDestroy() {
         super.onDestroy()
-        presenter.onViewWillHide()
+        presenter. onViewWillHide()
 
     }
 }

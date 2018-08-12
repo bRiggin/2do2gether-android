@@ -24,8 +24,8 @@ import kotlinx.android.synthetic.main.fragment_my_profile.*
  */
 class MyProfileFragment : BaseFragment(), IntMyProfileFragment {
 
-    /** Injected Presenter instance */
-    @Inject lateinit var presenter: IntMyProfilePresenter
+    /** Injected Interface instance */
+    @Inject lateinit var presenter: MyProfilePresenter
 
     /** injected instance of Constants. */
     @Inject lateinit var utilities: Utilities

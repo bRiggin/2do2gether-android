@@ -10,54 +10,51 @@ import io.reactivex.disposables.Disposable
 /**
  * Base class to be subclassed by all fragment presenters
  */
-abstract class BasePresenter<T> (private val sharedPreferences: SharedPreferences,
-                                 private val utilities: Utilities): IntBasePresenter<T> {
+open class BasePresenter<T> (private val sharedPreferences: SharedPreferences,
+                                 private val utilities: Utilities) {
 
     private val attachedDisposables: CompositeDisposable = CompositeDisposable()
     private val visibleDisposables: CompositeDisposable = CompositeDisposable()
 
-    /** Instance Fragment Interface */
-    var mFragment: T? = null
+    var view: T? = null
 
-    /**
-     * Provides instance of relevant fragment.
-     */
     @CallSuper
-    override fun onViewAttached(fragment: T) {
+    open fun onViewAttached(view: T) {
         if (isViewAttached()){
-            throw IllegalStateException("Fragment " + this.mFragment + " is already attached.")
+            throw IllegalStateException("Fragment " + this.view + " is already attached.")
         }
-        mFragment = fragment
+        this.view = view
     }
 
-    override fun onViewWillShow() {}
+    open fun onViewWillShow() {}
 
     @CallSuper
-    override fun onViewWillHide() {
+    open fun onViewWillHide() {
         visibleDisposables.clear()
     }
 
     @CallSuper
-    override fun onViewDetached() {
+    open fun onViewDetached() {
         if (!isViewAttached()){
             throw IllegalStateException("Fragment is already detached.")
         }
-        mFragment = null
+        view = null
 
         attachedDisposables.clear()
     }
 
     @CallSuper
-    override fun disposeOnViewWillHide(disposable: Disposable) {
+    fun disposeOnViewWillHide(disposable: Disposable) {
         visibleDisposables.add(disposable)
     }
 
-    override fun disposeOnViewWillDetach(disposable: Disposable) {
+    @CallSuper
+    fun disposeOnViewWillDetach(disposable: Disposable) {
         attachedDisposables.add(disposable)
     }
 
     fun isViewAttached(): Boolean {
-        return mFragment != null
+        return view != null
     }
 
     fun getUid(): String?{

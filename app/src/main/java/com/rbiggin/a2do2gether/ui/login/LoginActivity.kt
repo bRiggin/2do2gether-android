@@ -31,7 +31,7 @@ import javax.inject.Inject
  */
 class LoginActivity : AppCompatActivity(), IntLoginActivity{
     /** injected instance of Activity's presenter. */
-    @Inject lateinit var presenter: IntLoginPresenter
+    @Inject lateinit var presenter: LoginPresenter
 
     /** injected instance of Constants. */
     @Inject lateinit var utilities: Utilities

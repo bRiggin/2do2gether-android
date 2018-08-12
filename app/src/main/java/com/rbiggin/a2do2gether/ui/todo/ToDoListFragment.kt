@@ -15,9 +15,9 @@ import javax.inject.Inject
  */
 class ToDoListFragment : BaseFragment() {
 
-    /** Injected Presenter instance */
+    /** Injected Interface instance */
     @Inject
-    lateinit var presenter: IntToDoListPresenter
+    lateinit var presenter: ToDoListPresenter
 
     /**
      * Companion object to provide access to newInstance.

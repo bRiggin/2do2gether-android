@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.rbiggin.a2do2gether.application.MyApplication
-import com.rbiggin.a2do2gether.ui.login.IntLoginPresenter
+import com.rbiggin.a2do2gether.ui.login.LoginPresenter
 import javax.inject.Inject
 
 /**
@@ -12,8 +12,8 @@ import javax.inject.Inject
  */
 open class MasterFragment : Fragment() {
 
-    /** Injected Presenter instance */
-    @Inject lateinit var presenter: IntLoginPresenter
+    /** Injected Interface instance */
+    @Inject lateinit var presenter: LoginPresenter
 
     /** The ID number of fragment */
     var mFragmentNumber: Int? = null
