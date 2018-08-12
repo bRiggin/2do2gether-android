@@ -13,6 +13,8 @@ import com.rbiggin.a2do2gether.ui.todo.ToDoListPresenter
 import com.rbiggin.a2do2gether.utils.Utilities
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Scheduler
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -69,8 +71,9 @@ class PresenterModule {
     fun provideMyConnectionsPresenter(utils: Utilities,
                                       sharedPrefs: SharedPreferences,
                                       cRepo: ConnectionsRepository,
-                                      uRepo: UserProfileRepository):
+                                      uRepo: UserProfileRepository,
+                                      @Named("main") thread: Scheduler):
                                       MyConnectionsPresenter {
-        return MyConnectionsPresenter(cRepo, uRepo, utils, sharedPrefs)
+        return MyConnectionsPresenter(cRepo, uRepo, utils, thread, sharedPrefs)
     }
 }

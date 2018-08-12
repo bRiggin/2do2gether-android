@@ -82,12 +82,12 @@ class ConnectionRequestsAdapter (private val requests: ArrayList<UserConnectionR
             when (v.id){
                 R.id.requestAcceptBtn -> {
                     uid?.let {
-                        listener.onRecyclerViewButtonClicked(Constants.ConnectionsActionType.ACCEPT_CONNECTION_REQUEST, it)
+                        listener.onRecyclerViewButtonClicked(MyConnectionsPresenter.Action.ACCEPT_CONNECTION_REQUEST, it)
                     }
                 }
                 R.id.requestRejectBtn -> {
                     uid?.let {
-                        listener.onRecyclerViewButtonClicked(Constants.ConnectionsActionType.REJECT_CONNECTION_REQUEST, it)
+                        listener.onRecyclerViewButtonClicked(MyConnectionsPresenter.Action.REJECT_CONNECTION_REQUEST, it)
                     }
                 }
                 else -> {

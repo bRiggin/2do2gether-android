@@ -20,27 +20,18 @@ import javax.inject.Inject
 
 import kotlinx.android.synthetic.main.fragment_my_connections.*
 
-/**
- * Fragment that allows user to control the people they're connected to.
- */
 class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
                                               MyConnectionsPresenter.Button,
                                               IntMainListener{
 
-    /** Injected Interface instance */
     @Inject lateinit var presenter: MyConnectionsPresenter
 
-    /** injected instance of Constants. */
     @Inject lateinit var utilities: Utilities
 
-    /** ... */
     private lateinit var mSearchLayoutManager: LinearLayoutManager
     private lateinit var mPendingLayoutManager: LinearLayoutManager
     private lateinit var mConnectionsLayoutManager: LinearLayoutManager
 
-    /**
-     * Companion object to provide access to newInstance.
-     */
     companion object {
         fun newInstance(id: Int): MyConnectionsFragment {
             val fragment = MyConnectionsFragment()
@@ -93,12 +84,12 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
 
     }
 
-    override fun onDisplayView(view: Constants.MyConnection) {
+    override fun onDisplayView(view: MyConnectionsPresenter.Window) {
         when(view){
-            Constants.MyConnection.MAIN_VIEW -> {
+            MyConnectionsPresenter.Window.MAIN_VIEW -> {
                 myConnectionsLayoutFlipper.displayedChild = myConnectionsLayoutFlipper.indexOfChild(myConnectionsMainView)
             }
-            Constants.MyConnection.SEARCH_VIEW -> {
+            MyConnectionsPresenter.Window.SEARCH_VIEW -> {
                 myConnectionsLayoutFlipper.displayedChild = myConnectionsLayoutFlipper.indexOfChild(myConnectionsSearchView)
             }
         }
@@ -152,6 +143,9 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
             Constants.DB_CONNECTION_REQUEST_SUBMITTED -> {
                 getString(R.string.connection_request_submitted)
             }
+            Constants.ERROR_NO_NETWORK -> {
+                getString(R.string.error_network)
+            }
             else -> { getString(R.string.error_unknown)
                 throw IllegalArgumentException("MyConnectionsFragment, onDisplayDialogMessage: An " +
                         "unknown error has been handed to this function. Error ID: $message_id")
@@ -161,9 +155,6 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
         utilities.showOKDialog(activity as Context, getString(R.string.app_name), messageString)
     }
 
-    /**
-     *
-     */
     override fun menuItemPressed(item: Constants.MenuBarItem) {
         if (item == Constants.MenuBarItem.PLUS){
             presenter.onPlusButtonPressed()
@@ -172,9 +163,6 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
         }
     }
 
-    /**
-     * Display Progress Spinner
-     */
     override fun displayProgressSpinner(show: Boolean) {
         if (show) {
             hideKeyboard()
@@ -184,41 +172,19 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
         }
     }
 
-    /**
-     * Display No Results Found
-     *
-    override fun displayNoResultsFound(show: Boolean) {
-        if (show) {
-            connectionsNoResultsFound.visibility = View.VISIBLE
-        } else {
-            connectionsNoResultsFound.visibility = View.GONE
-        }
-    }*/
-
-    /**
-     * Hide keyboard
-     */
     private fun hideKeyboard(){
-        val view = activity?.currentFocus
-        if (view != null) {
+        val view: View? = activity?.currentFocus
+        view?.let{
             val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
 
-    /**
-     * onBackPressed notification from main activity.
-     *
-     * If returned true, main activity will perform super.onBackPressed.
-     */
-    override fun backPressed(): Boolean {
+    override fun onBackPressed(): Boolean {
         return presenter.onMainActivityBackPressed()
     }
 
-    /**
-     * Recycler View Button Clicked
-     */
-    override fun onRecyclerViewButtonClicked(type: Constants.ConnectionsActionType, targetUid: String) {
+    override fun onRecyclerViewButtonClicked(type: MyConnectionsPresenter.Action, targetUid: String) {
         presenter.onRecyclerViewButtonPressed(type, targetUid)
     }
 }

@@ -1,4 +1,4 @@
-package com.rbiggin.a2do2gether
+package com.rbiggin.a2do2gether.main
 
 import com.nhaarman.mockito_kotlin.*
 import com.rbiggin.a2do2gether.repository.AuthRepository
@@ -31,7 +31,5 @@ class MainPresenterTest {
         whenever(authRepo.userId()).doReturn(uidFromAuthRepo)
 
         activity = mock()
-
-
     }
 }

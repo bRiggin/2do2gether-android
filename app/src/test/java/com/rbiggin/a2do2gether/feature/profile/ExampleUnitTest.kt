@@ -1,4 +1,4 @@
-package com.rbiggin.a2do2gether
+package com.rbiggin.a2do2gether.feature.profile
 
 import org.junit.Test
 

@@ -77,4 +77,5 @@
     <string name="error_missing_field">Please populate all fields.</string>
     <string name="error_password_mismatch">The two provided passwords do not match.</string>
     <string name="error_unknown">An unknown error occurred.</string>
+    <string name="error_network">No network connection, cannot perform action.</string>
 </resources>

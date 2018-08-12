@@ -44,6 +44,7 @@ class Constants {
         const val ERROR_PROFILE_PICTURE_NO_NETWORK_CONNECTION: Int = 100007
         const val ERROR_NICKNAME_STRUCTURE_ERROR: Int = 100008
         const val ERROR_USER_NOT_PUBLIC: Int = 100009
+        const val ERROR_NO_NETWORK: Int = 100010
 
         /**
          * Functional dialog codes
@@ -136,11 +137,6 @@ class Constants {
         FIND_CONNECTIONS;
     }
 
-    enum class MyConnection {
-        MAIN_VIEW,
-        SEARCH_VIEW;
-    }
-
     enum class MenuBarItem {
         PLUS,
         DELETE,
@@ -152,11 +148,4 @@ class Constants {
         EXISTING_CONNECTION,
         NEW_CONNECTION;
     }
-
-    enum class ConnectionsActionType{
-        CONNECTION_REQUEST,
-        ACCEPT_CONNECTION_REQUEST,
-        REJECT_CONNECTION_REQUEST;
-    }
-
 }

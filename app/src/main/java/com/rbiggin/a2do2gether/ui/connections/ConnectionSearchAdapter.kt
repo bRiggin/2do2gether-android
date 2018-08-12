@@ -70,7 +70,7 @@ class ConnectionSearchAdapter(private val searchResults: ArrayList<UserConnectio
                 R.id.connectUserBtn -> {
                     if (onClickEnabled){
                         uid?.apply {
-                            listener.onRecyclerViewButtonClicked(Constants.ConnectionsActionType.CONNECTION_REQUEST,
+                            listener.onRecyclerViewButtonClicked(MyConnectionsPresenter.Action.CONNECTION_REQUEST,
                                     this)
                         }
                     }

@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             drawerLayout.closeDrawer(GravityCompat.START)
         } else {
             if (currentFragment is IntMainListener){
-                if (currentFragment.backPressed()){
+                if (currentFragment.onBackPressed()){
                     presenter.onBackPressed()
                     super.onBackPressed()
                 }
