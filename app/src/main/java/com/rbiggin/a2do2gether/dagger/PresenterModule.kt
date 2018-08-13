@@ -21,8 +21,10 @@ import javax.inject.Singleton
 class PresenterModule {
     @Provides
     @Singleton
-    fun provideLoginPresenter(repo: AuthRepository): LoginPresenter {
-        return LoginPresenter(repo)
+    fun provideLoginPresenter(repo: AuthRepository,
+                              sharedPrefs: SharedPreferences,
+                              utils: Utilities): LoginPresenter {
+        return LoginPresenter(repo, utils, sharedPrefs)
     }
 
     @Provides

@@ -7,9 +7,6 @@ import com.rbiggin.a2do2gether.utils.Utilities
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-/**
- * Base class to be subclassed by all fragment presenters
- */
 open class BasePresenter<T> (private val sharedPreferences: SharedPreferences,
                                  private val utilities: Utilities) {
 

@@ -26,25 +26,16 @@ import com.rbiggin.a2do2gether.utils.Utilities
 import kotlinx.android.synthetic.main.activity_login.*
 import javax.inject.Inject
 
-/**
- * Activity for app login.
- */
 class LoginActivity : AppCompatActivity(), IntLoginActivity{
-    /** injected instance of Activity's presenter. */
+
     @Inject lateinit var presenter: LoginPresenter
 
-    /** injected instance of Constants. */
     @Inject lateinit var utilities: Utilities
 
-    /** Instance of inner class: SectionsPagerAdapter. */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
 
-    /** Activity's logging TAG */
     private lateinit var TAG: String
 
-    /**
-     * onCreate
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -52,25 +43,25 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
         (application as MyApplication).daggerComponent.inject(this)
         TAG = Constants.LOGIN_ACTIVITY_TAG
 
-        presenter.setView(this)
+        presenter.onViewAttached(this)
 
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
         loginViewPager.adapter = mSectionsPagerAdapter
 
-        presenter.onViewWillShow()
-
         createNotificationChannel()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.onViewWillShow()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        presenter.onViewWillHide()
+        presenter.onViewDetached()
     }
 
-    /**
-     * Use utility's "OkDialog" function to display a error message to the user.
-     */
     override fun displayDialogMessage(message_id: Int, message: String?) {
         var dialogMessage = getString(R.string.error_unknown)
         message?.let{ dialogMessage = message }
@@ -90,9 +81,6 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
         utilities.showOKDialog(this, getString(R.string.app_name), messageString!!)
     }
 
-    /**
-     * Use utility's "FunctionalDialog" function to display a error message to the user.
-     */
     override fun displayFunctionalDialog(type_id: Int) {
         Log.w(TAG, "displayFunctionalDialog called from presenter with ID: $type_id")
         val lambda: () -> Unit = when(type_id){
@@ -107,9 +95,6 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
                                     getString(R.string.forgot_password_prompt), positiveCode = lambda)
     }
 
-    /**
-     * Instruction from presenter to display specific fragment.
-     */
     override fun displayFragment(fragment_id: Int) {
         when(fragment_id){
             Constants.REGISTER_FRAGMENT_ID -> {
@@ -124,9 +109,6 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
         }
     }
 
-    /**
-     * onBackPressed, allows user to intuitively navigate through fragments.
-     */
     override fun onBackPressed() {
         when (loginViewPager.currentItem){
             0 -> {
@@ -140,15 +122,11 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
             }
             else -> {
                 super.onBackPressed()
-                //todo throw exception
             }
 
         }
     }
 
-    /**
-     * Display/hide progress spinner to the user.
-     */
     override fun displayProgressSpinner(show: Boolean) {
         if (show) {
             hideKeyboard()
@@ -158,9 +136,6 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
         }
     }
 
-    /**
-     * Hide keyboard
-     */
     private fun hideKeyboard(){
         val view = this.currentFocus
         if (view != null) {
@@ -169,9 +144,6 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
         }
     }
 
-    /**
-     * Launch main activity and destroy login activity.
-     */
     override fun launchMainActivity(email: String) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("email", email)
@@ -179,9 +151,6 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
         finish()
     }
 
-    /**
-     * Returns a fragment corresponding to one of the pages.
-     */
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
