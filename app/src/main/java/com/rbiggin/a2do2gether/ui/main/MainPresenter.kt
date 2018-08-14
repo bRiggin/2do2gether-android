@@ -1,19 +1,15 @@
 package com.rbiggin.a2do2gether.ui.main
 
-import android.content.SharedPreferences
 import android.graphics.Bitmap
 import com.rbiggin.a2do2gether.repository.*
 import com.rbiggin.a2do2gether.ui.base.BasePresenter
 import com.rbiggin.a2do2gether.utils.Constants
-import com.rbiggin.a2do2gether.utils.Utilities
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
-                                        private val userRepo: IntUserRepositoryActivity,
-                                        private val connectionsRepository: ConnectionsRepository,
-                                        utilities: Utilities,
-                                        sharedPreferences: SharedPreferences) :
-                                        BasePresenter<MainActivity>(sharedPreferences, utilities),
+                                        private val userRepo: UserProfileRepository,
+                                        private val connectionsRepository: ConnectionsRepository) :
+                                        BasePresenter<MainActivity>(),
                                         AuthRepository.Listener,
                                         UserProfileRepository.ActivityListener {
 
@@ -25,10 +21,11 @@ class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
         super.onViewAttached(view)
         mActivity = view
 
-        setupRepositories()
         if (!authRepo.isUserLoggedIn()) {
             mActivity?.launchLoginActivity()
         }
+
+        setupRepositories()
 
         var profilePicture: Bitmap?
         authRepo.getEmail()?.let {
@@ -86,8 +83,10 @@ class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
     }
 
     private fun setupRepositories() {
-        userRepo.setActivity(this)
         authRepo.setListener(this)
+        userRepo.initialise()
+        connectionsRepository.initialise()
+        userRepo.setActivity(this)
     }
 
     fun onBackPressed() {

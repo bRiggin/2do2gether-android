@@ -15,13 +15,10 @@ import com.google.firebase.database.DataSnapshot
 import com.rbiggin.a2do2gether.firebase.*
 import com.rbiggin.a2do2gether.utils.Utilities
 
-/**
- * Insert class/object/interface/file description...
- */
 class UserProfileRepository @Inject constructor(private val databaseApi: IntFirebaseDatabase,
                                                 private val storageApi: IntFirebaseStorage,
                                                 private val utilities: Utilities,
-                                                uidProvider: UidProvider) :
+                                                private val uidProvider: UidProvider) :
                                                 IntUserRepositoryActivity,
                                                 IntUserRepositoryFragment,
                                                 IntFirebaseDatabaseListener,
@@ -41,7 +38,7 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
 
     private val tag = Constants.USER_REPOSITORY_TAG
 
-    init {
+    override fun initialise(){
         val uid = uidProvider.getUid()
         uid?.let {
             user = UserDetails("", "", "", uid, false)

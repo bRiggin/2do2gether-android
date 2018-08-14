@@ -90,13 +90,6 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
         }
     }
 
-    fun storeUid() {
-        user?.firebaseUser?.uid?.let {
-            sharedPrefs.edit().putString(utilities.encode(Constants.SP_UID),
-                    utilities.encode(it)).apply()
-        }
-    }
-
     override fun apiResult(type: Constants.Auth, success: Boolean, message: String?) {
         val errorMessage = message ?: "Undefined Error"
         when (type) {

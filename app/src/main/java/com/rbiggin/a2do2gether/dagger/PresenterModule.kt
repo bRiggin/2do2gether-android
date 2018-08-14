@@ -1,7 +1,5 @@
 package com.rbiggin.a2do2gether.dagger
 
-
-import android.content.SharedPreferences
 import com.rbiggin.a2do2gether.repository.*
 import com.rbiggin.a2do2gether.ui.connections.MyConnectionsPresenter
 import com.rbiggin.a2do2gether.ui.login.LoginPresenter
@@ -21,61 +19,49 @@ import javax.inject.Singleton
 class PresenterModule {
     @Provides
     @Singleton
-    fun provideLoginPresenter(repo: AuthRepository,
-                              sharedPrefs: SharedPreferences,
-                              utils: Utilities): LoginPresenter {
-        return LoginPresenter(repo, utils, sharedPrefs)
+    fun provideLoginPresenter(repo: AuthRepository): LoginPresenter {
+        return LoginPresenter(repo)
     }
 
     @Provides
     @Singleton
     fun provideMainPresenter(aRepo: AuthRepository,
                              uRepo: UserProfileRepository,
-                             cRepo: ConnectionsRepository,
-                             sharedPrefs: SharedPreferences,
-                             utils: Utilities): MainPresenter {
-        return MainPresenter(aRepo, uRepo, cRepo, utils, sharedPrefs)
+                             cRepo: ConnectionsRepository): MainPresenter {
+        return MainPresenter(aRepo, uRepo, cRepo)
     }
 
     @Provides
     @Singleton
-    fun provideMyProfilePresenter(utils: Utilities,
-                                  sharedPrefs: SharedPreferences,
-                                  uRepo: UserProfileRepository): MyProfilePresenter {
-        return MyProfilePresenter(uRepo, utils, sharedPrefs)
+    fun provideMyProfilePresenter(uRepo: UserProfileRepository, uidProvider: UidProvider): MyProfilePresenter {
+        return MyProfilePresenter(uRepo, uidProvider)
     }
 
     @Provides
     @Singleton
-    fun provideSettingsPresenter(utils: Utilities,
-                                 sharedPrefs: SharedPreferences,
-                                 repo: AuthRepository): SettingsPresenter {
-        return SettingsPresenter(repo, utils, sharedPrefs)
+    fun provideSettingsPresenter(repo: AuthRepository): SettingsPresenter {
+        return SettingsPresenter(repo)
     }
 
     @Provides
     @Singleton
-    fun provideChecklistsPresenter(utils: Utilities,
-                                   sharedPrefs: SharedPreferences): ChecklistsPresenter? {
-        return ChecklistsPresenter(utils, sharedPrefs)
+    fun provideChecklistsPresenter(): ChecklistsPresenter? {
+        return ChecklistsPresenter()
     }
 
     @Provides
     @Singleton
-    fun provideToDoListPresenter(utils: Utilities,
-                                 sharedPrefs: SharedPreferences):
-                                 ToDoListPresenter {
-        return ToDoListPresenter(utils,sharedPrefs)
+    fun provideToDoListPresenter() : ToDoListPresenter {
+        return ToDoListPresenter()
     }
 
     @Provides
     @Singleton
     fun provideMyConnectionsPresenter(utils: Utilities,
-                                      sharedPrefs: SharedPreferences,
                                       cRepo: ConnectionsRepository,
                                       uRepo: UserProfileRepository,
                                       @Named("main") thread: Scheduler):
                                       MyConnectionsPresenter {
-        return MyConnectionsPresenter(cRepo, uRepo, utils, thread, sharedPrefs)
+        return MyConnectionsPresenter(cRepo, uRepo, utils, thread)
     }
 }

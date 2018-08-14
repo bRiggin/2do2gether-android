@@ -2,9 +2,6 @@ package com.rbiggin.a2do2gether.repository
 
 import android.graphics.Bitmap
 
-/**
- * Defines User Repository calls from Fragment
- */
 interface IntUserRepositoryFragment {
     fun onSetFragment(listener: UserProfileRepository.FragmentListener)
 
@@ -25,10 +22,9 @@ interface IntUserRepositoryFragment {
     fun getProfilePictureForMainActivity()
 }
 
-/**
- * Defines User Repository calls from Activity
- */
 interface IntUserRepositoryActivity {
+    fun initialise()
+
     fun setActivity(listener: UserProfileRepository.ActivityListener)
 
     fun onDetachActivity()

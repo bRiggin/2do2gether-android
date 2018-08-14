@@ -1,14 +1,10 @@
 package com.rbiggin.a2do2gether.ui.base
 
-import android.content.SharedPreferences
 import android.support.annotation.CallSuper
-import com.rbiggin.a2do2gether.utils.Constants
-import com.rbiggin.a2do2gether.utils.Utilities
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-open class BasePresenter<T> (private val sharedPreferences: SharedPreferences,
-                                 private val utilities: Utilities) {
+open class BasePresenter<T> {
 
     private val attachedDisposables: CompositeDisposable = CompositeDisposable()
     private val visibleDisposables: CompositeDisposable = CompositeDisposable()
@@ -52,10 +48,5 @@ open class BasePresenter<T> (private val sharedPreferences: SharedPreferences,
 
     fun isViewAttached(): Boolean {
         return view != null
-    }
-
-    fun getUid(): String?{
-        val encodedUid = sharedPreferences.getString(utilities.encode(Constants.SP_UID), null)
-        return encodedUid?.let { utilities.decode(encodedUid) }
     }
 }

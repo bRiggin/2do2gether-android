@@ -56,7 +56,7 @@ class ChecklistsFragment : BaseFragment() {
      */
     override fun onDestroy() {
         super.onDestroy()
-        presenter. onViewWillHide()
+        presenter.onViewWillHide()
 
     }
 }

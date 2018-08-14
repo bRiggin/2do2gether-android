@@ -1,29 +1,19 @@
 package com.rbiggin.a2do2gether.ui.profile
 
-import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.util.Log
 import com.rbiggin.a2do2gether.repository.*
 import com.rbiggin.a2do2gether.ui.base.BasePresenter
 import com.rbiggin.a2do2gether.utils.Constants
-import com.rbiggin.a2do2gether.utils.Utilities
 import javax.inject.Inject
 
-/**
- * Interface responsible for the My Profile Fragment
- */
 class MyProfilePresenter @Inject constructor(private val userRepo: IntUserRepositoryFragment,
-                                             utilities: Utilities,
-                                             sharedPreferences: SharedPreferences) :
-                                             BasePresenter<MyProfileFragment>(sharedPreferences, utilities),
+                                             private val uidProvider: UidProvider) :
+                                             BasePresenter<MyProfileFragment>(),
                                              IntAuthRepositoryListener,
                                              UserProfileRepository.FragmentListener{
-    /** Logging Tag */
     var tag: String? = null
 
-    /**
-     * View Will Show
-     */
     override fun onViewWillShow() {
         userRepo.onSetFragment(this)
         view?.onUpdateDetails(userRepo.geUsersFirstName(), userRepo.getUsersSecondName(), userRepo.getUsersNickname())
@@ -31,24 +21,15 @@ class MyProfilePresenter @Inject constructor(private val userRepo: IntUserReposi
         tag = Constants.PROFILE_PRESENTER_TAG
     }
 
-    /**
-     * View Will Hide
-     */
     override fun onViewWillHide() {
         super.onViewWillHide()
         userRepo.onDetachFragment()
     }
 
-    /**
-     * Profile Picture Button Pressed
-     */
     fun onProfilePictureButtonPressed() {
         view?.onLaunchImageCropActivity()
     }
 
-    /**
-     * Update User Details Button Pressed
-     */
     fun onUpdateUserDetailsButtonPressed(fName: String, sName: String, nName: String) {
         if (fName.trim().isEmpty() || sName.trim().isEmpty() || nName.trim().isEmpty()){
             view?.onDisplayDialogMessage(Constants.ERROR_PROFILE_DETAILS_BLANK, null)
@@ -76,7 +57,7 @@ class MyProfilePresenter @Inject constructor(private val userRepo: IntUserReposi
             view?.onDisplayDialogMessage(Constants.ERROR_IMAGE_CROPPING_ACTIVITY_EXCEPTION,
                     errorMessage?.message)
         } else if (view?.hasNetworkConnection()!!){
-            getUid()?.let {
+            uidProvider.getUid()?.let {
                 userRepo.uploadNewProfilePicture(image, it)
             } ?: throw ExceptionInInitializerError()
         } else {
@@ -85,16 +66,10 @@ class MyProfilePresenter @Inject constructor(private val userRepo: IntUserReposi
         }
     }
 
-    /**
-     * Picture Upload Progress Update
-     */
     override fun onPictureUploadProgressUpdate(progress: Int) {
         view?.onUpdateProgressBar(true, progress)
     }
 
-    /**
-     * Picture Upload Result
-     */
     override fun onPictureUploadResult(success: Boolean, errorMessage: String?) {
         view?.onUpdateProgressBar(false, 0)
         if (success){
@@ -105,16 +80,10 @@ class MyProfilePresenter @Inject constructor(private val userRepo: IntUserReposi
         }
     }
 
-    /**
-     * User Details Changed
-     */
     override fun onUserDetailsChanged(firstName: String, secondName: String, nickname: String) {
         view?.onUpdateDetails(firstName, secondName, nickname)
     }
 
-    /**
-     * Auth State Change
-     */
     override fun onAuthStateChange(response_id: Int, message: String?) {
         // not currently used within MyProfilePresenter
     }

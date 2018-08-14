@@ -1,6 +1,5 @@
 package com.rbiggin.a2do2gether.ui.connections
 
-import android.content.SharedPreferences
 import android.support.annotation.VisibleForTesting
 import com.rbiggin.a2do2gether.model.UserConnectionRequest
 import com.rbiggin.a2do2gether.model.UserConnectionSearch
@@ -13,15 +12,11 @@ import com.rbiggin.a2do2gether.utils.Utilities
 import io.reactivex.Scheduler
 import javax.inject.Inject
 
-/**
- * Interface responsible for the My Connections Fragment
- */
 class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: ConnectionsRepository,
                                                  private val userRepo: UserProfileRepository,
                                                  private val utilities: Utilities,
-                                                 private val uiThread: Scheduler,
-                                                 sharedPreferences: SharedPreferences) :
-        BasePresenter<MyConnectionsFragment>(sharedPreferences, utilities) {
+                                                 private val uiThread: Scheduler) :
+                                                 BasePresenter<MyConnectionsFragment>() {
 
     @VisibleForTesting
     var currentView: Window? = null

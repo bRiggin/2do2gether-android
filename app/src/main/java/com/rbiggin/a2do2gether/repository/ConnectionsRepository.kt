@@ -17,7 +17,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class ConnectionsRepository @Inject constructor(private val databaseApi: IntFirebaseDatabase,
-                                                uidProvider: UidProvider) :
+                                                private val uidProvider: UidProvider) :
                                                 IntFirebaseDatabaseListener,
                                                 FirebaseReadEqualWatcher.Listener,
                                                 FirebaseReadWatcher.Listener{
@@ -44,7 +44,7 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
     private val mConnectionRequests: HashMap<String, UserConnectionRequest> = HashMap()
     private val mConnections: HashMap<String,UserDetails> = HashMap()
 
-    init{
+    fun initialise(){
         mDatabase = com.google.firebase.database.FirebaseDatabase.getInstance().reference
         mUid = uidProvider.getUid()
         if (mUid.isNullOrBlank()){
