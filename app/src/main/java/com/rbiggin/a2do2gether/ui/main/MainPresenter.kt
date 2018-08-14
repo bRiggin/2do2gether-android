@@ -8,17 +8,14 @@ import com.rbiggin.a2do2gether.utils.Constants
 import com.rbiggin.a2do2gether.utils.Utilities
 import javax.inject.Inject
 
-/**
- * MainPresenter Interface
- */
-class MainPresenter @Inject constructor(private val authRepo: IntAuthRepository,
+class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
                                         private val userRepo: IntUserRepositoryActivity,
-                                        private val connectionsRepository: IntConnectionsRepository,
+                                        private val connectionsRepository: ConnectionsRepository,
                                         utilities: Utilities,
                                         sharedPreferences: SharedPreferences) :
-        BasePresenter<MainActivity>(sharedPreferences, utilities),
-        IntAuthRepositoryListener,
-        IntUserRepositoryOnChangeListener {
+                                        BasePresenter<MainActivity>(sharedPreferences, utilities),
+                                        AuthRepository.Listener,
+                                        UserProfileRepository.ActivityListener {
 
     private var mActivity: MainPresenter.View? = null
 
@@ -32,9 +29,7 @@ class MainPresenter @Inject constructor(private val authRepo: IntAuthRepository,
         if (!authRepo.isUserLoggedIn()) {
             mActivity?.launchLoginActivity()
         }
-    }
 
-    override fun onViewWillShow() {
         var profilePicture: Bitmap?
         authRepo.getEmail()?.let {
             mActivity?.setupActivity(it)
@@ -57,11 +52,6 @@ class MainPresenter @Inject constructor(private val authRepo: IntAuthRepository,
         } ?: throw ExceptionInInitializerError("MainPresenter, onViewWillSHow: authentication " +
                 "repository return null user uid and therefore unable to setup user repository.")
         userRepo.getUsersName()
-    }
-
-    override fun onViewWillHide() {
-        super.onViewWillHide()
-        mActivity = null
     }
 
     override fun onViewDetached() {
@@ -90,9 +80,6 @@ class MainPresenter @Inject constructor(private val authRepo: IntAuthRepository,
                 Constants.Fragment.MY_PROFILE, Constants.Fragment.SETTINGS -> {
                     mActivity?.launchFragment(type, true)
                 }
-                else -> {
-                    throw IllegalArgumentException("MainPresenter Interface, navDrawerItemSelected: has been supplied with an illegal input.")
-                }
             }
             currentFragment = type
         }
@@ -100,11 +87,7 @@ class MainPresenter @Inject constructor(private val authRepo: IntAuthRepository,
 
     private fun setupRepositories() {
         userRepo.setActivity(this)
-        authRepo.setup(this)
-        authRepo.userId()?.let {
-            userRepo.setup(it)
-            connectionsRepository.setup(it)
-        }
+        authRepo.setListener(this)
     }
 
     fun onBackPressed() {
