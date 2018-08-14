@@ -6,7 +6,7 @@ import android.graphics.Bitmap
  * Defines User Repository calls from Fragment
  */
 interface IntUserRepositoryFragment {
-    fun onSetFragment(listener: IntUserProfileRepositoryListener)
+    fun onSetFragment(listener: UserProfileRepository.FragmentListener)
 
     fun onDetachFragment()
 
@@ -29,35 +29,11 @@ interface IntUserRepositoryFragment {
  * Defines User Repository calls from Activity
  */
 interface IntUserRepositoryActivity {
-    fun setActivity(listener: IntUserRepositoryOnChangeListener)
-
-    fun setup(uid: String)
+    fun setActivity(listener: UserProfileRepository.ActivityListener)
 
     fun onDetachActivity()
 
     fun getProfilePicture()
 
     fun getUsersName()
-}
-
-/**
- * Defines callbacks from User Repository to Activity
- */
-interface IntUserProfileRepositoryListener {
-    fun onUserDetailsChanged(firstName: String, secondName: String, nickname: String)
-
-    fun onWriteUserDetailsResult(success: Boolean, errorMessage: String?)
-
-    fun onPictureUploadProgressUpdate(progress: Int)
-
-    fun onPictureUploadResult(success: Boolean, errorMessage: String?)
-}
-
-/**
- * Defines callbacks from User Repository to Fragment
- */
-interface IntUserRepositoryOnChangeListener{
-    fun onUserDetailsChanged(userName: String)
-
-    fun onProfilePictureChanged(image: Bitmap)
 }

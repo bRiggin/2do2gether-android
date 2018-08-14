@@ -20,54 +20,30 @@ import com.rbiggin.a2do2gether.utils.Utilities
  */
 class UserProfileRepository @Inject constructor(private val databaseApi: IntFirebaseDatabase,
                                                 private val storageApi: IntFirebaseStorage,
-                                                private val utilities: Utilities) :
+                                                private val utilities: Utilities,
+                                                uidProvider: UidProvider) :
                                                 IntUserRepositoryActivity,
                                                 IntUserRepositoryFragment,
                                                 IntFirebaseDatabaseListener,
                                                 IntFirebaseStorageListener{
-    /** Fragment Listener */
-    private var mFragmentListener: IntUserProfileRepositoryListener? = null
 
-    /** Activity Listener */
-    private var mActivityListener: IntUserRepositoryOnChangeListener? = null
+    private var mFragmentListener: FragmentListener? = null
 
-    /** UserDetails model data class */
+    private var mActivityListener: ActivityListener? = null
+
     private var user: UserDetails? = null
 
-    /** Database Reference */
     private var mDatabase: DatabaseReference? = null
 
-    /** Firebase Storage */
     private var mStorage: FirebaseStorage? = null
 
-    /** Firebase Storage Refernece */
     private var mStorageRef: StorageReference? = null
 
-    /** Logging TAG */
     private val tag = Constants.USER_REPOSITORY_TAG
 
-    /**
-     * Sets activity listener (MainPresenter Activity)
-     */
-    override fun setActivity(listener: IntUserRepositoryOnChangeListener) {
-        mActivityListener = listener
-    }
-
-    /**
-     * Sets fragment listener (Multiple fragment types)
-     */
-    override fun onSetFragment(listener: IntUserProfileRepositoryListener) {
-        mFragmentListener = listener
-    }
-
-    /**
-     * Initialise repository, called from MainPresenter Activity
-     */
-    override fun setup(uid: String) {
-        if (mActivityListener == null){
-            throw ExceptionInInitializerError("UserRepository, setup: Cannot setup user repository" +
-                    "without first having set \"mActivityListener: IntUserRepositoryOnChangeListener\"")
-        } else{
+    init {
+        val uid = uidProvider.getUid()
+        uid?.let {
             user = UserDetails("", "", "", uid, false)
             mDatabase = com.google.firebase.database.FirebaseDatabase.getInstance().reference
             mDatabase?.let {
@@ -76,28 +52,27 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
 
             mStorage = FirebaseStorage.getInstance()
             mStorageRef = mStorage?.reference
-        }
+        } ?: throw NullPointerException("Uid provided by UidProvider has returned null")
     }
 
-    /**
-     * Detaches mActivityListener and dismantles repository.
-     */
+    override fun setActivity(listener: ActivityListener) {
+        mActivityListener = listener
+    }
+
+    override fun onSetFragment(listener: FragmentListener) {
+        mFragmentListener = listener
+    }
+
     override fun onDetachActivity() {
         mActivityListener = null
         //todo destroy everything here, DESTROY!!!!!!
     }
 
-    /**
-     * Detaches mFragmentListener
-     */
     override fun onDetachFragment() {
         mFragmentListener = null
         storageApi.cancelTasks()
     }
 
-    /**
-     * Database Result
-     */
     override fun onDatabaseResult(type: Constants.DatabaseApi, data: DataSnapshot?, success: Boolean, message: String?) {
         when (type){
             Constants.DatabaseApi.WRITE_USER_DETAILS -> {
@@ -115,9 +90,6 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
         }
     }
 
-    /**
-     * Handle User Details Result
-     */
     private fun handleUserDetailsResult(dataSnapshot: DataSnapshot){
         dataSnapshot.value?.apply {
             val userDetails = hashMapOf<String, String>()
@@ -133,9 +105,6 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
         }
     }
 
-    /**
-     * Write New User Details
-     */
     override fun writeNewUserDetails(firstName: Any, secondName: Any, nickname: Any) {
         val newDetails = hashMapOf("first_name" to firstName,
                                    "second_name" to secondName,
@@ -148,9 +117,6 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
         } ?: throw ExceptionInInitializerError()
     }
 
-    /**
-     * Upload New Profile Picture
-     */
     override fun uploadNewProfilePicture(image: Bitmap?, uid: String) {
         val resizedBitmap = Bitmap.createScaledBitmap(image, 150, 150, false)
         val baos = ByteArrayOutputStream()
@@ -163,16 +129,10 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
                 " mStorageRef has not yet been initialised.")
     }
 
-    /**
-     * Picture Upload Result
-     */
     override fun onPictureUploadResult(success: Boolean, errorMessage: String?) {
         mFragmentListener?.onPictureUploadResult(success, errorMessage)
     }
 
-    /**
-     * Picture Download Result
-     */
     override fun onPictureDownloadResult(path: String?, success: Boolean, errorMessage: String?) {
         if (success){
             var newProfilePicture: Bitmap? = null
@@ -183,16 +143,10 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
         }
     }
 
-    /**
-     * Picture Upload Progress
-     */
     override fun onPictureUploadProgress(progress: Int) {
         mFragmentListener?.onPictureUploadProgressUpdate(progress)
     }
 
-    /**
-     * Get Profile Picture
-     */
     override fun getProfilePicture() {
         val reference = mStorageRef?.child("profile_pictures/${user?.uid}.jpg")
         val localFile = File.createTempFile("${user?.uid}", "jpg")
@@ -204,16 +158,10 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
         }
     }
 
-    /**
-     * Get Profile Picture For MainPresenter Activity
-     */
     override fun getProfilePictureForMainActivity() {
         getProfilePicture()
     }
 
-    /**
-     * Get Local Image
-     */
     private fun getLocalImage(path: String): Bitmap?{
         val imageFile = File(path)
         if (imageFile.exists()) {
@@ -222,9 +170,6 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
         return null
     }
 
-    /**
-     * Get User's Name
-     */
     override fun getUsersName() {
         mDatabase?.let {
             val path = "${Constants.FB_USER_PROFILE}/${user?.uid}"
@@ -232,31 +177,35 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
         } ?: throw ExceptionInInitializerError()
     }
 
-    /**
-     *
-     */
     override fun isUserDiscoverable(): Boolean {
         return user?.discoverable ?: false
     }
 
-    /**
-     * Get User's First Name
-     */
     override fun geUsersFirstName(): String {
         return user?.firstName ?: ""
     }
 
-    /**
-     * Get User's Second Name
-     */
     override fun getUsersSecondName(): String {
         return user?.secondName ?: ""
     }
 
-    /**
-     * Get User's Nickname
-     */
     override fun getUsersNickname(): String {
         return user?.nickname ?: ""
+    }
+
+    interface FragmentListener {
+        fun onUserDetailsChanged(firstName: String, secondName: String, nickname: String)
+
+        fun onWriteUserDetailsResult(success: Boolean, errorMessage: String?)
+
+        fun onPictureUploadProgressUpdate(progress: Int)
+
+        fun onPictureUploadResult(success: Boolean, errorMessage: String?)
+    }
+
+    interface ActivityListener{
+        fun onUserDetailsChanged(userName: String)
+
+        fun onProfilePictureChanged(image: Bitmap)
     }
 }

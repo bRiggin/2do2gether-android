@@ -16,19 +16,15 @@ import javax.inject.Inject
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-/**
- * Handles the storage and update of user's connections
- */
-class ConnectionsRepository @Inject constructor(private val databaseApi: IntFirebaseDatabase) :
-                                                IntConnectionsRepository,
+class ConnectionsRepository @Inject constructor(private val databaseApi: IntFirebaseDatabase,
+                                                uidProvider: UidProvider) :
                                                 IntFirebaseDatabaseListener,
                                                 FirebaseReadEqualWatcher.Listener,
                                                 FirebaseReadWatcher.Listener{
-    /** Database Reference */
+
     private var mDatabase: DatabaseReference? = null
 
-    /** ... */
-    private lateinit var mUid: String
+    private var mUid: String? = null
 
     private val connectionsMap: HashMap<String, FirebaseReadWatcher> = HashMap()
     private var connectionsWatcher: FirebaseReadWatcher? = null
@@ -48,7 +44,15 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
     private val mConnectionRequests: HashMap<String, UserConnectionRequest> = HashMap()
     private val mConnections: HashMap<String,UserDetails> = HashMap()
 
-    override fun presenterDetached() {
+    init{
+        mDatabase = com.google.firebase.database.FirebaseDatabase.getInstance().reference
+        mUid = uidProvider.getUid()
+        if (mUid.isNullOrBlank()){
+            throw NullPointerException("Uid provided by UidProvider has returned null")
+        }
+    }
+
+    fun presenterDetached() {
         clearConnectionsMap()
         connectionsWatcher?.detachListener()
         connectionsWatcher = null
@@ -73,17 +77,8 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
         connectionsMap.clear()
     }
 
-    override fun setup(uid: String) {
-        mDatabase = com.google.firebase.database.FirebaseDatabase.getInstance().reference
-        mUid = uid
-    }
-
-    /**
-     * Connection Search Submitted
-     */
-    override fun connectionSearchSubmitted(searchString: String) {
+    fun connectionSearchSubmitted(searchString: String) {
         mDatabase?.let {
-            val id = Constants.DatabaseApi.FIND_USERS.toString()
             mDatabase?.let {
                 searchResultWatcher = FirebaseReadEqualWatcher(it, Constants.FB_USER_PROFILE,
                                                        Constants.FB_NICKNAME, searchString,
@@ -98,10 +93,7 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
         }
     }
 
-    /**
-     * Get Pending Connection Requests
-     */
-    override fun setupConnectionWatchers() {
+    fun setupConnectionWatchers() {
         mDatabase?.let {
             pendingRequestsWatcher = FirebaseReadWatcher(it, "${Constants.FB_CONNECTION_REQUEST}/$mUid",
                     Constants.DatabaseApi.FIND_PENDING_CONNECTIONS, this)
@@ -112,9 +104,6 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
         }
     }
 
-    /**
-     * Database Read Result
-     */
     override fun onDatabaseResult(type: Constants.DatabaseApi, data: DataSnapshot?, success: Boolean, message: String?) {
         when (type){
             Constants.DatabaseApi.FIND_USERS -> {
@@ -136,9 +125,6 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
         }
     }
 
-    /**
-     * Handle Connection Search Results
-     */
     private fun handleConnectionSearchResults(data: DataSnapshot){
         val users = ArrayList<UserConnectionSearch>()
         for (foundUser in data.children){
@@ -264,7 +250,7 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
         }
     }
 
-    override fun onConnectionRequestResponse(uid: String, accepted: Boolean) {
+    fun onConnectionRequestResponse(uid: String, accepted: Boolean) {
         val connectionResponse = hashMapOf(uid to true as Any)
 
         val path = "${Constants.FB_CONNECTION_REQUEST}/$mUid"
@@ -278,16 +264,15 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
         } ?: throw ExceptionInInitializerError()
     }
 
-    /**
-     * Submit Connection Request
-     */
-    override fun submitConnectionRequest(targetUid: String) {
-        val connectionRequest = hashMapOf(mUid to false as Any)
+    fun submitConnectionRequest(targetUid: String) {
+        mUid?.let {
+            val connectionRequest = hashMapOf(it to false as Any)
 
-        val path = "${Constants.FB_CONNECTION_REQUEST}/$targetUid"
+            val path = "${Constants.FB_CONNECTION_REQUEST}/$targetUid"
 
-        mDatabase?.let {
-            databaseApi.doWrite(it, path, connectionRequest)
-        } ?: throw ExceptionInInitializerError()
+            mDatabase?.let {
+                databaseApi.doWrite(it, path, connectionRequest)
+            } ?: throw ExceptionInInitializerError()
+        }
     }
 }

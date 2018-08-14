@@ -16,8 +16,8 @@ class MyProfilePresenter @Inject constructor(private val userRepo: IntUserReposi
                                              utilities: Utilities,
                                              sharedPreferences: SharedPreferences) :
                                              BasePresenter<MyProfileFragment>(sharedPreferences, utilities),
-        IntAuthRepositoryListener,
-                                             IntUserProfileRepositoryListener{
+                                             IntAuthRepositoryListener,
+                                             UserProfileRepository.FragmentListener{
     /** Logging Tag */
     var tag: String? = null
 

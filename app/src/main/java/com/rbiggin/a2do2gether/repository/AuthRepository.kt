@@ -14,7 +14,7 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
                                          private val sharedPrefs: SharedPreferences,
                                          private val fbDatabaseApi: IntFirebaseDatabase,
                                          private val utilities: Utilities) :
-                     IntAuthRepository, IntFirebaseAuthListener, com.google.firebase.auth.FirebaseAuth.AuthStateListener{
+                     IntFirebaseAuthListener, com.google.firebase.auth.FirebaseAuth.AuthStateListener{
 
     private val falseString: String = "false"
 
@@ -22,49 +22,54 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
 
     private var mAuth: com.google.firebase.auth.FirebaseAuth? = null
 
-    private var mListener: IntAuthRepositoryListener? = null
+    private var mListener: Listener? = null
 
-    private var mActivityListener: IntAuthRepositoryActiveListener? = null
+    private var mActivityListener: ActiveListener? = null
 
     private var mDatabase: DatabaseReference? = null
 
-    override fun setup(listener: IntAuthRepositoryListener) {
-        mListener = listener
-        if (listener is IntAuthRepositoryActiveListener) { mActivityListener = listener }
+    init {
         mAuth = com.google.firebase.auth.FirebaseAuth.getInstance()
         mAuth?.addAuthStateListener(this)
         user = User(mAuth?.currentUser)
         mDatabase = com.google.firebase.database.FirebaseDatabase.getInstance().reference
     }
 
-    override fun isUserLoggedIn(): Boolean {
+    fun setListener(listener: Listener) {
+        mListener = listener
+        if (listener is ActiveListener) {
+            mActivityListener = listener
+        }
+    }
+
+    fun isUserLoggedIn(): Boolean {
         return when(user?.firebaseUser){
             null -> { false }
             else -> { true }
         }
     }
 
-    override fun userId(): String? {
+    fun userId(): String? {
         return user?.firebaseUser?.uid
     }
 
-    override fun getEmail(): String? {
+    fun getEmail(): String? {
         return user?.firebaseUser?.email
     }
 
-    override fun createAccount(email: String, password: String) {
+    fun createAccount(email: String, password: String) {
         authApi.createAccount(mAuth, this, email, password, Constants.Auth.CREATE_ACCOUNT)
     }
 
-    override fun login(email: String, password: String) {
+    fun login(email: String, password: String) {
         authApi.login(mAuth, this, email, password, Constants.Auth.LOGIN)
     }
 
-    override fun sendPasswordReset(email: String) {
+    fun sendPasswordReset(email: String) {
         authApi.sendRestEmail(mAuth, this, email, Constants.Auth.RESET_PASSWORD)
     }
 
-    override fun updateFcmToken() {
+    fun updateFcmToken() {
         val currentFcmToken = sharedPrefs.getString(utilities.encode(Constants.SP_FCM_TOKEN), falseString)
         if (currentFcmToken != falseString){
             val decodedToken = utilities.decode(currentFcmToken)
@@ -75,7 +80,7 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
         }
     }
 
-    override fun removeFcmToken() {
+    fun removeFcmToken() {
         val currentFcmToken = sharedPrefs.getString(utilities.encode(Constants.SP_FCM_TOKEN), "false")
         if (currentFcmToken != "false"){
             user?.firebaseUser?.uid?.let {
@@ -85,7 +90,7 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
         }
     }
 
-    override fun storeUid() {
+    fun storeUid() {
         user?.firebaseUser?.uid?.let {
             sharedPrefs.edit().putString(utilities.encode(Constants.SP_UID),
                     utilities.encode(it)).apply()
@@ -140,11 +145,11 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
         }
     }
 
-    override fun logout() {
+    fun logout() {
         mAuth?.signOut()
     }
 
-    override fun detach() {
+    fun detach() {
         mListener = null
         mActivityListener = null
     }
@@ -156,5 +161,13 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
         } else {
             mListener?.onAuthStateChange(Constants.AUTH_STATE_LOGGED_IN, "user logged in")
         }
+    }
+
+    interface Listener{
+        fun onAuthStateChange(response_id: Int, message: String?)
+    }
+
+    interface ActiveListener: Listener{
+        fun onAuthCommandResult(response_id: Int, message: String?)
     }
 }

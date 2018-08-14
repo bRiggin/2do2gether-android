@@ -2,6 +2,7 @@ package com.rbiggin.a2do2gether.ui.login
 
 import android.content.SharedPreferences
 import android.util.Log
+import com.rbiggin.a2do2gether.repository.AuthRepository
 import com.rbiggin.a2do2gether.ui.login.fragments.IntLoginFragmentCallbacks
 import com.rbiggin.a2do2gether.repository.IntAuthRepository
 import com.rbiggin.a2do2gether.repository.IntAuthRepositoryActiveListener
@@ -10,10 +11,10 @@ import com.rbiggin.a2do2gether.utils.Constants
 import com.rbiggin.a2do2gether.utils.Utilities
 import javax.inject.Inject
 
-class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository,
+class LoginPresenter @Inject constructor(private val authRepo: AuthRepository,
                                          utilities: Utilities,
                                          sharedPreferences: SharedPreferences) :
-                                         IntAuthRepositoryActiveListener,
+                                         AuthRepository.ActiveListener,
                                          BasePresenter<LoginActivity>(sharedPreferences, utilities){
 
     private var mLoginActivity: IntLoginActivity? = null
@@ -27,7 +28,7 @@ class LoginPresenter @Inject constructor(private val authRepo: IntAuthRepository
     private val tag = Constants.LOGIN_PRESENTER_TAG
 
     private fun setup() {
-        authRepo.setup(this)
+        authRepo.setListener(this)
     }
 
     override fun onViewAttached(view: LoginActivity) {
