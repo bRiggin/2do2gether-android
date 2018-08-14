@@ -45,7 +45,7 @@ class PresenterModule {
 
     @Provides
     @Singleton
-    fun provideChecklistsPresenter(): ChecklistsPresenter? {
+    fun provideChecklistsPresenter(): ChecklistsPresenter {
         return ChecklistsPresenter()
     }
 
