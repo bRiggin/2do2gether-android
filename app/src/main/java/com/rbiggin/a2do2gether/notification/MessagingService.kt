@@ -5,6 +5,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.rbiggin.a2do2gether.R
 import android.app.PendingIntent
+import android.app.TaskStackBuilder
 import android.content.Intent
 import android.content.SharedPreferences
 import com.rbiggin.a2do2gether.ui.main.MainActivity
@@ -38,11 +39,13 @@ class MessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
         super.onMessageReceived(remoteMessage)
 
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        intent.putExtra(Constants.LOAD_FRAGMENT, Constants.Fragment.MY_CONNECTIONS.toString())
+        val stackBuilder = TaskStackBuilder.create(this)
+        stackBuilder.addNextIntentWithParentStack(intent)
+        val pendingIntent = stackBuilder.getPendingIntent(1234567, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val mBuilder = NotificationCompat.Builder(this, getString(R.string.notification_channel_id))
+        val mBuilder = NotificationCompat.Builder(applicationContext, getString(R.string.notification_channel_id))
                 .setSmallIcon(R.drawable.logo_background)
                 .setContentTitle(remoteMessage?.notification?.title)
                 .setContentText(remoteMessage?.notification?.body)

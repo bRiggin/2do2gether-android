@@ -14,10 +14,11 @@ class Constants {
         const val NUMBER_OF_CHARACTERS_IN_NICKNAME: Int = 8
 
         /**
-         * Shared Preferences Strings
+         * General keys
          */
-        const val SP_UID: String = "current_uid"
+        const val LOAD_FRAGMENT: String = "load_fragment"
         const val SP_FCM_TOKEN: String = "current_fcm_token"
+        const val BUNDLE: String = "bundle"
 
         /**
          * Firebase Strings
@@ -98,8 +99,8 @@ class Constants {
          */
         const val LOGIN_ACTIVITY_TAG: String = "Login Activity"
         const val LOGIN_PRESENTER_TAG: String = "Login Interface"
-        const val MAIN_ACTIVITY_TAG: String = "MainPresenter Activity"
-        const val MAIN_PRESENTER_TAG: String = "MainPresenter Interface"
+        const val MAIN_ACTIVITY_TAG: String = "Main Activity"
+        const val MAIN_PRESENTER_TAG: String = "Main Presenter"
         const val TODO_ACTIVITY_TAG: String = "ToDoLists Activity"
         const val TODO_PRESENTER_TAG: String = "ToDoLists Interface"
         const val CHECKLISTS_ACTIVITY_TAG: String = "Checklists Activity"

@@ -24,7 +24,6 @@ class PresenterModule {
     }
 
     @Provides
-    @Singleton
     fun provideMainPresenter(aRepo: AuthRepository,
                              uRepo: UserProfileRepository,
                              cRepo: ConnectionsRepository): MainPresenter {

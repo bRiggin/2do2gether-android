@@ -11,6 +11,7 @@ import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -30,15 +31,13 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import java.io.*
 import javax.inject.Inject
 
-/**
- * MainPresenter activity that all primary fragments are contained within.
- */
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
-                                          MainPresenter.View{
+        MainPresenter.View {
 
-    @Inject lateinit var presenter: MainPresenter
+    @Inject
+    lateinit var presenter: MainPresenter
 
-    private lateinit var tag: String
+    private val tag: String = Constants.MAIN_ACTIVITY_TAG
 
     private var mMenu: Menu? = null
 
@@ -47,19 +46,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
         (application as MyApplication).daggerComponent.inject(this)
 
-        presenter.onViewAttached(this)
+        Log.w(tag, "intent: $intent")
+        Log.w(tag, "intent extra: ${intent.extras}")
 
-        tag = Constants.MAIN_ACTIVITY_TAG
-    }
-
-    override fun onResume() {
-        super.onResume()
-        presenter.onViewWillShow()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        presenter.onViewWillHide()
+        if (intent.hasExtra(Constants.LOAD_FRAGMENT)) {
+            presenter.onViewAttached(this, intent.extras.getString(Constants.LOAD_FRAGMENT))
+        } else {
+            presenter.onViewAttached(this, null)
+        }
     }
 
     override fun onDestroy() {
@@ -73,7 +67,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         finish()
     }
 
-    override fun setupActivity(email: String){
+    override fun setupActivity(email: String) {
         setSupportActionBar(findViewById(R.id.appToolbar))
 
         supportActionBar?.setDisplayShowCustomEnabled(true)
@@ -108,8 +102,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
         } else {
-            if (currentFragment is IntMainListener){
-                if (currentFragment.onBackPressed()){
+            if (currentFragment is IntMainListener) {
+                if (currentFragment.onBackPressed()) {
                     presenter.onBackPressed()
                     super.onBackPressed()
                 }
@@ -120,18 +114,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    /**
-     * onCreateOptionsMenu
-     */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_items, menu)
         mMenu = menu
+        presenter.reloadMenuButtons()
         return true
     }
 
-    /**
-     * onOptionsItemSelected
-     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.mainFrameLayout)
         if (currentFragment is IntMainListener) {
@@ -152,8 +141,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         return true
     }
-
-
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val backStackCount = supportFragmentManager.backStackEntryCount
@@ -178,8 +165,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    override fun launchFragment(type: Constants.Fragment, toBackStack: Boolean){
-        val fragment = when(type){
+    override fun launchFragment(type: Constants.Fragment, toBackStack: Boolean) {
+        val fragment = when (type) {
             Constants.Fragment.TODO -> {
                 ToDoListFragment.newInstance(Constants.TODOLIST_FRAGMENT_ID)
             }
@@ -190,37 +177,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 MyConnectionsFragment.newInstance(Constants.MY_CONNECTIONS_FRAGMENT_ID)
             }
             Constants.Fragment.MY_PROFILE -> {
-               MyProfileFragment.newInstance(Constants.MY_PROFILE_FRAGMENT_ID)
+                MyProfileFragment.newInstance(Constants.MY_PROFILE_FRAGMENT_ID)
             }
             Constants.Fragment.SETTINGS -> {
                 SettingsFragment.newInstance(Constants.SETTINGS_FRAGMENT_ID)
             }
-            else -> {
-                throw IllegalArgumentException("MainPresenter Activity, launchFragment: has been supplied with an illegal input.")
-            }
         }
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.mainFrameLayout, fragment)
-        if (toBackStack){
+        if (toBackStack) {
             transaction.addToBackStack(type.toString())
         }
         transaction.commit()
     }
 
-    /**
-     * Pop Back Stack
-     */
     override fun popBackStack() {
         supportFragmentManager.popBackStackImmediate()
     }
 
-    /**
-     * Update Action Bar
-     */
     override fun updateActionBar(type: Constants.Fragment) {
         setupMenuBarItems(type)
         val view = supportActionBar?.customView?.findViewById(R.id.action_bar_title_view) as TextView
-        val heading = when(type){
+        val heading = when (type) {
             Constants.Fragment.TODO -> {
                 getString(R.string.to_do_lists)
             }
@@ -236,35 +214,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             Constants.Fragment.SETTINGS -> {
                 getString(R.string.settings)
             }
-            else -> {
-                throw IllegalArgumentException("MainPresenter Activity, updateActionBar: has been supplied with an illegal input.")
-            }
         }
         view.text = heading
     }
 
-    /**
-     * Update Profile Picture
-     */
     override fun updateProfilePicture(image: Bitmap) {
         navigationDrawer.getHeaderView(0).findViewById<ImageView>(R.id.drawerImageView).setImageBitmap(image)
     }
 
-    /**
-     * Update User Name
-     */
     override fun updateUsersName(name: String) {
         navigationDrawer.getHeaderView(0).findViewById<TextView>(R.id.drawerHeading).text = name
     }
 
-    /**
-     * Setup Menu Bar Items
-     */
-    private fun setupMenuBarItems(type: Constants.Fragment){
+    private fun setupMenuBarItems(type: Constants.Fragment) {
         val addView = mMenu?.getItem(0)
         val deleteView = mMenu?.getItem(1)
         val shareView = mMenu?.getItem(2)
-        when(type) {
+        when (type) {
             Constants.Fragment.TODO -> {
                 addView?.setVisible(true)
                 deleteView?.setVisible(true)
@@ -292,14 +258,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 deleteView?.setVisible(false)
                 shareView?.setVisible(false)
             }
-            else -> {
-                throw IllegalArgumentException("MainPresenter Activity, setupMenuBarItem: has been supplied with an illegal input.")
-            }
         }
     }
 
     override fun updateNavigationDrawer(type: Constants.Fragment) {
-        when(type) {
+        when (type) {
             Constants.Fragment.TODO -> {
                 navigationDrawer.setCheckedItem(R.id.drawer_to_do_lists)
             }
@@ -315,22 +278,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             Constants.Fragment.SETTINGS -> {
                 navigationDrawer.setCheckedItem(R.id.drawer_settings)
             }
-            else -> {
-                throw IllegalArgumentException("MainPresenter Activity, updateNavigationDrawer: has been supplied with an illegal input.")
-            }
         }
     }
 
-    /**
-     * Save Profile Picture
-     */
     override fun saveProfilePicture(image: Bitmap, uid: String) {
         saveImageToInternalStorage(image, uid)
     }
 
-    /**
-     * Save Image to Internal Storage
-     */
     private fun saveImageToInternalStorage(bitmapImage: Bitmap, uid: String) {
         val contextWrapper = ContextWrapper(applicationContext)
         val directory = contextWrapper.getDir("imageDir", Context.MODE_PRIVATE)
@@ -350,17 +304,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    /**
-     * Get Profile Picture
-     */
     override fun getProfilePicture(uid: String): Bitmap? {
         return loadImageFromStorage(uid)
     }
 
-    /**
-     * Load Image from Storage
-     */
-    private fun loadImageFromStorage(uid: String): Bitmap?{
+    private fun loadImageFromStorage(uid: String): Bitmap? {
         val contextWrapper = ContextWrapper(applicationContext)
         val directory = contextWrapper.getDir("imageDir", Context.MODE_PRIVATE)
         try {

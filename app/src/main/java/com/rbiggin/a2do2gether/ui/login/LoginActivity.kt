@@ -144,9 +144,9 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
         }
     }
 
-    override fun launchMainActivity(email: String) {
+    override fun launchMainActivity(fragmentToLoad: Constants.Fragment) {
         val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("email", email)
+        intent.putExtra(Constants.LOAD_FRAGMENT, fragmentToLoad.toString())
         startActivity(intent)
         finish()
     }

@@ -49,8 +49,7 @@ class LoginPresenter @Inject constructor(private val authRepo: AuthRepository) :
 
     private fun enterMainActivity(){
         authRepo.updateFcmToken()
-        val email = authRepo.getEmail() ?: "Unknown"
-        mLoginActivity?.launchMainActivity(email)
+        mLoginActivity?.launchMainActivity(Constants.Fragment.TODO)
     }
 
     fun emailSubmitted(email: String?, reference: IntLoginFragmentCallbacks) {
