@@ -65,10 +65,17 @@
 
     <!-- Settings strings -->
     <string name="settings">Settings</string>
+    <string name="preferences">Preferences</string>
     <string name="logout">Logout</string>
     <string name="notifications">Notifications</string>
-    <string name="settings_discoverable">Profile is public</string>
-    <string name="settings_not_discoverable">Profile is private</string>
+    <string name="settings_discoverable">Profile Privacy</string>
+    <string name="settings_discoverable_description">Make your profile public so you can connect with others</string>
+    <string name="settings_notification_connection_request">Connection Requests</string>
+    <string name="settings_notification_connection_request_description">Receive a notification when others request to connect with you</string>
+    <string name="settings_notification_connection_request_result">New Connections</string>
+    <string name="settings_notification_connection_request_result_description">Receive a notification when others accept your connection requests</string>
+    <string name="settings_notification_new_list">New 2Do List</string>
+    <string name="settings_notification_new_list_description">Receive a notification when you\'re added to a new 2Do list</string>
 
     <!-- Error Strings -->
     <string name="error_blank_email">Must provide E-mail Address.</string>

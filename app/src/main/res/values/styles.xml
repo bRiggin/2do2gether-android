@@ -36,6 +36,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="SwitchCompatStyle" >
+        <item name="android:thumb">@drawable/icon_tick</item>
+        <item name="trackTint">@color/switch_colour</item>
+    </style>
+
     <style name="ActionBarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="colorControlNormal">@color/white</item>
     </style>

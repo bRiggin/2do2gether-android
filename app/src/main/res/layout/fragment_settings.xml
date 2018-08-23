@@ -39,38 +39,67 @@
             <TextView style="@style/TextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/settings"
-                android:layout_margin="16dp"/>
+                android:text="@string/preferences"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp">
-                <TextView style="@style/TextViewStyle"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:gravity="center_vertical"
-                    android:text="@string/settings_discoverable"/>
-                <Switch
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+                    <TextView style="@style/TextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_discoverable"/>
+                    <TextView style="@style/TextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:text="@string/settings_discoverable_description"/>
+                </LinearLayout>
+                <android.support.v7.widget.SwitchCompat
+                    style="@style/SwitchCompatStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
             </LinearLayout>
             <TextView style="@style/TextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:text="@string/notifications"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp">
-                <TextView style="@style/TextViewStyle"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:gravity="center_vertical"
-                    android:text="@string/settings_discoverable"/>
-                <Switch
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+                    <TextView style="@style/TextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_notification_connection_request"/>
+                    <TextView style="@style/TextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:text="@string/settings_notification_connection_request_description"/>
+                </LinearLayout>
+                <android.support.v7.widget.SwitchCompat
+                    style="@style/SwitchCompatStyle"
+                    android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
             </LinearLayout>
@@ -78,13 +107,51 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp">
-                <TextView style="@style/TextViewStyle"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:gravity="center_vertical"
-                    android:text="@string/settings_discoverable"/>
-                <Switch
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+                    <TextView style="@style/TextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_notification_connection_request_result"/>
+                    <TextView style="@style/TextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:text="@string/settings_notification_connection_request_result_description"/>
+                </LinearLayout>
+                <android.support.v7.widget.SwitchCompat
+                    style="@style/SwitchCompatStyle"
+                    android:layout_marginStart="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+                    <TextView style="@style/TextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_notification_new_list"/>
+                    <TextView style="@style/TextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:text="@string/settings_notification_new_list_description"/>
+                </LinearLayout>
+                <android.support.v7.widget.SwitchCompat
+                    style="@style/SwitchCompatStyle"
+                    android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
             </LinearLayout>
