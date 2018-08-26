@@ -6,23 +6,31 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.jakewharton.rxbinding2.view.clicks
 import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.application.MyApplication
+import com.rbiggin.a2do2gether.model.SettingsUpdate
 import com.rbiggin.a2do2gether.ui.base.BaseFragment
 import com.rbiggin.a2do2gether.ui.login.LoginActivity
+import com.rbiggin.a2do2gether.utils.Constants
+import com.rbiggin.a2do2gether.utils.Utilities
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
 import kotlinx.android.synthetic.main.fragment_settings.*
 
-class SettingsFragment : BaseFragment(), IntSettingsFragment {
+class SettingsFragment : BaseFragment(), SettingsPresenter.View {
 
-    @Inject lateinit var presenter: SettingsPresenter
+    @Inject
+    lateinit var presenter: SettingsPresenter
+
+    @Inject
+    lateinit var utilities: Utilities
+
+    val switcthSubject: PublishSubject<SettingsUpdate> = PublishSubject.create()
 
     companion object {
-        /**
-         * @param id ID handed to Fragment.
-         * @return A new instance of fragment: AddressFragment.
-         */
         fun newInstance(id: Int): SettingsFragment {
             val fragment = SettingsFragment()
             val args = Bundle()
@@ -54,6 +62,22 @@ class SettingsFragment : BaseFragment(), IntSettingsFragment {
         logout_btn.setOnClickListener {
             presenter.logout()
         }
+
+        profilePublicSwitch.clicks().subscribeBy {
+            switcthSubject.onNext(SettingsUpdate(Constants.Setting.PROFILE_PRIVACY, profilePublicSwitch.isChecked))
+        }
+
+        connectionRequestSwitch.clicks().subscribeBy {
+            switcthSubject.onNext(SettingsUpdate(Constants.Setting.CONNECTION_REQUEST, connectionRequestSwitch.isChecked))
+        }
+
+        newConnectionSwitch.clicks().subscribeBy {
+            switcthSubject.onNext(SettingsUpdate(Constants.Setting.NEW_CONNECTIONS, newConnectionSwitch.isChecked))
+        }
+
+        newListSwitch.clicks().subscribeBy {
+            switcthSubject.onNext(SettingsUpdate(Constants.Setting.NEW_LIST, newListSwitch.isChecked))
+        }
     }
 
     override fun onPause() {
@@ -70,6 +94,23 @@ class SettingsFragment : BaseFragment(), IntSettingsFragment {
         val intent = Intent(activity, LoginActivity::class.java)
         startActivity(intent)
         activity?.finish()
+    }
+
+    override fun updateSwitch(update: SettingsUpdate) {
+        when (update.type) {
+            Constants.Setting.PROFILE_PRIVACY -> {
+                profilePublicSwitch.isChecked = utilities.stringToBoolean(update.value.toString())
+            }
+            Constants.Setting.CONNECTION_REQUEST -> {
+                connectionRequestSwitch.isChecked = utilities.stringToBoolean(update.value.toString())
+            }
+            Constants.Setting.NEW_CONNECTIONS -> {
+                newConnectionSwitch.isChecked = utilities.stringToBoolean(update.value.toString())
+            }
+            Constants.Setting.NEW_LIST -> {
+                newListSwitch.isChecked = utilities.stringToBoolean(update.value.toString())
+            }
+        }
     }
 
     override fun onDisplayDialogMessage(message_id: Int, message: String?) {

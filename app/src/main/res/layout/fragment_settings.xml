@@ -65,6 +65,7 @@
                         android:text="@string/settings_discoverable_description"/>
                 </LinearLayout>
                 <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/profilePublicSwitch"
                     style="@style/SwitchCompatStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent" />
@@ -98,6 +99,7 @@
                         android:text="@string/settings_notification_connection_request_description"/>
                 </LinearLayout>
                 <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/connectionRequestSwitch"
                     style="@style/SwitchCompatStyle"
                     android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
@@ -124,6 +126,7 @@
                         android:text="@string/settings_notification_connection_request_result_description"/>
                 </LinearLayout>
                 <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/newConnectionSwitch"
                     style="@style/SwitchCompatStyle"
                     android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
@@ -150,6 +153,7 @@
                         android:text="@string/settings_notification_new_list_description"/>
                 </LinearLayout>
                 <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/newListSwitch"
                     style="@style/SwitchCompatStyle"
                     android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"

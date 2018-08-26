@@ -24,4 +24,9 @@ class FirebaseModule {
     fun provideFirebaseDatabase(): IntFirebaseDatabase {
         return FirebaseDatabase
     }
+
+    @Provides
+    fun provideFirebaseDatabaseWriter(): FirebaseDatabaseWriter {
+        return FirebaseDatabaseWriter
+    }
 }

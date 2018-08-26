@@ -8,7 +8,8 @@ import javax.inject.Inject
 
 class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
                                         private val userRepo: UserProfileRepository,
-                                        private val connectionsRepository: ConnectionsRepository) :
+                                        private val connectionsRepository: ConnectionsRepository,
+                                        private val settingsRepository: SettingsRepository) :
                                         AuthRepository.Listener,
                                         UserProfileRepository.ActivityListener {
 
@@ -56,6 +57,8 @@ class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
 
     fun onViewDetached() {
         mActivity = null
+
+        settingsRepository.presenterDetached()
     }
 
     private fun loadFragmentOnLoad(fragment: String?){
@@ -120,6 +123,7 @@ class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
         authRepo.setListener(this)
         userRepo.initialise()
         connectionsRepository.initialise()
+        settingsRepository.initialise()
         userRepo.setActivity(this)
     }
 

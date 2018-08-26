@@ -25,6 +25,7 @@ class Constants {
          */
         const val FB_USER_PROFILE: String = "user_profile"
         const val FB_CONNECTION_REQUEST: String = "connection_requests"
+        const val FB_SETTINGS: String = "user_settings"
         const val FB_CONNECTIONS: String = "connections"
         const val FB_FCM_TOKENS: String = "fcm_tokens"
         const val FB_FIRST_NAME: String = "first_name"
@@ -135,7 +136,8 @@ class Constants {
         WRITE_USER_DETAILS,
         FIND_USERS,
         FIND_PENDING_CONNECTIONS,
-        FIND_CONNECTIONS;
+        FIND_CONNECTIONS,
+        READ_SETTINGS;
     }
 
     enum class MenuBarItem {
@@ -144,9 +146,16 @@ class Constants {
         SHARE_PUBLISH;
     }
 
-    enum class ConnectionsSearchResult{
+    enum class ConnectionsSearchResult {
         SELF,
         EXISTING_CONNECTION,
         NEW_CONNECTION;
+    }
+
+    enum class Setting(val key: String) {
+        PROFILE_PRIVACY("profile_public"),
+        CONNECTION_REQUEST("notification_connection_requests"),
+        NEW_CONNECTIONS("notification_new_connections"),
+        NEW_LIST("notification_new_lists")
     }
 }

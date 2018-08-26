@@ -26,8 +26,9 @@ class PresenterModule {
     @Provides
     fun provideMainPresenter(aRepo: AuthRepository,
                              uRepo: UserProfileRepository,
-                             cRepo: ConnectionsRepository): MainPresenter {
-        return MainPresenter(aRepo, uRepo, cRepo)
+                             cRepo: ConnectionsRepository,
+                             sRepo: SettingsRepository): MainPresenter {
+        return MainPresenter(aRepo, uRepo, cRepo, sRepo)
     }
 
     @Provides
@@ -38,8 +39,11 @@ class PresenterModule {
 
     @Provides
     @Singleton
-    fun provideSettingsPresenter(repo: AuthRepository): SettingsPresenter {
-        return SettingsPresenter(repo)
+    fun provideSettingsPresenter(aRepo: AuthRepository,
+                                 sRepo: SettingsRepository,
+                                 @Named("main") mThread: Scheduler,
+                                 @Named("computation") cThread: Scheduler): SettingsPresenter {
+        return SettingsPresenter(aRepo, sRepo, mThread, cThread)
     }
 
     @Provides
@@ -59,8 +63,9 @@ class PresenterModule {
     fun provideMyConnectionsPresenter(utils: Utilities,
                                       cRepo: ConnectionsRepository,
                                       uRepo: UserProfileRepository,
+                                      sRepo: SettingsRepository,
                                       @Named("main") thread: Scheduler):
                                       MyConnectionsPresenter {
-        return MyConnectionsPresenter(cRepo, uRepo, utils, thread)
+        return MyConnectionsPresenter(cRepo, uRepo, sRepo, utils, thread)
     }
 }

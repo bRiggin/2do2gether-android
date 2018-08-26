@@ -37,8 +37,8 @@
     </style>
 
     <style name="SwitchCompatStyle" >
-        <item name="android:thumb">@drawable/icon_tick</item>
-        <item name="trackTint">@color/switch_colour</item>
+        <item name="thumbTint">@color/switch_color_thumb</item>
+        <item name="trackTint">@color/switch_colour_track</item>
     </style>
 
     <style name="ActionBarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">

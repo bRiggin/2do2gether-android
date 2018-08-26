@@ -6,9 +6,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.rbiggin.a2do2gether.utils.Constants
 
-/**
- * Insert class/object/interface/file description...
- */
 class FirebaseReadWatcher(dbRef: DatabaseReference, path: String, type: Constants.DatabaseApi,
                           listener: FirebaseReadWatcher.Listener) {
 

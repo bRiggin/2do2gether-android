@@ -6,7 +6,6 @@ import com.rbiggin.a2do2gether.model.UserConnectionSearch
 import com.rbiggin.a2do2gether.model.UserDetails
 import com.rbiggin.a2do2gether.repository.*
 import com.rbiggin.a2do2gether.ui.base.BasePresenter
-import com.rbiggin.a2do2gether.ui.base.IntBaseFragment
 import com.rbiggin.a2do2gether.utils.Constants
 import com.rbiggin.a2do2gether.utils.Utilities
 import io.reactivex.Scheduler
@@ -14,6 +13,7 @@ import javax.inject.Inject
 
 class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: ConnectionsRepository,
                                                  private val userRepo: UserProfileRepository,
+                                                 private val settingsRepository: SettingsRepository,
                                                  private val utilities: Utilities,
                                                  private val uiThread: Scheduler) :
                                                  BasePresenter<MyConnectionsFragment>() {
@@ -24,25 +24,27 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
     @VisibleForTesting
     var isProcessingBol: Boolean = false
 
+    var profileIsPublic: Boolean = false
+
     override fun onViewAttached(view: MyConnectionsFragment) {
         super.onViewAttached(view)
 
         disposeOnViewWillDetach(connectionsRepo.connectionsSubject
-                .subscribeOn(uiThread)
+                .observeOn(uiThread)
                 .subscribe {
                     val connections = utilities.hashMapToArray(it) as ArrayList<UserDetails>
                     view.onDisplayConnections(connections)
                 })
 
         disposeOnViewWillDetach(connectionsRepo.pendingRequestsSubject
-                .subscribeOn(uiThread)
+                .observeOn(uiThread)
                 .subscribe {
                     val requests = utilities.hashMapToArray(it) as ArrayList<UserConnectionRequest>
                     view.onDisplayConnectionRequests(requests)
                 })
 
         disposeOnViewWillDetach(connectionsRepo.connectionSearchSubject
-                .subscribeOn(uiThread)
+                .observeOn(uiThread)
                 .subscribe {
                     isProcessing(false)
                     if (!it.isEmpty()) {
@@ -50,6 +52,12 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
                     } else {
                         this.view?.onDisplaySearchResults(ArrayList())
                     }
+                })
+
+        disposeOnViewWillDetach(settingsRepository.profilePublicSubject
+                .observeOn(uiThread)
+                .subscribe {
+                    profileIsPublic = it
                 })
     }
 
@@ -67,7 +75,7 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
 
     fun onPlusButtonPressed() {
         if (currentView == Window.MAIN_VIEW) {
-            if (userRepo.isUserDiscoverable()) {
+            if (userRepo.isUserDiscoverable() && profileIsPublic) {
                 view?.onDisplayView(Window.SEARCH_VIEW)
                 currentView = Window.SEARCH_VIEW
             } else {
@@ -145,7 +153,7 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
         REJECT_CONNECTION_REQUEST;
     }
 
-    interface View : IntBaseFragment {
+    interface View : BasePresenter.View{
         fun onDisplayView(view: MyConnectionsPresenter.Window)
 
         fun onDisplayConnections(connections: ArrayList<UserDetails>)

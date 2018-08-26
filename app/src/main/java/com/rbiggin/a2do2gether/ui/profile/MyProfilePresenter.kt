@@ -9,9 +9,9 @@ import javax.inject.Inject
 
 class MyProfilePresenter @Inject constructor(private val userRepo: IntUserRepositoryFragment,
                                              private val uidProvider: UidProvider) :
-                                             BasePresenter<MyProfileFragment>(),
-                                             IntAuthRepositoryListener,
-                                             UserProfileRepository.FragmentListener{
+        BasePresenter<MyProfileFragment>(),
+        IntAuthRepositoryListener,
+        UserProfileRepository.FragmentListener {
     var tag: String? = null
 
     override fun onViewWillShow() {
@@ -31,20 +31,19 @@ class MyProfilePresenter @Inject constructor(private val userRepo: IntUserReposi
     }
 
     fun onUpdateUserDetailsButtonPressed(fName: String, sName: String, nName: String) {
-        if (fName.trim().isEmpty() || sName.trim().isEmpty() || nName.trim().isEmpty()){
+        if (fName.trim().isEmpty() || sName.trim().isEmpty() || nName.trim().isEmpty()) {
             view?.onDisplayDialogMessage(Constants.ERROR_PROFILE_DETAILS_BLANK, null)
         } else if (nName.trim().length < Constants.NUMBER_OF_CHARACTERS_IN_NICKNAME ||
                 nName.trim().contains(" ")) {
             view?.onDisplayDialogMessage(Constants.ERROR_NICKNAME_STRUCTURE_ERROR, null)
-        }
-        else {
+        } else {
             userRepo.writeNewUserDetails(fName.trim(), sName.trim(), nName.trim())
             view?.onDisplayDialogMessage(Constants.DB_WRITE_USER_DETAILS_SUCCESSFUL, null)
         }
     }
 
     override fun onWriteUserDetailsResult(success: Boolean, errorMessage: String?) {
-        if (success){
+        if (success) {
             Log.d(tag, "User's profile details have been successfully written to database.")
         } else {
             Log.d(tag, "User's profile details have been unsuccessfully written to database.")
@@ -53,10 +52,10 @@ class MyProfilePresenter @Inject constructor(private val userRepo: IntUserReposi
     }
 
     fun uploadProfilePicture(image: Bitmap?, cropActivityErrorOccurred: Boolean, errorMessage: Exception?) {
-        if (cropActivityErrorOccurred){
+        if (cropActivityErrorOccurred) {
             view?.onDisplayDialogMessage(Constants.ERROR_IMAGE_CROPPING_ACTIVITY_EXCEPTION,
                     errorMessage?.message)
-        } else if (view?.hasNetworkConnection()!!){
+        } else if (view?.hasNetworkConnection()!!) {
             uidProvider.getUid()?.let {
                 userRepo.uploadNewProfilePicture(image, it)
             } ?: throw ExceptionInInitializerError()
@@ -72,7 +71,7 @@ class MyProfilePresenter @Inject constructor(private val userRepo: IntUserReposi
 
     override fun onPictureUploadResult(success: Boolean, errorMessage: String?) {
         view?.onUpdateProgressBar(false, 0)
-        if (success){
+        if (success) {
             view?.onDisplayDialogMessage(Constants.STORAGE_PROFILE_UPLOAD_SUCCESSFUL, null)
             userRepo.getProfilePictureForMainActivity()
         } else {
@@ -86,5 +85,13 @@ class MyProfilePresenter @Inject constructor(private val userRepo: IntUserReposi
 
     override fun onAuthStateChange(response_id: Int, message: String?) {
         // not currently used within MyProfilePresenter
+    }
+
+    interface View : BasePresenter.View {
+        fun onLaunchImageCropActivity()
+
+        fun onUpdateProgressBar(isVisible: Boolean, progress: Int)
+
+        fun onUpdateDetails(firstName: String, secondName: String, nickname: String)
     }
 }

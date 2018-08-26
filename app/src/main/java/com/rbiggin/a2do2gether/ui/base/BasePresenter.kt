@@ -49,4 +49,8 @@ open class BasePresenter<T> {
     fun isViewAttached(): Boolean {
         return view != null
     }
+
+    interface View {
+        fun onDisplayDialogMessage(message_id: Int, message: String?)
+    }
 }

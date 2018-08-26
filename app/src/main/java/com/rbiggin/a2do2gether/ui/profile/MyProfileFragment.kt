@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_my_profile.*
 /**
  * Fragment to allow the user to update/edit their public facing profile.
  */
-class MyProfileFragment : BaseFragment(), IntMyProfileFragment {
+class MyProfileFragment : BaseFragment(), MyProfilePresenter.View {
 
     /** Injected Interface instance */
     @Inject lateinit var presenter: MyProfilePresenter

@@ -30,4 +30,11 @@ class RepositoryModule {
             : ConnectionsRepository {
         return ConnectionsRepository(fbDatabase, uidProvider)
     }
+
+    @Provides
+    @Singleton
+    fun provideSettingsRepository(utilities: Utilities, uidProvider: UidProvider, writer: FirebaseDatabaseWriter)
+            : SettingsRepository {
+        return SettingsRepository(uidProvider, writer, utilities)
+    }
 }
