@@ -8,6 +8,7 @@ import com.rbiggin.a2do2gether.firebase.IntFirebaseDatabase
 import com.rbiggin.a2do2gether.model.User
 import com.rbiggin.a2do2gether.utils.Constants
 import com.rbiggin.a2do2gether.utils.Utilities
+import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
 class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
@@ -28,11 +29,17 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
 
     private var mDatabase: DatabaseReference? = null
 
+    val uidSubject: BehaviorSubject<String> = BehaviorSubject.create()
+
     init {
         mAuth = com.google.firebase.auth.FirebaseAuth.getInstance()
         mAuth?.addAuthStateListener(this)
         user = User(mAuth?.currentUser)
         mDatabase = com.google.firebase.database.FirebaseDatabase.getInstance().reference
+
+        user?.firebaseUser?.uid?.let {
+            uidSubject.onNext(it)
+        }
     }
 
     fun setListener(listener: Listener) {

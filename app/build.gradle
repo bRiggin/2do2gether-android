@@ -36,7 +36,6 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
     implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:2.1.1'
 
-
     testImplementation 'junit:junit:4.12'
     testImplementation 'com.nhaarman:mockito-kotlin-kt1.1:1.5.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
@@ -58,6 +57,7 @@ dependencies {
     implementation 'com.github.florent37:expansionpanel:1.1.1'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.6.+'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 }
 
 

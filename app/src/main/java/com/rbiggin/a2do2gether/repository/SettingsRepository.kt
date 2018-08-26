@@ -74,16 +74,16 @@ class SettingsRepository @Inject constructor(private val uidProvider: UidProvide
     private fun updateSettingsSubjects(data: DataSnapshot){
         for (setting in data.children){
             when (setting.key){
-                Constants.Setting.PROFILE_PRIVACY.key -> {
+                Constants.Setting.PROFILE_PRIVACY.value -> {
                     profilePublicSubject.onNext(utilities.stringToBoolean(setting.value.toString()))
                 }
-                Constants.Setting.CONNECTION_REQUEST.key -> {
+                Constants.Setting.CONNECTION_REQUEST.value -> {
                     connectionRequestsSubject.onNext(utilities.stringToBoolean(setting.value.toString()))
                 }
-                Constants.Setting.NEW_CONNECTIONS.key -> {
+                Constants.Setting.NEW_CONNECTIONS.value -> {
                     newConnectionsSubject.onNext(utilities.stringToBoolean(setting.value.toString()))
                 }
-                Constants.Setting.NEW_LIST.key -> {
+                Constants.Setting.NEW_LIST.value -> {
                     newListSubject.onNext(utilities.stringToBoolean(setting.value.toString()))
                 }
             }
@@ -93,7 +93,7 @@ class SettingsRepository @Inject constructor(private val uidProvider: UidProvide
     fun updateSetting(update: SettingsUpdate) {
         val path = "${Constants.FB_SETTINGS}/$mUid"
         val userDetailsPath = "${Constants.FB_USER_PROFILE}/$mUid"
-        val data = hashMapOf(update.type.key to update.value as Any)
+        val data = hashMapOf(update.type.value to update.value as Any)
         mDatabase?.let {
             databaseWriter.doWrite(it, path, data)
 

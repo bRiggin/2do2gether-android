@@ -152,10 +152,16 @@ class Constants {
         NEW_CONNECTION;
     }
 
-    enum class Setting(val key: String) {
+    enum class Setting(val value: String) {
         PROFILE_PRIVACY("profile_public"),
         CONNECTION_REQUEST("notification_connection_requests"),
         NEW_CONNECTIONS("notification_new_connections"),
         NEW_LIST("notification_new_lists")
+    }
+
+    enum class NotificationType(val value: String) {
+        REQUEST("connection_request"),
+        NEW_CONNECTION("new_connection"),
+        NEW_LIST("notification_new_connections")
     }
 }

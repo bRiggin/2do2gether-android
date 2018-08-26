@@ -1,5 +1,6 @@
 package com.rbiggin.a2do2gether.dagger
 
+import com.rbiggin.a2do2gether.notification.MessagingPresenter
 import com.rbiggin.a2do2gether.repository.*
 import com.rbiggin.a2do2gether.ui.connections.MyConnectionsPresenter
 import com.rbiggin.a2do2gether.ui.login.LoginPresenter
@@ -54,7 +55,7 @@ class PresenterModule {
 
     @Provides
     @Singleton
-    fun provideToDoListPresenter() : ToDoListPresenter {
+    fun provideToDoListPresenter(): ToDoListPresenter {
         return ToDoListPresenter()
     }
 
@@ -67,5 +68,12 @@ class PresenterModule {
                                       @Named("main") thread: Scheduler):
                                       MyConnectionsPresenter {
         return MyConnectionsPresenter(cRepo, uRepo, sRepo, utils, thread)
+    }
+
+    @Provides
+    fun provideMessagingPresenter(aRepo: AuthRepository,
+                                  sRepo: SettingsRepository):
+                                  MessagingPresenter {
+        return MessagingPresenter(aRepo, sRepo)
     }
 }
