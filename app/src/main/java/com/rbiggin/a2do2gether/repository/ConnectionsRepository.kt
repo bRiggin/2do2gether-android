@@ -128,7 +128,8 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
     private fun handleConnectionSearchResults(data: DataSnapshot){
         val users = ArrayList<UserConnectionSearch>()
         for (foundUser in data.children){
-            if (foundUser.child(Constants.FB_DISCOVERABLE).value.toString() == "true"){
+            if (foundUser.child(Constants.FB_DISCOVERABLE).value.toString() == "true"
+                && foundUser.child(Constants.Setting.PROFILE_PRIVACY.key).value.toString() == "true"){
                 val firstName = foundUser.child( Constants.FB_FIRST_NAME).value.toString()
                 val secondName = foundUser.child(Constants.FB_SECOND_NAME).value.toString()
                 val nickname = foundUser.child(Constants.FB_NICKNAME).value.toString()

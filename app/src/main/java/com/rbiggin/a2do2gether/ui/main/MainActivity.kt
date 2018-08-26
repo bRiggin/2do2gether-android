@@ -19,6 +19,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.application.MyApplication
+import com.rbiggin.a2do2gether.ui.base.BaseFragment
 import com.rbiggin.a2do2gether.ui.checklists.ChecklistsFragment
 import com.rbiggin.a2do2gether.ui.connections.MyConnectionsFragment
 import com.rbiggin.a2do2gether.ui.login.LoginActivity
@@ -166,7 +167,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun launchFragment(type: Constants.Fragment, toBackStack: Boolean) {
-        val fragment = when (type) {
+        val fragment: BaseFragment = when (type) {
             Constants.Fragment.TODO -> {
                 ToDoListFragment.newInstance(Constants.TODOLIST_FRAGMENT_ID)
             }

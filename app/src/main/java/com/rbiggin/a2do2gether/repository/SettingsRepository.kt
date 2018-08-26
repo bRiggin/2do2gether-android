@@ -92,9 +92,14 @@ class SettingsRepository @Inject constructor(private val uidProvider: UidProvide
 
     fun updateSetting(update: SettingsUpdate) {
         val path = "${Constants.FB_SETTINGS}/$mUid"
+        val userDetailsPath = "${Constants.FB_USER_PROFILE}/$mUid"
         val data = hashMapOf(update.type.key to update.value as Any)
         mDatabase?.let {
             databaseWriter.doWrite(it, path, data)
+
+            if (update.type == Constants.Setting.PROFILE_PRIVACY){
+                databaseWriter.doWrite(it, userDetailsPath, data)
+            }
         }
     }
 }
