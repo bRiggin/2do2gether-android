@@ -94,8 +94,8 @@ class Utilities {
         return String(Base64.decode(input, Base64.DEFAULT))
     }
 
-    fun stringToBoolean(boolean: String): Boolean{
-        return when (boolean.trim()){
+    fun String.toBoolean(): Boolean{
+        return when (toString().trim()){
             "true" -> {
                 true
             } else -> {
@@ -103,6 +103,7 @@ class Utilities {
             }
         }
     }
+
 
     fun hashMapToArray(map: HashMap<*, *>): ArrayList<Any>{
         val array : ArrayList<Any> = ArrayList()

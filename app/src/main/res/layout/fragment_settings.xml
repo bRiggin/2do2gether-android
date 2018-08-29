@@ -36,6 +36,43 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <TextView style="@style/TextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="@string/to_do_lists"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+                    <TextView style="@style/TextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_list_reorder"/>
+                    <TextView style="@style/TextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:text="@string/settings_list_reorder_description"/>
+                </LinearLayout>
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/doItemReorderSwitch"
+                    style="@style/SwitchCompatStyle"
+                    android:layout_marginStart="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
             <TextView style="@style/TextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -95,7 +132,7 @@
                     <TextView style="@style/TextViewStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:text="@string/settings_notification_connection_request_description"/>
                 </LinearLayout>
                 <android.support.v7.widget.SwitchCompat
@@ -154,6 +191,41 @@
                 </LinearLayout>
                 <android.support.v7.widget.SwitchCompat
                     android:id="@+id/newListSwitch"
+                    style="@style/SwitchCompatStyle"
+                    android:layout_marginStart="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+            <TextView style="@style/TextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="@string/analytics"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+                    <TextView style="@style/TextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_analytics"/>
+                    <TextView style="@style/TextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:text="@string/settings_analytics_description"/>
+                </LinearLayout>
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/analyticsSwitch"
                     style="@style/SwitchCompatStyle"
                     android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"

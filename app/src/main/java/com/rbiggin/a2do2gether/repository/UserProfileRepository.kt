@@ -96,7 +96,7 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
             user?.firstName = userDetails["first_name"] ?: ""
             user?.secondName = userDetails["second_name"] ?: ""
             user?.nickname = userDetails["nickname"] ?: ""
-            user?.discoverable = utilities.stringToBoolean(userDetails["discoverable"] ?: "")
+            user?.discoverable = userDetails["discoverable"]?.toBoolean() ?: false
             mFragmentListener?.onUserDetailsChanged(user?.firstName!!, user?.secondName!!, user?.nickname!!)
             mActivityListener?.onUserDetailsChanged("${user?.firstName} ${user?.secondName}")
         }
