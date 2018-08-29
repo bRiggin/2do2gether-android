@@ -63,6 +63,10 @@ class SettingsFragment : BaseFragment(), SettingsPresenter.View {
             presenter.logout()
         }
 
+        doItemReorderSwitch.clicks().subscribeBy {
+            switcthSubject.onNext(SettingsUpdate(Constants.Setting.LIST_REORDER, doItemReorderSwitch.isChecked))
+        }
+
         profilePublicSwitch.clicks().subscribeBy {
             switcthSubject.onNext(SettingsUpdate(Constants.Setting.PROFILE_PRIVACY, profilePublicSwitch.isChecked))
         }
@@ -77,6 +81,10 @@ class SettingsFragment : BaseFragment(), SettingsPresenter.View {
 
         newListSwitch.clicks().subscribeBy {
             switcthSubject.onNext(SettingsUpdate(Constants.Setting.NEW_LIST, newListSwitch.isChecked))
+        }
+
+        analyticsSwitch.clicks().subscribeBy {
+            switcthSubject.onNext(SettingsUpdate(Constants.Setting.ANALYTICS, analyticsSwitch.isChecked))
         }
     }
 
@@ -98,17 +106,23 @@ class SettingsFragment : BaseFragment(), SettingsPresenter.View {
 
     override fun updateSwitch(update: SettingsUpdate) {
         when (update.type) {
+            Constants.Setting.LIST_REORDER -> {
+                doItemReorderSwitch.isChecked = update.value
+            }
             Constants.Setting.PROFILE_PRIVACY -> {
-                profilePublicSwitch.isChecked = utilities.stringToBoolean(update.value.toString())
+                profilePublicSwitch.isChecked = update.value
             }
             Constants.Setting.CONNECTION_REQUEST -> {
-                connectionRequestSwitch.isChecked = utilities.stringToBoolean(update.value.toString())
+                connectionRequestSwitch.isChecked = update.value
             }
             Constants.Setting.NEW_CONNECTIONS -> {
-                newConnectionSwitch.isChecked = utilities.stringToBoolean(update.value.toString())
+                newConnectionSwitch.isChecked = update.value
             }
             Constants.Setting.NEW_LIST -> {
-                newListSwitch.isChecked = utilities.stringToBoolean(update.value.toString())
+                newListSwitch.isChecked = update.value
+            }
+            Constants.Setting.ANALYTICS -> {
+                analyticsSwitch.isChecked = update.value
             }
         }
     }

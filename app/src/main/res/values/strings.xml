@@ -67,15 +67,20 @@
     <string name="settings">Settings</string>
     <string name="preferences">Preferences</string>
     <string name="logout">Logout</string>
+    <string name="analytics">Analytics</string>
     <string name="notifications">Notifications</string>
+    <string name="settings_analytics">Analytics Event</string>
+    <string name="settings_analytics_description">Allow the developer to track key events to facilitate future development</string>
+    <string name="settings_list_reorder">Reorder 2Do List Items </string>
+    <string name="settings_list_reorder_description">Reorder 2Do lists so that completed items appear at the bottom</string>
     <string name="settings_discoverable">Profile Privacy</string>
     <string name="settings_discoverable_description">Make your profile public so you can connect with others</string>
     <string name="settings_notification_connection_request">Connection Requests</string>
-    <string name="settings_notification_connection_request_description">Receive a notification when others request to connect with you</string>
+    <string name="settings_notification_connection_request_description">Get notified when others request to connect with you</string>
     <string name="settings_notification_connection_request_result">New Connections</string>
-    <string name="settings_notification_connection_request_result_description">Receive a notification when others accept your connection requests</string>
+    <string name="settings_notification_connection_request_result_description">Get notified when others accept your connection requests</string>
     <string name="settings_notification_new_list">New 2Do List</string>
-    <string name="settings_notification_new_list_description">Receive a notification when you\'re added to a new 2Do list</string>
+    <string name="settings_notification_new_list_description">Get notified when you\'re added to a new 2Do list</string>
 
     <!-- Error Strings -->
     <string name="error_blank_email">Must provide E-mail Address.</string>

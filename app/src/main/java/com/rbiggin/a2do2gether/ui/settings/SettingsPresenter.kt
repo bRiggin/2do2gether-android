@@ -18,6 +18,13 @@ class SettingsPresenter @Inject constructor(private val authRepo: AuthRepository
     override fun onViewAttached(view: SettingsFragment) {
         super.onViewAttached(view)
 
+        disposeOnViewWillDetach(settingsRepo.reorderListSubject
+                .observeOn(uiThread)
+                .distinctUntilChanged()
+                .subscribe {
+                    view.updateSwitch(SettingsUpdate(Constants.Setting.LIST_REORDER, it))
+                })
+
         disposeOnViewWillDetach(settingsRepo.profilePublicSubject
                 .observeOn(uiThread)
                 .distinctUntilChanged()
@@ -44,6 +51,13 @@ class SettingsPresenter @Inject constructor(private val authRepo: AuthRepository
                 .distinctUntilChanged()
                 .subscribe {
                     view.updateSwitch(SettingsUpdate(Constants.Setting.NEW_LIST, it))
+                })
+
+        disposeOnViewWillDetach(settingsRepo.analyticsSubject
+                .observeOn(uiThread)
+                .distinctUntilChanged()
+                .subscribe {
+                    view.updateSwitch(SettingsUpdate(Constants.Setting.ANALYTICS, it))
                 })
     }
 

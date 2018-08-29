@@ -152,11 +152,14 @@ class Constants {
         NEW_CONNECTION;
     }
 
+
     enum class Setting(val value: String) {
+        LIST_REORDER("reorder_to_do_lists"),
         PROFILE_PRIVACY("profile_public"),
         CONNECTION_REQUEST("notification_connection_requests"),
         NEW_CONNECTIONS("notification_new_connections"),
-        NEW_LIST("notification_new_lists")
+        NEW_LIST("notification_new_lists"),
+        ANALYTICS("analytics_enabled")
     }
 
     enum class NotificationType(val value: String) {

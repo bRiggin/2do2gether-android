@@ -21,6 +21,8 @@ class SettingsRepository @Inject constructor(private val uidProvider: UidProvide
 
     private var settingsWatcher: FirebaseReadWatcher? = null
 
+    val reorderListSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
+
     val profilePublicSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
 
     val connectionRequestsSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
@@ -28,6 +30,8 @@ class SettingsRepository @Inject constructor(private val uidProvider: UidProvide
     val newConnectionsSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
 
     val newListSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
+
+    val analyticsSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
 
     fun initialise() {
         mDatabase = com.google.firebase.database.FirebaseDatabase.getInstance().reference
@@ -73,18 +77,25 @@ class SettingsRepository @Inject constructor(private val uidProvider: UidProvide
 
     private fun updateSettingsSubjects(data: DataSnapshot){
         for (setting in data.children){
+            val value = setting.value.toString().toBoolean()
             when (setting.key){
+                Constants.Setting.LIST_REORDER.value ->{
+                    reorderListSubject.onNext(value)
+                }
                 Constants.Setting.PROFILE_PRIVACY.value -> {
-                    profilePublicSubject.onNext(utilities.stringToBoolean(setting.value.toString()))
+                    profilePublicSubject.onNext(value)
                 }
                 Constants.Setting.CONNECTION_REQUEST.value -> {
-                    connectionRequestsSubject.onNext(utilities.stringToBoolean(setting.value.toString()))
+                    connectionRequestsSubject.onNext(value)
                 }
                 Constants.Setting.NEW_CONNECTIONS.value -> {
-                    newConnectionsSubject.onNext(utilities.stringToBoolean(setting.value.toString()))
+                    newConnectionsSubject.onNext(value)
                 }
                 Constants.Setting.NEW_LIST.value -> {
-                    newListSubject.onNext(utilities.stringToBoolean(setting.value.toString()))
+                    newListSubject.onNext(value)
+                }
+                Constants.Setting.ANALYTICS.value -> {
+                    analyticsSubject.onNext(value)
                 }
             }
         }
