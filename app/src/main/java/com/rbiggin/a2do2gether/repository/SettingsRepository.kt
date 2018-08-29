@@ -6,14 +6,12 @@ import com.rbiggin.a2do2gether.firebase.FirebaseDatabaseWriter
 import com.rbiggin.a2do2gether.firebase.FirebaseReadWatcher
 import com.rbiggin.a2do2gether.model.SettingsUpdate
 import com.rbiggin.a2do2gether.utils.Constants
-import com.rbiggin.a2do2gether.utils.Utilities
 import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
 class SettingsRepository @Inject constructor(private val uidProvider: UidProvider,
-                                             private val databaseWriter: FirebaseDatabaseWriter,
-                                             private val utilities: Utilities) :
-        FirebaseReadWatcher.Listener {
+                                             private val databaseWriter: FirebaseDatabaseWriter) :
+                                             FirebaseReadWatcher.Listener {
 
     private var mDatabase: DatabaseReference? = null
 

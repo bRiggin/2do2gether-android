@@ -20,8 +20,8 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideUserRepository(fbDatabase: IntFirebaseDatabase, fbStorage: IntFirebaseStorage,
-                              utilities: Utilities, uidProvider: UidProvider): UserProfileRepository {
-        return UserProfileRepository(fbDatabase, fbStorage, utilities, uidProvider)
+                              uidProvider: UidProvider): UserProfileRepository {
+        return UserProfileRepository(fbDatabase, fbStorage, uidProvider)
     }
 
     @Provides
@@ -33,8 +33,8 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideSettingsRepository(utilities: Utilities, uidProvider: UidProvider, writer: FirebaseDatabaseWriter)
+    fun provideSettingsRepository(uidProvider: UidProvider, writer: FirebaseDatabaseWriter)
             : SettingsRepository {
-        return SettingsRepository(uidProvider, writer, utilities)
+        return SettingsRepository(uidProvider, writer)
     }
 }

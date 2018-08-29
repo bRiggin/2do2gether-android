@@ -1,7 +1,9 @@
 package com.rbiggin.a2do2gether.repository
 
+import android.support.annotation.VisibleForTesting
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.rbiggin.a2do2gether.firebase.FirebaseReadEqualWatcher
 import com.rbiggin.a2do2gether.firebase.FirebaseReadWatcher
 import com.rbiggin.a2do2gether.firebase.IntFirebaseDatabase
@@ -18,7 +20,6 @@ import kotlin.collections.HashMap
 
 class ConnectionsRepository @Inject constructor(private val databaseApi: IntFirebaseDatabase,
                                                 private val uidProvider: UidProvider) :
-                                                IntFirebaseDatabaseListener,
                                                 FirebaseReadEqualWatcher.Listener,
                                                 FirebaseReadWatcher.Listener{
 
@@ -26,11 +27,16 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
 
     private var mUid: String? = null
 
-    private val connectionsMap: HashMap<String, FirebaseReadWatcher> = HashMap()
-    private var connectionsWatcher: FirebaseReadWatcher? = null
-    private val pendingRequestsMap: HashMap<String, FirebaseReadWatcher> = HashMap()
-    private var pendingRequestsWatcher: FirebaseReadWatcher? = null
-    private var searchResultWatcher: FirebaseReadEqualWatcher? = null
+    @VisibleForTesting
+    val connectionsMap: HashMap<String, FirebaseReadWatcher> = HashMap()
+    @VisibleForTesting
+    var connectionsWatcher: FirebaseReadWatcher? = null
+    @VisibleForTesting
+    val pendingRequestsMap: HashMap<String, FirebaseReadWatcher> = HashMap()
+    @VisibleForTesting
+    var pendingRequestsWatcher: FirebaseReadWatcher? = null
+    @VisibleForTesting
+    var searchResultWatcher: FirebaseReadEqualWatcher? = null
 
 
     val pendingRequestsSubject: BehaviorSubject<HashMap<String, UserConnectionRequest>>
@@ -45,7 +51,7 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
     private val mConnections: HashMap<String,UserDetails> = HashMap()
 
     fun initialise(){
-        mDatabase = com.google.firebase.database.FirebaseDatabase.getInstance().reference
+        mDatabase = FirebaseDatabase.getInstance().reference
         mUid = uidProvider.getUid()
         if (mUid.isNullOrBlank()){
             throw NullPointerException("Uid provided by UidProvider has returned null")
@@ -70,6 +76,7 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
         pendingRequestsMap.clear()
     }
 
+
     private fun clearConnectionsMap(){
         for ((_, reader) in connectionsMap) {
             reader.detachListener()
@@ -86,11 +93,6 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
                                                        this)
             }
         }
-
-        mDatabase?.let {
-            databaseApi.doEqualToRead(it, Constants.FB_USER_PROFILE, Constants.FB_NICKNAME,
-                                      searchString, this, Constants.DatabaseApi.FIND_USERS)
-        }
     }
 
     fun setupConnectionWatchers() {
@@ -101,27 +103,6 @@ class ConnectionsRepository @Inject constructor(private val databaseApi: IntFire
             connectionsWatcher = FirebaseReadWatcher(it, "${Constants.FB_CONNECTIONS}/$mUid",
                     Constants.DatabaseApi.FIND_CONNECTIONS, this)
 
-        }
-    }
-
-    override fun onDatabaseResult(type: Constants.DatabaseApi, data: DataSnapshot?, success: Boolean, message: String?) {
-        when (type){
-            Constants.DatabaseApi.FIND_USERS -> {
-                if (success){
-                    data?.let { handleConnectionSearchResults(data) }
-                }
-            }
-            Constants.DatabaseApi.FIND_PENDING_CONNECTIONS -> {
-
-            }
-            Constants.DatabaseApi.READ_USER_DETAILS -> {
-                if (success){
-                    data?.let { handlePendingConnectionDetails(data) }
-                }
-            }
-            else -> {
-                //todo throw exception
-            }
         }
     }
 

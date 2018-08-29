@@ -17,7 +17,6 @@ import com.rbiggin.a2do2gether.utils.Utilities
 
 class UserProfileRepository @Inject constructor(private val databaseApi: IntFirebaseDatabase,
                                                 private val storageApi: IntFirebaseStorage,
-                                                private val utilities: Utilities,
                                                 private val uidProvider: UidProvider) :
                                                 IntUserRepositoryActivity,
                                                 IntUserRepositoryFragment,

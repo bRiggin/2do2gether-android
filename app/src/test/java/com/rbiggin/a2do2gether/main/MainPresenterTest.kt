@@ -5,15 +5,14 @@ import com.rbiggin.a2do2gether.repository.AuthRepository
 import com.rbiggin.a2do2gether.repository.UserProfileRepository
 import com.rbiggin.a2do2gether.ui.main.MainActivity
 import com.rbiggin.a2do2gether.ui.main.MainPresenter
-import junitparams.JUnitParamsRunner
-import junitparams.Parameters
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.junit.MockitoJUnitRunner
 
-@RunWith(JUnitParamsRunner::class)
+@RunWith(MockitoJUnitRunner::class)
 class MainPresenterTest {
     private lateinit var presenter: MainPresenter
     private lateinit var activity: MainActivity
