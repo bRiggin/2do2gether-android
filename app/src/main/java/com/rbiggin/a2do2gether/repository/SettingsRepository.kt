@@ -7,10 +7,12 @@ import com.rbiggin.a2do2gether.firebase.FirebaseReadWatcher
 import com.rbiggin.a2do2gether.model.SettingsUpdate
 import com.rbiggin.a2do2gether.utils.Constants
 import io.reactivex.subjects.BehaviorSubject
+import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 class SettingsRepository @Inject constructor(private val uidProvider: UidProvider,
-                                             private val databaseWriter: FirebaseDatabaseWriter) :
+                                             private val databaseWriter: FirebaseDatabaseWriter):
                                              FirebaseReadWatcher.Listener {
 
     private var mDatabase: DatabaseReference? = null
@@ -58,12 +60,12 @@ class SettingsRepository @Inject constructor(private val uidProvider: UidProvide
                                          errorMessage: String?, type: Constants.DatabaseApi) {
         when (type) {
             Constants.DatabaseApi.READ_SETTINGS -> {
-                if (success){
+                if (success) {
                     snapshot?.let {
                         updateSettingsSubjects(it)
                     }
                 } else {
-                    throw Exception("SettingsWatcher error, message: $errorMessage")
+                    Timber.d("SettingsWatcher error, message: $errorMessage")
                 }
             }
             else -> {
@@ -73,11 +75,11 @@ class SettingsRepository @Inject constructor(private val uidProvider: UidProvide
         }
     }
 
-    private fun updateSettingsSubjects(data: DataSnapshot){
-        for (setting in data.children){
+    private fun updateSettingsSubjects(data: DataSnapshot) {
+        for (setting in data.children) {
             val value = setting.value.toString().toBoolean()
-            when (setting.key){
-                Constants.Setting.LIST_REORDER.value ->{
+            when (setting.key) {
+                Constants.Setting.LIST_REORDER.value -> {
                     reorderListSubject.onNext(value)
                 }
                 Constants.Setting.PROFILE_PRIVACY.value -> {
@@ -106,7 +108,7 @@ class SettingsRepository @Inject constructor(private val uidProvider: UidProvide
         mDatabase?.let {
             databaseWriter.doWrite(it, path, data)
 
-            if (update.type == Constants.Setting.PROFILE_PRIVACY){
+            if (update.type == Constants.Setting.PROFILE_PRIVACY) {
                 databaseWriter.doWrite(it, userDetailsPath, data)
             }
         }

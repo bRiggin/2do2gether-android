@@ -31,16 +31,20 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
 
         disposeOnViewWillDetach(connectionsRepo.connectionsSubject
                 .observeOn(uiThread)
+                .map {
+                    utilities.hashMapToArray(it)
+                }
                 .subscribe {
-                    val connections = utilities.hashMapToArray(it) as ArrayList<UserDetails>
-                    view.onDisplayConnections(connections)
+                    view.onDisplayConnections(it)
                 })
 
         disposeOnViewWillDetach(connectionsRepo.pendingRequestsSubject
                 .observeOn(uiThread)
+                .map{
+                    utilities.hashMapToArray(it)
+                }
                 .subscribe {
-                    val requests = utilities.hashMapToArray(it) as ArrayList<UserConnectionRequest>
-                    view.onDisplayConnectionRequests(requests)
+                    view.onDisplayConnectionRequests(it)
                 })
 
         disposeOnViewWillDetach(connectionsRepo.connectionSearchSubject

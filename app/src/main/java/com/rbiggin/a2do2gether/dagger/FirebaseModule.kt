@@ -26,6 +26,7 @@ class FirebaseModule {
     }
 
     @Provides
+    @Singleton
     fun provideFirebaseDatabaseWriter(): FirebaseDatabaseWriter {
         return FirebaseDatabaseWriter
     }

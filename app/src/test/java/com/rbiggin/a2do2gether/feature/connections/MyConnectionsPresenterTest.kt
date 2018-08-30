@@ -31,7 +31,11 @@ class MyConnectionsPresenterTest {
     private val settingsRepo: SettingsRepository = mock()
     private val utilities: Utilities = mock()
 
-    private val scheduler = TestScheduler()
+    private val ui = TestScheduler()
+
+    private val computation = TestScheduler()
+
+    private val profilePrivacySubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
 
     private val pendingRequestsSubject: BehaviorSubject<HashMap<String, UserConnectionRequest>> = BehaviorSubject.create<HashMap<String, UserConnectionRequest>>()
 
@@ -41,11 +45,13 @@ class MyConnectionsPresenterTest {
 
     @Before
     fun `configure MyConnections Presenter`() {
+        whenever(settingsRepo.profilePublicSubject).doReturn(profilePrivacySubject)
+
         whenever(connectionsRepo.connectionsSubject).doReturn(connectionsSubject)
         whenever(connectionsRepo.connectionSearchSubject).doReturn(connectionSearchSubject)
         whenever(connectionsRepo.pendingRequestsSubject).doReturn(pendingRequestsSubject)
 
-        presenter = MyConnectionsPresenter(connectionsRepo, userRepo, settingsRepo, utilities, scheduler)
+        presenter = MyConnectionsPresenter(connectionsRepo, userRepo, settingsRepo, utilities, ui)
     }
 
     @Test
@@ -74,6 +80,10 @@ class MyConnectionsPresenterTest {
 
         presenter.onViewAttached(fragment)
         presenter.onViewWillShow()
+
+        profilePrivacySubject.onNext(true)
+        computation.triggerActions()
+        ui.triggerActions()
 
         presenter.onPlusButtonPressed()
 
@@ -140,8 +150,7 @@ class MyConnectionsPresenterTest {
     fun `on_recycler_button_pressed connection_request`() {
         val uid = "uid"
 
-        presenter.onViewAttached(fragment)
-        presenter.onViewWillShow()
+        `on_search_view_pressed and_user_is_discoverable presenting_search_view`()
 
         presenter.onRecyclerViewButtonPressed(MyConnectionsPresenter.Action.CONNECTION_REQUEST, uid)
 
@@ -149,7 +158,6 @@ class MyConnectionsPresenterTest {
 
         verify(fragment).onClearSearchView()
         verify(fragment).onDisplayDialogMessage(Constants.DB_CONNECTION_REQUEST_SUBMITTED, null)
-        verify(fragment).onDisplayView(MyConnectionsPresenter.Window.MAIN_VIEW)
 
         assertThat(presenter.currentView, (equalTo(MyConnectionsPresenter.Window.MAIN_VIEW)))
     }

@@ -11,6 +11,8 @@ import android.view.Window
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.rbiggin.a2do2gether.R
+import com.rbiggin.a2do2gether.model.UserConnectionRequest
+import com.rbiggin.a2do2gether.model.UserDetails
 
 class Utilities {
 
@@ -104,9 +106,8 @@ class Utilities {
         }
     }
 
-
-    fun hashMapToArray(map: HashMap<*, *>): ArrayList<Any>{
-        val array : ArrayList<Any> = ArrayList()
+    fun <T> hashMapToArray(map: HashMap<String, T>): ArrayList<T>{
+        val array : ArrayList<T> = ArrayList()
         for ((_, item) in map) {
             array.add(item)
         }

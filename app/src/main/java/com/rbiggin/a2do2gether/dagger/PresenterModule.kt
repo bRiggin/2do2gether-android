@@ -65,9 +65,9 @@ class PresenterModule {
                                       cRepo: ConnectionsRepository,
                                       uRepo: UserProfileRepository,
                                       sRepo: SettingsRepository,
-                                      @Named("main") thread: Scheduler):
+                                      @Named("main") mThread: Scheduler):
                                       MyConnectionsPresenter {
-        return MyConnectionsPresenter(cRepo, uRepo, sRepo, utils, thread)
+        return MyConnectionsPresenter(cRepo, uRepo, sRepo, utils, mThread)
     }
 
     @Provides
