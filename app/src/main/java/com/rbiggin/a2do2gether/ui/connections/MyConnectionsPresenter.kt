@@ -24,7 +24,7 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
     @VisibleForTesting
     var isProcessingBol: Boolean = false
 
-    var profileIsPublic: Boolean = false
+    private var profileIsPublic: Boolean = false
 
     override fun onViewAttached(view: MyConnectionsFragment) {
         super.onViewAttached(view)

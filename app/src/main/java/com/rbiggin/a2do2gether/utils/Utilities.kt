@@ -106,7 +106,7 @@ class Utilities {
         }
     }
 
-    fun <T> hashMapToArray(map: HashMap<String, T>): ArrayList<T>{
+    fun <T> hashMapToArray(map: HashMap<*, T>): ArrayList<T>{
         val array : ArrayList<T> = ArrayList()
         for ((_, item) in map) {
             array.add(item)
