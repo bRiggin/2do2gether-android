@@ -41,6 +41,12 @@
         <item name="trackTint">@color/switch_colour_track</item>
     </style>
 
+    <style name="NavigationText" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/caviar_dreams_family</item>
+    </style>
+
     <style name="ActionBarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="colorControlNormal">@color/white</item>
     </style>
