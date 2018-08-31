@@ -5,6 +5,7 @@
     <color name="colorAccent">@color/blue_300</color>
 
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
     <color name="text_colour">@color/white</color>
 
     <color name="grey_500">#9E9E9E</color>
