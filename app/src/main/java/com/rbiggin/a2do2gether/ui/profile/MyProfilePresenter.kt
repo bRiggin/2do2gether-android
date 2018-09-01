@@ -5,6 +5,7 @@ import android.util.Log
 import com.rbiggin.a2do2gether.repository.*
 import com.rbiggin.a2do2gether.ui.base.BasePresenter
 import com.rbiggin.a2do2gether.utils.Constants
+import timber.log.Timber
 import javax.inject.Inject
 
 class MyProfilePresenter @Inject constructor(private val userRepo: IntUserRepositoryFragment,
@@ -12,13 +13,10 @@ class MyProfilePresenter @Inject constructor(private val userRepo: IntUserReposi
         BasePresenter<MyProfileFragment>(),
         IntAuthRepositoryListener,
         UserProfileRepository.FragmentListener {
-    var tag: String? = null
 
     override fun onViewWillShow() {
         userRepo.onSetFragment(this)
         view?.onUpdateDetails(userRepo.geUsersFirstName(), userRepo.getUsersSecondName(), userRepo.getUsersNickname())
-
-        tag = Constants.PROFILE_PRESENTER_TAG
     }
 
     override fun onViewWillHide() {
@@ -44,9 +42,9 @@ class MyProfilePresenter @Inject constructor(private val userRepo: IntUserReposi
 
     override fun onWriteUserDetailsResult(success: Boolean, errorMessage: String?) {
         if (success) {
-            Log.d(tag, "User's profile details have been successfully written to database.")
+            Timber.d("User's profile details have been successfully written to database.")
         } else {
-            Log.d(tag, "User's profile details have been unsuccessfully written to database.")
+            Timber.d("User's profile details have been unsuccessfully written to database.")
             view?.onDisplayDialogMessage(Constants.DB_WRITE_USER_DETAILS_UNSUCCESSFUL, errorMessage)
         }
     }

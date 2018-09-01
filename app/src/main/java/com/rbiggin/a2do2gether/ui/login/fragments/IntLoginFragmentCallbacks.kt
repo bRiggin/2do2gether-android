@@ -1,8 +1,5 @@
 package com.rbiggin.a2do2gether.ui.login.fragments
 
-/**
- * Insert class/object/interface/file description...
- */
 interface IntLoginFragmentCallbacks {
     fun clearViews()
 

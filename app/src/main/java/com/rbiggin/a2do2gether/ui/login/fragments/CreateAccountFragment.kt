@@ -8,41 +8,13 @@ import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.utils.Constants
 import kotlinx.android.synthetic.main.fragment_register.*
 
-/**
- * Fragment instance the manages the user's input of their new password while creating account.
- */
 class CreateAccountFragment : MasterFragment(), IntLoginFragmentCallbacks {
 
-    /**
-     * Companion object to provide access to newInstance.
-     */
-    companion object {
-        /**
-         * Create a new instance of this fragment using the provided parameters.
-         *
-         * @param id ID handed to Fragment.
-         * @return A new instance of fragment: RegisterFragment.
-         */
-        fun newInstance(id: Int): CreateAccountFragment {
-            val fragment = CreateAccountFragment()
-            val args = Bundle()
-            args.putInt(Constants.FRAGMENT_ID, id)
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
-    /**
-     * onCreateView
-     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_register, container, false)
     }
 
-    /**
-     * onResume
-     */
     override fun onResume() {
         super.onResume()
         register_create_btn.setOnClickListener {
@@ -52,18 +24,12 @@ class CreateAccountFragment : MasterFragment(), IntLoginFragmentCallbacks {
         }
     }
 
-    /**
-     * Clears all UI views within fragment
-     */
     override fun clearViews() {
         register_email_et.text.clear()
         register_password_et.text.clear()
         register_re_password_et.text.clear()
     }
 
-    /**
-     *
-     */
     override fun clearViews(email: Boolean, passwordOne: Boolean, passwordTwo: Boolean) {
         if (email){
             register_email_et.text.clear()
@@ -73,6 +39,16 @@ class CreateAccountFragment : MasterFragment(), IntLoginFragmentCallbacks {
         }
         if (passwordTwo) {
             register_re_password_et.text.clear()
+        }
+    }
+
+    companion object {
+        fun newInstance(id: Int): CreateAccountFragment {
+            val fragment = CreateAccountFragment()
+            val args = Bundle()
+            args.putInt(Constants.FRAGMENT_ID, id)
+            fragment.arguments = args
+            return fragment
         }
     }
 }

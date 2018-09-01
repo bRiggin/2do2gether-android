@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import com.rbiggin.a2do2gether.repository.*
 import com.rbiggin.a2do2gether.utils.Constants
+import timber.log.Timber
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
@@ -18,10 +19,8 @@ class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
 
     private var currentFragment: Constants.Fragment? = null
 
-    private val tag = Constants.MAIN_PRESENTER_TAG
-
     fun onViewAttached(view: MainActivity, fragment: String?) {
-        Log.w(tag, "onViewAttach: view = $view, fragment = $fragment")
+        Timber.d("onViewAttach: view = $view, fragment = $fragment")
         mActivity = view
 
         if (!authRepo.isUserLoggedIn()) {

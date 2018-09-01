@@ -1,8 +1,5 @@
 package com.rbiggin.a2do2gether.repository
 
-/**
- * Defines Authentication Repository calls
- */
 interface IntAuthRepository{
     fun setup(listener: IntAuthRepositoryListener)
 
@@ -29,9 +26,6 @@ interface IntAuthRepository{
     fun detach()
 }
 
-/**
- * Defines callbacks from Authentication Repository
- */
 interface IntAuthRepositoryListener{
     fun onAuthStateChange(response_id: Int, message: String?)
 }

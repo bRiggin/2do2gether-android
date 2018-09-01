@@ -19,45 +19,17 @@ import javax.inject.Inject
 
 import kotlinx.android.synthetic.main.fragment_my_profile.*
 
-/**
- * Fragment to allow the user to update/edit their public facing profile.
- */
 class MyProfileFragment : BaseFragment(), MyProfilePresenter.View {
 
-    /** Injected Interface instance */
     @Inject lateinit var presenter: MyProfilePresenter
 
-    /** injected instance of Constants. */
     @Inject lateinit var utilities: Utilities
 
-    /**
-     * Companion object to provide access to newInstance.
-     */
-    companion object {
-        /**
-         * @param id ID handed to Fragment.
-         * @return A new instance of fragment: AddressFragment.
-         */
-        fun newInstance(id: Int): MyProfileFragment {
-            val fragment = MyProfileFragment()
-            val args = Bundle()
-            args.putInt(Constants.FRAGMENT_ID, id)
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
-    /**
-     * onCreateView
-     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_my_profile, container, false)
     }
 
-    /**
-     * onAttach
-     */
     override fun onAttach(context: Context?) {
         (context?.applicationContext as MyApplication).daggerComponent.inject(this)
         super.onAttach(context)
@@ -65,9 +37,6 @@ class MyProfileFragment : BaseFragment(), MyProfilePresenter.View {
         presenter.onViewAttached(this)
     }
 
-    /**
-     * onResume
-     */
     override fun onResume() {
         super.onResume()
 
@@ -92,17 +61,11 @@ class MyProfileFragment : BaseFragment(), MyProfilePresenter.View {
 
     }
 
-    /**
-     *
-     */
     override fun onDestroy() {
         super.onDestroy()
         presenter.onViewDetached()
     }
 
-    /**
-     *
-     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -116,9 +79,6 @@ class MyProfileFragment : BaseFragment(), MyProfilePresenter.View {
         }
     }
 
-    /**
-     *
-     */
     override fun onDisplayDialogMessage(message_id: Int, message: String?) {
         var dialogMessage = getString(R.string.error_unknown)
         message?.let{ dialogMessage = message }
@@ -140,9 +100,6 @@ class MyProfileFragment : BaseFragment(), MyProfilePresenter.View {
         utilities.showOKDialog(activity as Context, getString(R.string.app_name), messageString!!)
     }
 
-    /**
-     *
-     */
     override fun onUpdateProgressBar(isVisible: Boolean, progress: Int) {
         myProfileProgressBar.progress = progress
         if (isVisible) {
@@ -158,14 +115,21 @@ class MyProfileFragment : BaseFragment(), MyProfilePresenter.View {
         myProfileNicknameEt.setText(nickname)
     }
 
-    /**
-     *
-     */
     override fun onLaunchImageCropActivity() {
         CropImage.activity().
                 setGuidelines(CropImageView.Guidelines.ON).
                 setCropShape(CropImageView.CropShape.OVAL).
                 setAspectRatio(1,1).
                 start(context!!, this)
+    }
+
+    companion object {
+        fun newInstance(id: Int): MyProfileFragment {
+            val fragment = MyProfileFragment()
+            val args = Bundle()
+            args.putInt(Constants.FRAGMENT_ID, id)
+            fragment.arguments = args
+            return fragment
+        }
     }
 }

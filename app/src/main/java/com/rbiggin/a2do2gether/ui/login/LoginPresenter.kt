@@ -5,6 +5,7 @@ import com.rbiggin.a2do2gether.repository.AuthRepository
 import com.rbiggin.a2do2gether.ui.login.fragments.IntLoginFragmentCallbacks
 import com.rbiggin.a2do2gether.ui.base.BasePresenter
 import com.rbiggin.a2do2gether.utils.Constants
+import timber.log.Timber
 import javax.inject.Inject
 
 class LoginPresenter @Inject constructor(private val authRepo: AuthRepository) :
@@ -19,7 +20,6 @@ class LoginPresenter @Inject constructor(private val authRepo: AuthRepository) :
 
     private var isProcessingBol: Boolean = false
 
-    private val tag = Constants.LOGIN_PRESENTER_TAG
 
     private fun setup() {
         authRepo.setListener(this)
@@ -156,19 +156,19 @@ class LoginPresenter @Inject constructor(private val authRepo: AuthRepository) :
     }
 
     fun backPressedInFragment(fragment_id: Int) {
-        Log.d(tag, "Interface notified of back press. Fragment ID: $fragment_id")
+        Timber.d("Interface notified of back press. Fragment ID: $fragment_id")
         when (fragment_id) {
             Constants.REGISTER_FRAGMENT_ID -> {
                 mLoginActivity?.displayFragment(Constants.ADDRESS_FRAGMENT_ID)
             }
             Constants.ADDRESS_FRAGMENT_ID -> {
-                Log.w(tag, "Fragment ID: $fragment_id, should never notify presenter.")
+                Timber.w("Fragment ID: $fragment_id, should never notify presenter.")
             }
             Constants.PASSWORD_FRAGMENT_ID -> {
                 mLoginActivity?.displayFragment(Constants.ADDRESS_FRAGMENT_ID)
             }
             else -> {
-                Log.w(tag, "Fragment ID: $fragment_id, not recognised.")
+                Timber.w("Fragment ID: $fragment_id, not recognised.")
             }
         }
     }

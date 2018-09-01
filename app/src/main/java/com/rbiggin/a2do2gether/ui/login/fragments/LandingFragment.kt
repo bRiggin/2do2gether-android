@@ -8,41 +8,13 @@ import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.utils.Constants
 import kotlinx.android.synthetic.main.fragment_address.*
 
-/**
- * Fragment instance the manages the user's input of their email address during login
- */
 class LandingFragment : MasterFragment(), IntLoginFragmentCallbacks{
 
-    /**
-     * Companion object to provide access to newInstance.
-     */
-    companion object {
-        /**
-         * Create a new instance of this fragment using the provided parameters.
-         *
-         * @param id ID handed to Fragment.
-         * @return A new instance of fragment: AddressFragment.
-         */
-        fun newInstance(id: Int): LandingFragment {
-            val fragment = LandingFragment()
-            val args = Bundle()
-            args.putInt(Constants.FRAGMENT_ID, id)
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
-    /**
-     * onCreateViewrhy
-     */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_address, container, false)
     }
 
-    /**
-     * onResume
-     */
     override fun onResume() {
         super.onResume()
         address_create_account_btn.setOnClickListener {
@@ -54,19 +26,23 @@ class LandingFragment : MasterFragment(), IntLoginFragmentCallbacks{
         }
     }
 
-    /**
-     * Clears all UI views within fragment
-     */
     override fun clearViews() {
         address_email_et.text.clear()
     }
 
-    /**
-     *
-     */
     override fun clearViews(email: Boolean, passwordOne: Boolean, passwordTwo: Boolean) {
         if (email) {
             clearViews()
+        }
+    }
+
+    companion object {
+        fun newInstance(id: Int): LandingFragment {
+            val fragment = LandingFragment()
+            val args = Bundle()
+            args.putInt(Constants.FRAGMENT_ID, id)
+            fragment.arguments = args
+            return fragment
         }
     }
 }

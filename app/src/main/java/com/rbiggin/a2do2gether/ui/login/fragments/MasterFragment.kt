@@ -7,31 +7,19 @@ import com.rbiggin.a2do2gether.application.MyApplication
 import com.rbiggin.a2do2gether.ui.login.LoginPresenter
 import javax.inject.Inject
 
-/**
- * Master fragment, all login fragments are subclasses for this fragment.
- */
 open class MasterFragment : Fragment() {
 
-    /** Injected Interface instance */
     @Inject lateinit var presenter: LoginPresenter
 
-    /** The ID number of fragment */
     var mFragmentNumber: Int? = null
 
-    /** The context of the attached Activity */
     private var mContext: Context? = null
 
-    /**
-     * onAttach
-     */
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         mContext = context
     }
 
-    /**
-     * onCreate
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (mContext?.applicationContext as MyApplication).daggerComponent.inject(this)

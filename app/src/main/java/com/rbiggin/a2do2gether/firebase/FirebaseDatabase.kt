@@ -6,14 +6,8 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.rbiggin.a2do2gether.utils.Constants
 
-/**
- * Object that performs all Firebase database calls
- */
 object FirebaseDatabase : IntFirebaseDatabase {
 
-    /**
-     * Do Read
-     */
     override fun doRead(dbRef: DatabaseReference, path: String,
                         listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApi) {
         val mReference = dbRef.child(path)
@@ -29,9 +23,6 @@ object FirebaseDatabase : IntFirebaseDatabase {
         mReference.addValueEventListener(postListener)
     }
 
-    /**
-     * Do Equal to Read
-     */
     override fun doEqualToRead(dbRef: DatabaseReference, path: String, sortBy: String, equalTo: String,
                                listener: IntFirebaseDatabaseListener?, type: Constants.DatabaseApi) {
         val mReference = dbRef.child(path).orderByChild(sortBy).equalTo(equalTo)

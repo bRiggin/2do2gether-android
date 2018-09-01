@@ -3,9 +3,6 @@ package com.rbiggin.a2do2gether.firebase
 import com.google.firebase.database.DatabaseReference
 import com.rbiggin.a2do2gether.utils.Constants
 
-/**
- * Defines Firebase database API calls
- */
 interface IntFirebaseDatabase {
     fun doRead(dbRef: DatabaseReference, path: String, listener: IntFirebaseDatabaseListener?,
                type: Constants.DatabaseApi)

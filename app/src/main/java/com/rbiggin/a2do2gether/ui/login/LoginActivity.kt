@@ -41,7 +41,6 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
         setContentView(R.layout.activity_login)
 
         (application as MyApplication).daggerComponent.inject(this)
-        TAG = Constants.LOGIN_ACTIVITY_TAG
 
         presenter.onViewAttached(this)
 

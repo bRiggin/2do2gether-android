@@ -1,8 +1,5 @@
 package com.rbiggin.a2do2gether.utils
 
-/**
- * Constants for application
- */
 class Constants {
 
     companion object {
@@ -99,24 +96,6 @@ class Constants {
         const val MY_PROFILE_FRAGMENT_ID: Int = 700007
         const val SETTINGS_FRAGMENT_ID: Int = 700008
 
-        /**
-         * Logging tag strings
-         */
-        const val LOGIN_ACTIVITY_TAG: String = "Login Activity"
-        const val LOGIN_PRESENTER_TAG: String = "Login Interface"
-        const val MAIN_ACTIVITY_TAG: String = "Main Activity"
-        const val MAIN_PRESENTER_TAG: String = "Main Presenter"
-        const val TODO_ACTIVITY_TAG: String = "ToDoLists Activity"
-        const val TODO_PRESENTER_TAG: String = "ToDoLists Interface"
-        const val CHECKLISTS_ACTIVITY_TAG: String = "Checklists Activity"
-        const val CHECKLISTS_PRESENTER_TAG: String = "Checklists Interface"
-        const val CONNECTIONS_ACTIVITY_TAG: String = "My Connections Activity"
-        const val CONNECTIONS_PRESENTER_TAG: String = "My Connections Interface"
-        const val PROFILE_ACTIVITY_TAG: String = "My Profile Activity"
-        const val PROFILE_PRESENTER_TAG: String = "My Profile Interface"
-        const val SETTINGS_ACTIVITY_TAG: String = "Setting Activity"
-        const val SETTINGS_PRESENTER_TAG: String = "Setting Interface"
-        const val USER_REPOSITORY_TAG = "User Repository"
     }
 
     enum class Auth {

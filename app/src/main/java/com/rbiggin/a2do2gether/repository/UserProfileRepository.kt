@@ -10,10 +10,9 @@ import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 import java.io.File
 import android.graphics.BitmapFactory
-import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.rbiggin.a2do2gether.firebase.*
-import com.rbiggin.a2do2gether.utils.Utilities
+import timber.log.Timber
 
 class UserProfileRepository @Inject constructor(private val databaseApi: IntFirebaseDatabase,
                                                 private val storageApi: IntFirebaseStorage,
@@ -34,8 +33,6 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
     private var mStorage: FirebaseStorage? = null
 
     private var mStorageRef: StorageReference? = null
-
-    private val tag = Constants.USER_REPOSITORY_TAG
 
     override fun initialise(){
         val uid = uidProvider.getUid()
@@ -135,7 +132,7 @@ class UserProfileRepository @Inject constructor(private val databaseApi: IntFire
             path?.let { newProfilePicture = getLocalImage(path) }
             newProfilePicture?.let { mActivityListener?.onProfilePictureChanged(it) }
         } else {
-            Log.d(tag, "Profile picture download failed with message: $errorMessage" )
+            Timber.d("Profile picture download failed with message: $errorMessage" )
         }
     }
 

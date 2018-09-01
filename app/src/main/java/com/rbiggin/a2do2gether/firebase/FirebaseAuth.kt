@@ -3,14 +3,8 @@ package com.rbiggin.a2do2gether.firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.rbiggin.a2do2gether.utils.Constants
 
-/**
- * Object that performs all Firebase authentication calls
- */
 object FirebaseAuth{
 
-    /**
-     * Creates Account
-     */
     fun createAccount(auth: FirebaseAuth?, listener: IntFirebaseAuthListener?, email: String,
                       password: String, type: Constants.Auth) {
         auth?.createUserWithEmailAndPassword(email, password)?.addOnCompleteListener {
@@ -22,9 +16,6 @@ object FirebaseAuth{
         }
     }
 
-    /**
-     * Login
-     */
     fun login(auth: FirebaseAuth?, listener: IntFirebaseAuthListener?, email: String,
               password: String, type: Constants.Auth) {
         auth?.signInWithEmailAndPassword(email, password)?.addOnCompleteListener {
@@ -36,9 +27,6 @@ object FirebaseAuth{
         }
     }
 
-    /**
-     * Send Reset Email
-     */
     fun sendRestEmail(auth: FirebaseAuth?, listener: IntFirebaseAuthListener?, email: String,
                       type: Constants.Auth) {
         auth?.sendPasswordResetEmail(email)?.addOnCompleteListener {
