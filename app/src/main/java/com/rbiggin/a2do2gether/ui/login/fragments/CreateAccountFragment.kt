@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.rbiggin.a2do2gether.R
+import com.rbiggin.a2do2gether.utils.Constants
 import kotlinx.android.synthetic.main.fragment_register.*
 
 /**
@@ -25,7 +26,7 @@ class CreateAccountFragment : MasterFragment(), IntLoginFragmentCallbacks {
         fun newInstance(id: Int): CreateAccountFragment {
             val fragment = CreateAccountFragment()
             val args = Bundle()
-            args.putInt("FRAGMENT_ID", id)
+            args.putInt(Constants.FRAGMENT_ID, id)
             fragment.arguments = args
             return fragment
         }

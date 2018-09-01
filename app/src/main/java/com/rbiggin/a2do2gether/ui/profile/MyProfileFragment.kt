@@ -41,7 +41,7 @@ class MyProfileFragment : BaseFragment(), MyProfilePresenter.View {
         fun newInstance(id: Int): MyProfileFragment {
             val fragment = MyProfileFragment()
             val args = Bundle()
-            args.putInt("FRAGMENT_ID", id)
+            args.putInt(Constants.FRAGMENT_ID, id)
             fragment.arguments = args
             return fragment
         }

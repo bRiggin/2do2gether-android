@@ -16,6 +16,7 @@ class Constants {
         /**
          * General keys
          */
+        const val FRAGMENT_ID: String = "fragment_id"
         const val LOAD_FRAGMENT: String = "load_fragment"
         const val SP_FCM_TOKEN: String = "current_fcm_token"
         const val BUNDLE: String = "bundle"
@@ -24,6 +25,9 @@ class Constants {
          * Firebase Strings
          */
         const val FB_USER_PROFILE: String = "user_profile"
+        const val FB_CHECKLISTS: String = "checklists"
+        const val FB_CHECKLIST_TITLE: String = "title"
+        const val FB_CHECKLIST_ITEMS: String = "items"
         const val FB_CONNECTION_REQUEST: String = "connection_requests"
         const val FB_SETTINGS: String = "user_settings"
         const val FB_CONNECTIONS: String = "connections"
@@ -132,6 +136,7 @@ class Constants {
 
     enum class DatabaseApi {
         READ_USER_DETAILS,
+        READ_CHECKLISTS,
         READ_CONNECTION_REQUEST_DETAILS,
         WRITE_USER_DETAILS,
         FIND_USERS,

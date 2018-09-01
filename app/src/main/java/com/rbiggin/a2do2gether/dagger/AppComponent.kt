@@ -3,6 +3,7 @@ package com.rbiggin.a2do2gether.dagger
 import com.rbiggin.a2do2gether.application.AppModule
 import com.rbiggin.a2do2gether.notification.MessagingService
 import com.rbiggin.a2do2gether.ui.base.BaseFragment
+import com.rbiggin.a2do2gether.ui.checklists.ChecklistFragment
 import com.rbiggin.a2do2gether.ui.checklists.ChecklistsFragment
 import com.rbiggin.a2do2gether.ui.connections.MyConnectionsFragment
 import com.rbiggin.a2do2gether.ui.login.LoginActivity
@@ -38,6 +39,8 @@ interface AppComponent {
     fun inject(target: ToDoListFragment){}
 
     fun inject(target: ChecklistsFragment){}
+
+    fun inject(target: ChecklistFragment){}
 
     fun inject(target: MessagingService){}
 }

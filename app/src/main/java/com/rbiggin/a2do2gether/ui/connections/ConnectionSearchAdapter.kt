@@ -62,9 +62,6 @@ class ConnectionSearchAdapter(private val searchResults: ArrayList<UserConnectio
             view.connectUserBtn.setOnClickListener(this)
         }
 
-        /**
-         * onClick
-         */
         override fun onClick(v: View) {
             when (v.id){
                 R.id.connectUserBtn -> {

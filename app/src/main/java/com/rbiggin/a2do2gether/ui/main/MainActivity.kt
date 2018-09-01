@@ -29,6 +29,7 @@ import com.rbiggin.a2do2gether.ui.todo.ToDoListFragment
 import com.rbiggin.a2do2gether.utils.Constants
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import timber.log.Timber
 import java.io.*
 import javax.inject.Inject
 
@@ -38,8 +39,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     @Inject
     lateinit var presenter: MainPresenter
 
-    private val tag: String = Constants.MAIN_ACTIVITY_TAG
-
     private var mMenu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,8 +46,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
         (application as MyApplication).daggerComponent.inject(this)
 
-        Log.w(tag, "intent: $intent")
-        Log.w(tag, "intent extra: ${intent.extras}")
+        Timber.w("intent: $intent")
+        Timber.w( "intent extra: ${intent.extras}")
 
         if (intent.hasExtra(Constants.LOAD_FRAGMENT)) {
             presenter.onViewAttached(this, intent.extras.getString(Constants.LOAD_FRAGMENT))

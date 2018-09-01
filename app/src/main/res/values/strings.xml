@@ -4,6 +4,7 @@
     <!-- General Strings -->
     <string name="email_address">E-mail Address&#8230;</string>
     <string name="enter">Enter</string>
+    <string name="add">Add</string>
     <string name="submit">Submit</string>
     <string name="delete">Delete</string>
     <string name="accept">Accept</string>
@@ -31,6 +32,7 @@
 
     <!-- Checklist strings -->
     <string name="checklists">Checklists</string>
+    <string name="checklists_hint">New checklist item&#8230;</string>
 
     <!-- My Connections strings -->
     <string name="my_connections">My Connections</string>

@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import com.rbiggin.a2do2gether.utils.Constants
 
 open class BaseFragment : Fragment(){
 
@@ -19,7 +20,7 @@ open class BaseFragment : Fragment(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            mFragmentId = it.getInt("FRAGMENT_ID")
+            mFragmentId = it.getInt(Constants.FRAGMENT_ID)
         }
     }
 

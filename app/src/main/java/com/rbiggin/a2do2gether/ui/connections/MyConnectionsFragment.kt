@@ -36,7 +36,7 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
         fun newInstance(id: Int): MyConnectionsFragment {
             val fragment = MyConnectionsFragment()
             val args = Bundle()
-            args.putInt("FRAGMENT_ID", id)
+            args.putInt(Constants.FRAGMENT_ID, id)
             fragment.arguments = args
             return fragment
         }

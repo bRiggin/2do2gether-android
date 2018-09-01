@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.application.MyApplication
 import com.rbiggin.a2do2gether.ui.base.BaseFragment
+import com.rbiggin.a2do2gether.utils.Constants
 import javax.inject.Inject
 
 class ToDoListFragment : BaseFragment(), ToDoListPresenter.View {
@@ -19,7 +20,7 @@ class ToDoListFragment : BaseFragment(), ToDoListPresenter.View {
         fun newInstance(id: Int): ToDoListFragment {
             val fragment = ToDoListFragment()
             val args = Bundle()
-            args.putInt("FRAGMENT_ID", id)
+            args.putInt(Constants.FRAGMENT_ID, id)
             fragment.arguments = args
             return fragment
         }

@@ -26,6 +26,13 @@ class RepositoryModule {
 
     @Provides
     @Singleton
+    fun provideChecklistsRepository(uidProvider: UidProvider, writer: FirebaseDatabaseWriter)
+            : ChecklistRepository {
+        return ChecklistRepository(uidProvider, writer)
+    }
+
+    @Provides
+    @Singleton
     fun provideConnectionsRepository(fbDatabase: IntFirebaseDatabase, uidProvider: UidProvider)
             : ConnectionsRepository {
         return ConnectionsRepository(fbDatabase, uidProvider)

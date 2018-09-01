@@ -7,6 +7,7 @@ import com.rbiggin.a2do2gether.utils.Constants
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
+                                        private val checklistRepo: ChecklistRepository,
                                         private val userRepo: UserProfileRepository,
                                         private val connectionsRepository: ConnectionsRepository,
                                         private val settingsRepository: SettingsRepository) :
@@ -121,6 +122,7 @@ class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
 
     private fun setupRepositories() {
         authRepo.setListener(this)
+        checklistRepo.initialise()
         userRepo.initialise()
         connectionsRepository.initialise()
         settingsRepository.initialise()

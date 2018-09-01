@@ -2,6 +2,7 @@ package com.rbiggin.a2do2gether.dagger
 
 import com.rbiggin.a2do2gether.notification.MessagingPresenter
 import com.rbiggin.a2do2gether.repository.*
+import com.rbiggin.a2do2gether.ui.checklists.ChecklistPresenter
 import com.rbiggin.a2do2gether.ui.connections.MyConnectionsPresenter
 import com.rbiggin.a2do2gether.ui.login.LoginPresenter
 import com.rbiggin.a2do2gether.ui.main.MainPresenter
@@ -26,10 +27,11 @@ class PresenterModule {
 
     @Provides
     fun provideMainPresenter(aRepo: AuthRepository,
+                             clRepo: ChecklistRepository,
                              uRepo: UserProfileRepository,
                              cRepo: ConnectionsRepository,
                              sRepo: SettingsRepository): MainPresenter {
-        return MainPresenter(aRepo, uRepo, cRepo, sRepo)
+        return MainPresenter(aRepo, clRepo, uRepo, cRepo, sRepo)
     }
 
     @Provides
@@ -49,8 +51,15 @@ class PresenterModule {
 
     @Provides
     @Singleton
-    fun provideChecklistsPresenter(): ChecklistsPresenter {
-        return ChecklistsPresenter()
+    fun provideChecklistsPresenter(clRepo: ChecklistRepository,
+                                   @Named("main") mThread: Scheduler): ChecklistsPresenter {
+        return ChecklistsPresenter(clRepo, mThread)
+    }
+
+    @Provides
+    fun provideChecklistPresenter(clRepo: ChecklistRepository,
+                                   @Named("main") mThread: Scheduler): ChecklistPresenter {
+        return ChecklistPresenter(clRepo, mThread)
     }
 
     @Provides
