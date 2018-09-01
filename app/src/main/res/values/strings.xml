@@ -30,7 +30,7 @@
     <string name="share_list">Share 2Do List</string>
     <string name="new_item_hint">New 2Do list item&#8230;</string>
 
-    <!-- Checklist strings -->
+    <!-- ChecklistArray strings -->
     <string name="checklists">Checklists</string>
     <string name="checklists_hint">New checklist item&#8230;</string>
 

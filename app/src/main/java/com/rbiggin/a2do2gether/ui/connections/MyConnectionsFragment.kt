@@ -33,10 +33,10 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
     private lateinit var mConnectionsLayoutManager: LinearLayoutManager
 
     companion object {
-        fun newInstance(id: Int): MyConnectionsFragment {
+        fun newInstance(id: String): MyConnectionsFragment {
             val fragment = MyConnectionsFragment()
             val args = Bundle()
-            args.putInt(Constants.FRAGMENT_ID, id)
+            args.putString(Constants.FRAGMENT_ID, id)
             fragment.arguments = args
             return fragment
         }
@@ -169,14 +169,6 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
             connectionsProgressSpinner.visibility = View.VISIBLE
         } else {
             connectionsProgressSpinner.visibility = View.GONE
-        }
-    }
-
-    private fun hideKeyboard(){
-        val view: View? = activity?.currentFocus
-        view?.let{
-            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
 

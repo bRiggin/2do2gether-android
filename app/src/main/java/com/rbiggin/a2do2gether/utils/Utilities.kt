@@ -5,9 +5,13 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
+import android.support.v7.app.AppCompatActivity
 import android.util.Base64
 import android.view.View
 import android.view.Window
+import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.rbiggin.a2do2gether.R
@@ -112,5 +116,15 @@ class Utilities {
             array.add(item)
         }
         return array
+    }
+
+    fun <T, J> hashMapToDoubleArray(map: HashMap<T, J>): HashMap<String, ArrayList<String>>{
+        val keyArray : ArrayList<String> = ArrayList()
+        val valueArray : ArrayList<String> = ArrayList()
+        for ((key, value) in map) {
+            keyArray.add(key.toString())
+            valueArray.add(value.toString())
+        }
+        return hashMapOf("keyArray" to keyArray, "valueArray" to valueArray)
     }
 }

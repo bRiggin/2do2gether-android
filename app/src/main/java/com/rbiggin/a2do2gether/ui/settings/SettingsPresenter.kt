@@ -65,7 +65,7 @@ class SettingsPresenter @Inject constructor(private val authRepo: AuthRepository
         authRepo.setListener(this)
 
         view?.let {
-            disposeOnViewWillHide(it.switcthSubject
+            disposeOnViewWillHide(it.switchSubject
                     .observeOn(computationThread)
                     .subscribe{update ->
                         settingsRepo.updateSetting(update)

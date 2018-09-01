@@ -4,7 +4,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.rbiggin.a2do2gether.firebase.FirebaseDatabaseWriter
 import com.rbiggin.a2do2gether.firebase.FirebaseReadWatcher
-import com.rbiggin.a2do2gether.model.Checklist
+import com.rbiggin.a2do2gether.model.ChecklistArray
+import com.rbiggin.a2do2gether.model.ChecklistMap
 import com.rbiggin.a2do2gether.utils.Constants
 import io.reactivex.subjects.BehaviorSubject
 import timber.log.Timber
@@ -20,7 +21,7 @@ class ChecklistRepository @Inject constructor(private val uidProvider: UidProvid
 
     private var checklistsWatcher: FirebaseReadWatcher? = null
 
-    val checklistsWatcherMap: HashMap<String, BehaviorSubject<Checklist>> = HashMap()
+    private val checklistsWatcherMap: HashMap<String, BehaviorSubject<ChecklistMap>> = HashMap()
 
     val checklistsSubject: BehaviorSubject<ArrayList<String>> = BehaviorSubject.create()
 
@@ -83,26 +84,43 @@ class ChecklistRepository @Inject constructor(private val uidProvider: UidProvid
         return manifest
     }
 
-    fun getChecklistSubject(id: String) : BehaviorSubject<Checklist> {
+    fun getChecklistSubject(id: String) : BehaviorSubject<ChecklistMap> {
         if (checklistsWatcherMap.containsKey(id)){
             checklistsWatcherMap[id]?.let {
                 return it
             } ?: throw Exception()
             //todo add info
         } else {
-            val subject: BehaviorSubject<Checklist> = BehaviorSubject.create()
+            val subject: BehaviorSubject<ChecklistMap> = BehaviorSubject.create()
             checklistsWatcherMap[id] = subject
             return subject
         }
     }
 
-    private fun constructChecklist(id: String, data: DataSnapshot): Checklist {
-        val items = ArrayList<String>()
+    private fun constructChecklist(id: String, data: DataSnapshot): ChecklistMap {
+        val values = ArrayList<String>()
+        val keys = ArrayList<String>()
         for (item in data.child(Constants.FB_CHECKLIST_ITEMS).children){
-            items.add(item.value.toString())
+            values.add(item.value.toString())
+            keys.add(item.key.toString())
         }
         val title = data.child(Constants.FB_CHECKLIST_TITLE).value.toString()
 
-        return Checklist(id, title, items)
+        return ChecklistMap(id, title, hashMapOf("keys" to keys, "values" to values))
+    }
+
+    fun addItem(listId: String?, newText: String){
+        val path = "${Constants.FB_CHECKLISTS}/$mUid/$listId/items"
+        mDatabase?.let {
+            databaseWriter.doPushWrite(it, path, arrayListOf(newText))
+        }
+    }
+
+    fun deleteItem(listId: String, itemIndex: Int){
+        val itemId = checklistsWatcherMap[listId]?.value?.items?.get("keys")?.get(itemIndex)
+        val path = "${Constants.FB_CHECKLISTS}/$mUid/$listId/items/$itemId"
+        mDatabase?.let {
+            databaseWriter.doDelete(it, path)
+        }
     }
 }

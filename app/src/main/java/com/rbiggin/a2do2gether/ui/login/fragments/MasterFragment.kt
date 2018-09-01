@@ -5,13 +5,14 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.rbiggin.a2do2gether.application.MyApplication
 import com.rbiggin.a2do2gether.ui.login.LoginPresenter
+import com.rbiggin.a2do2gether.utils.Constants
 import javax.inject.Inject
 
 open class MasterFragment : Fragment() {
 
     @Inject lateinit var presenter: LoginPresenter
 
-    var mFragmentNumber: Int? = null
+    var mFragmentNumber: String? = null
 
     private var mContext: Context? = null
 
@@ -24,7 +25,7 @@ open class MasterFragment : Fragment() {
         super.onCreate(savedInstanceState)
         (mContext?.applicationContext as MyApplication).daggerComponent.inject(this)
         arguments?.let {
-            mFragmentNumber = it.getInt("FRAGMENT_ID")
+            mFragmentNumber = it.getString(Constants.FRAGMENT_ID)
         }
     }
 }

@@ -83,19 +83,17 @@ class Constants {
         const val DB_WRITE_USER_DETAILS_SUCCESSFUL: Int = 600001
         const val DB_WRITE_USER_DETAILS_UNSUCCESSFUL: Int = 600002
         const val DB_CONNECTION_REQUEST_SUBMITTED: Int = 600003
+    }
 
-        /**
-         * Fragment IDs
-         */
-        const val ADDRESS_FRAGMENT_ID: Int = 700001
-        const val PASSWORD_FRAGMENT_ID: Int = 700002
-        const val REGISTER_FRAGMENT_ID: Int = 700003
-        const val TODOLIST_FRAGMENT_ID: Int = 700004
-        const val CHECKLIST_FRAGMENT_ID: Int = 700005
-        const val MY_CONNECTIONS_FRAGMENT_ID: Int = 700006
-        const val MY_PROFILE_FRAGMENT_ID: Int = 700007
-        const val SETTINGS_FRAGMENT_ID: Int = 700008
-
+    enum class Id(val value: String) {
+        ADDRESS_FRAGMENT("fragment_address"),
+        PASSWORD_FRAGMENT("fragment_password"),
+        REGISTER_FRAGMENT("fragment_register"),
+        TODOLIST_FRAGMENT("fragment_todolist"),
+        CHECKLIST_FRAGMENT("fragment_checklists"),
+        CONNECTIONS_FRAGMENT("fragment_connections"),
+        PROFILE_FRAGMENT("fragment_profile"),
+        SETTINGS_FRAGMENT("fragment_settings");
     }
 
     enum class Auth {

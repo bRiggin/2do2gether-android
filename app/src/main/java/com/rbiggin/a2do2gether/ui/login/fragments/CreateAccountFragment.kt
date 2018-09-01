@@ -43,10 +43,10 @@ class CreateAccountFragment : MasterFragment(), IntLoginFragmentCallbacks {
     }
 
     companion object {
-        fun newInstance(id: Int): CreateAccountFragment {
+        fun newInstance(id: String): CreateAccountFragment {
             val fragment = CreateAccountFragment()
             val args = Bundle()
-            args.putInt(Constants.FRAGMENT_ID, id)
+            args.putString(Constants.FRAGMENT_ID, id)
             fragment.arguments = args
             return fragment
         }

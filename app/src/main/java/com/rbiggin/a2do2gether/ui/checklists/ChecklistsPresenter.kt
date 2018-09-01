@@ -7,8 +7,9 @@ import io.reactivex.Scheduler
 import javax.inject.Inject
 
 class ChecklistsPresenter @Inject constructor(private val checklistRepository: ChecklistRepository,
-                                              private val uiThread: Scheduler):
-                                              BasePresenter<ChecklistsFragment>() {
+                                              private val uiThread: Scheduler,
+                                              private val computationThread: Scheduler) :
+        BasePresenter<ChecklistsFragment>() {
 
     override fun onViewAttached(view: ChecklistsFragment) {
         super.onViewAttached(view)
@@ -21,7 +22,27 @@ class ChecklistsPresenter @Inject constructor(private val checklistRepository: C
                 })
     }
 
+    override fun onViewWillShow() {
+        super.onViewWillShow()
+        view?.let {
+            disposeOnViewWillHide(it.newItemSubject
+                    .observeOn(computationThread)
+                    .filter {text ->
+                        !text.trim().isEmpty()
+                    }
+                    .subscribe {text ->
+                        view?.clearEditText()
+                        checklistRepository.addItem(view?.currentListId(), text)
+                    })
+        }
+
+    }
+
     interface View : BasePresenter.View {
         fun onCheckListManifestUpdate(manifest: ArrayList<String>)
+
+        fun clearEditText()
+
+        fun currentListId(): String?
     }
 }

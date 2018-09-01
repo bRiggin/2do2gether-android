@@ -7,7 +7,7 @@ interface IntLoginActivity {
 
     fun displayFunctionalDialog(type_id: Int)
 
-    fun displayFragment(fragment_id: Int)
+    fun displayFragment(fragment_id: Constants.Id)
 
     fun displayProgressSpinner(show: Boolean)
 

@@ -1,6 +1,5 @@
 package com.rbiggin.a2do2gether.ui.login
 
-import android.util.Log
 import com.rbiggin.a2do2gether.repository.AuthRepository
 import com.rbiggin.a2do2gether.ui.login.fragments.IntLoginFragmentCallbacks
 import com.rbiggin.a2do2gether.ui.base.BasePresenter
@@ -37,7 +36,7 @@ class LoginPresenter @Inject constructor(private val authRepo: AuthRepository) :
 
     override fun onViewWillShow() {
         super.onViewWillShow()
-        mLoginActivity?.displayFragment(Constants.ADDRESS_FRAGMENT_ID)
+        mLoginActivity?.displayFragment(Constants.Id.ADDRESS_FRAGMENT)
     }
 
     override fun onViewDetached() {
@@ -60,7 +59,7 @@ class LoginPresenter @Inject constructor(private val authRepo: AuthRepository) :
                     reference.clearViews()
                 } else {
                     tempEmail = email
-                    mLoginActivity?.displayFragment(Constants.PASSWORD_FRAGMENT_ID)
+                    mLoginActivity?.displayFragment(Constants.Id.PASSWORD_FRAGMENT)
                     reference.clearViews()
                 }
             }
@@ -69,7 +68,7 @@ class LoginPresenter @Inject constructor(private val authRepo: AuthRepository) :
 
     fun newAccountBtnPressed(reference: IntLoginFragmentCallbacks) {
         if (!isProcessingBol) {
-            mLoginActivity?.displayFragment(Constants.REGISTER_FRAGMENT_ID)
+            mLoginActivity?.displayFragment(Constants.Id.REGISTER_FRAGMENT)
             reference.clearViews()
         }
     }
@@ -117,14 +116,14 @@ class LoginPresenter @Inject constructor(private val authRepo: AuthRepository) :
 
     fun sendPasswordReset() {
         if (!isProcessingBol) {
-            mLoginActivity?.displayFragment(Constants.ADDRESS_FRAGMENT_ID)
+            mLoginActivity?.displayFragment(Constants.Id.ADDRESS_FRAGMENT)
             isProcessing(true)
             authRepo.sendPasswordReset(tempEmail)
         }
     }
 
     override fun onAuthCommandResult(response_id: Int, message: String?) {
-        mLoginActivity?.displayFragment(Constants.ADDRESS_FRAGMENT_ID)
+        mLoginActivity?.displayFragment(Constants.Id.ADDRESS_FRAGMENT)
         when(response_id){
             Constants.AUTH_LOGIN_SUCCESSFUL -> {
                 enterMainActivity()
@@ -155,17 +154,17 @@ class LoginPresenter @Inject constructor(private val authRepo: AuthRepository) :
         // not currently used within login activity.
     }
 
-    fun backPressedInFragment(fragment_id: Int) {
+    fun backPressedInFragment(fragment_id: Constants.Id) {
         Timber.d("Interface notified of back press. Fragment ID: $fragment_id")
         when (fragment_id) {
-            Constants.REGISTER_FRAGMENT_ID -> {
-                mLoginActivity?.displayFragment(Constants.ADDRESS_FRAGMENT_ID)
+            Constants.Id.REGISTER_FRAGMENT -> {
+                mLoginActivity?.displayFragment(Constants.Id.ADDRESS_FRAGMENT)
             }
-            Constants.ADDRESS_FRAGMENT_ID -> {
+            Constants.Id.ADDRESS_FRAGMENT -> {
                 Timber.w("Fragment ID: $fragment_id, should never notify presenter.")
             }
-            Constants.PASSWORD_FRAGMENT_ID -> {
-                mLoginActivity?.displayFragment(Constants.ADDRESS_FRAGMENT_ID)
+            Constants.Id.PASSWORD_FRAGMENT -> {
+                mLoginActivity?.displayFragment(Constants.Id.ADDRESS_FRAGMENT)
             }
             else -> {
                 Timber.w("Fragment ID: $fragment_id, not recognised.")

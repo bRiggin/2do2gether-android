@@ -11,7 +11,6 @@ import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -47,7 +46,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         (application as MyApplication).daggerComponent.inject(this)
 
         Timber.w("intent: $intent")
-        Timber.w( "intent extra: ${intent.extras}")
+        Timber.w("intent extra: ${intent.extras}")
 
         if (intent.hasExtra(Constants.LOAD_FRAGMENT)) {
             presenter.onViewAttached(this, intent.extras.getString(Constants.LOAD_FRAGMENT))
@@ -84,7 +83,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         navigationDrawer.setNavigationItemSelectedListener(this)
 
-        navigationDrawer.menu.getItem(0).setChecked(true)
+        navigationDrawer.menu.getItem(0).isChecked = true
         navigationDrawer.setCheckedItem(R.id.drawer_to_do_lists)
         navigationDrawer.getHeaderView(0).findViewById<TextView>(R.id.drawerSubHeading).text = email
     }
@@ -168,19 +167,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun launchFragment(type: Constants.Fragment, toBackStack: Boolean) {
         val fragment: BaseFragment = when (type) {
             Constants.Fragment.TODO -> {
-                ToDoListFragment.newInstance(Constants.TODOLIST_FRAGMENT_ID)
+                ToDoListFragment.newInstance(Constants.Id.TODOLIST_FRAGMENT.value)
             }
             Constants.Fragment.CHECKLIST -> {
-                ChecklistsFragment.newInstance(Constants.CHECKLIST_FRAGMENT_ID)
+                ChecklistsFragment.newInstance(Constants.Id.CHECKLIST_FRAGMENT.value)
             }
             Constants.Fragment.MY_CONNECTIONS -> {
-                MyConnectionsFragment.newInstance(Constants.MY_CONNECTIONS_FRAGMENT_ID)
+                MyConnectionsFragment.newInstance(Constants.Id.CONNECTIONS_FRAGMENT.value)
             }
             Constants.Fragment.MY_PROFILE -> {
-                MyProfileFragment.newInstance(Constants.MY_PROFILE_FRAGMENT_ID)
+                MyProfileFragment.newInstance(Constants.Id.PROFILE_FRAGMENT.value)
             }
             Constants.Fragment.SETTINGS -> {
-                SettingsFragment.newInstance(Constants.SETTINGS_FRAGMENT_ID)
+                SettingsFragment.newInstance(Constants.Id.SETTINGS_FRAGMENT.value)
             }
         }
         val transaction = supportFragmentManager.beginTransaction()
@@ -232,31 +231,31 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val shareView = mMenu?.getItem(2)
         when (type) {
             Constants.Fragment.TODO -> {
-                addView?.setVisible(true)
-                deleteView?.setVisible(true)
-                shareView?.setVisible(true)
+                addView?.isVisible = true
+                deleteView?.isVisible = true
+                shareView?.isVisible = true
                 shareView?.icon = ResourcesCompat.getDrawable(resources, R.drawable.icon_share, null)
             }
             Constants.Fragment.CHECKLIST -> {
-                addView?.setVisible(true)
-                deleteView?.setVisible(true)
-                shareView?.setVisible(true)
+                addView?.isVisible = true
+                deleteView?.isVisible = true
+                shareView?.isVisible = true
                 shareView?.icon = ResourcesCompat.getDrawable(resources, R.drawable.icon_publish, null)
             }
             Constants.Fragment.MY_CONNECTIONS -> {
-                addView?.setVisible(true)
-                deleteView?.setVisible(false)
-                shareView?.setVisible(false)
+                addView?.isVisible = true
+                deleteView?.isVisible = false
+                shareView?.isVisible = false
             }
             Constants.Fragment.MY_PROFILE -> {
-                addView?.setVisible(false)
-                deleteView?.setVisible(false)
-                shareView?.setVisible(false)
+                addView?.isVisible = false
+                deleteView?.isVisible = false
+                shareView?.isVisible = false
             }
             Constants.Fragment.SETTINGS -> {
-                addView?.setVisible(false)
-                deleteView?.setVisible(false)
-                shareView?.setVisible(false)
+                addView?.isVisible = false
+                deleteView?.isVisible = false
+                shareView?.isVisible = false
             }
         }
     }
@@ -315,7 +314,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val file = File(directory, "$uid.jpg")
             return BitmapFactory.decodeStream(FileInputStream(file))
         } catch (e: FileNotFoundException) {
-            e.printStackTrace()
+            Timber.d("loadImageFromStorage($uid), FileNotFoundException: $e")
         }
         return null
     }

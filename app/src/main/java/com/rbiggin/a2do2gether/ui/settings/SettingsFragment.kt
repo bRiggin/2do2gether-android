@@ -28,13 +28,13 @@ class SettingsFragment : BaseFragment(), SettingsPresenter.View {
     @Inject
     lateinit var utilities: Utilities
 
-    val switcthSubject: PublishSubject<SettingsUpdate> = PublishSubject.create()
+    val switchSubject: PublishSubject<SettingsUpdate> = PublishSubject.create()
 
     companion object {
-        fun newInstance(id: Int): SettingsFragment {
+        fun newInstance(id: String): SettingsFragment {
             val fragment = SettingsFragment()
             val args = Bundle()
-            args.putInt(Constants.FRAGMENT_ID, id)
+            args.putString(Constants.FRAGMENT_ID, id)
             fragment.arguments = args
             return fragment
         }
@@ -64,27 +64,27 @@ class SettingsFragment : BaseFragment(), SettingsPresenter.View {
         }
 
         doItemReorderSwitch.clicks().subscribeBy {
-            switcthSubject.onNext(SettingsUpdate(Constants.Setting.LIST_REORDER, doItemReorderSwitch.isChecked))
+            switchSubject.onNext(SettingsUpdate(Constants.Setting.LIST_REORDER, doItemReorderSwitch.isChecked))
         }
 
         profilePublicSwitch.clicks().subscribeBy {
-            switcthSubject.onNext(SettingsUpdate(Constants.Setting.PROFILE_PRIVACY, profilePublicSwitch.isChecked))
+            switchSubject.onNext(SettingsUpdate(Constants.Setting.PROFILE_PRIVACY, profilePublicSwitch.isChecked))
         }
 
         connectionRequestSwitch.clicks().subscribeBy {
-            switcthSubject.onNext(SettingsUpdate(Constants.Setting.CONNECTION_REQUEST, connectionRequestSwitch.isChecked))
+            switchSubject.onNext(SettingsUpdate(Constants.Setting.CONNECTION_REQUEST, connectionRequestSwitch.isChecked))
         }
 
         newConnectionSwitch.clicks().subscribeBy {
-            switcthSubject.onNext(SettingsUpdate(Constants.Setting.NEW_CONNECTIONS, newConnectionSwitch.isChecked))
+            switchSubject.onNext(SettingsUpdate(Constants.Setting.NEW_CONNECTIONS, newConnectionSwitch.isChecked))
         }
 
         newListSwitch.clicks().subscribeBy {
-            switcthSubject.onNext(SettingsUpdate(Constants.Setting.NEW_LIST, newListSwitch.isChecked))
+            switchSubject.onNext(SettingsUpdate(Constants.Setting.NEW_LIST, newListSwitch.isChecked))
         }
 
         analyticsSwitch.clicks().subscribeBy {
-            switcthSubject.onNext(SettingsUpdate(Constants.Setting.ANALYTICS, analyticsSwitch.isChecked))
+            switchSubject.onNext(SettingsUpdate(Constants.Setting.ANALYTICS, analyticsSwitch.isChecked))
         }
     }
 

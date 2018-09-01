@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.application.MyApplication
-import com.rbiggin.a2do2gether.model.Checklist
+import com.rbiggin.a2do2gether.model.ChecklistArray
 import com.rbiggin.a2do2gether.ui.base.BaseFragment
 import com.rbiggin.a2do2gether.utils.Constants
 import kotlinx.android.synthetic.main.fragment_checklist.*
@@ -45,7 +45,7 @@ class ChecklistFragment : BaseFragment(), ChecklistPresenter.View, ChecklistAdap
 
     override fun onResume() {
         super.onResume()
-        arguments?.getString(Constants.FRAGMENT_ID)?.let{
+        mFragmentId?.let {
             presenter.onIdSupplied(it)
         }
     }
@@ -54,7 +54,7 @@ class ChecklistFragment : BaseFragment(), ChecklistPresenter.View, ChecklistAdap
         //todo
     }
 
-    override fun onChecklistUpdate(checklist: Checklist) {
+    override fun onChecklistUpdate(checklist: ChecklistArray) {
         checklistTitle.text = checklist.title
         checklistItems.clear()
         checklistItems.addAll(checklist.items)
@@ -62,9 +62,7 @@ class ChecklistFragment : BaseFragment(), ChecklistPresenter.View, ChecklistAdap
     }
 
     override fun itemDeleted(index: Int) {
-        // todo hand top presenter so it can be deleted in firebase
-        checklistItems.removeAt(index)
-        checklistRv.adapter.notifyDataSetChanged()
+        mFragmentId?.let { presenter.onItemDeleted(index, it) }
     }
 
     companion object {

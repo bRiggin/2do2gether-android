@@ -51,7 +51,7 @@
             android:maxLines="1" />
 
         <Button
-            android:id="@+id/checklistsAddBtn"
+            android:id="@+id/checklistsItemAddBtn"
             style="@style/TextViewStyle"
             android:layout_width="100dp"
             android:layout_height="match_parent"

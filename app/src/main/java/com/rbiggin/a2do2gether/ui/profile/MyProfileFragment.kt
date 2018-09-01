@@ -124,10 +124,10 @@ class MyProfileFragment : BaseFragment(), MyProfilePresenter.View {
     }
 
     companion object {
-        fun newInstance(id: Int): MyProfileFragment {
+        fun newInstance(id: String): MyProfileFragment {
             val fragment = MyProfileFragment()
             val args = Bundle()
-            args.putInt(Constants.FRAGMENT_ID, id)
+            args.putString(Constants.FRAGMENT_ID, id)
             fragment.arguments = args
             return fragment
         }

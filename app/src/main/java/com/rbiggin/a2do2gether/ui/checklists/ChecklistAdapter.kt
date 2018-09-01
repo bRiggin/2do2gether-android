@@ -7,21 +7,22 @@ import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.utils.inflate
 import kotlinx.android.synthetic.main.row_item_checklist.view.*
 
-class ChecklistAdapter(private val items: ArrayList<String>,
+class ChecklistAdapter(private val itemValues: ArrayList<String>,
                        private val listener: Listener)
                        : RecyclerView.Adapter<ChecklistAdapter.ItemHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val inflatedView = parent.inflate(R.layout.row_item_checklist, false)
         return ItemHolder(inflatedView, listener)
     }
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
-        holder.setText(items[position])
+        holder.setText(itemValues[position])
         holder.mPosition = position
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return itemValues.size
     }
 
     class ItemHolder(private val view: View,

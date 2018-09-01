@@ -17,10 +17,10 @@ class ToDoListFragment : BaseFragment(), ToDoListPresenter.View {
     lateinit var presenter: ToDoListPresenter
 
     companion object {
-        fun newInstance(id: Int): ToDoListFragment {
+        fun newInstance(id: String): ToDoListFragment {
             val fragment = ToDoListFragment()
             val args = Bundle()
-            args.putInt(Constants.FRAGMENT_ID, id)
+            args.putString(Constants.FRAGMENT_ID, id)
             fragment.arguments = args
             return fragment
         }

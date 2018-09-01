@@ -52,13 +52,14 @@ class PresenterModule {
     @Provides
     @Singleton
     fun provideChecklistsPresenter(clRepo: ChecklistRepository,
-                                   @Named("main") mThread: Scheduler): ChecklistsPresenter {
-        return ChecklistsPresenter(clRepo, mThread)
+                                   @Named("main") mThread: Scheduler,
+                                   @Named("computation") cThread: Scheduler): ChecklistsPresenter {
+        return ChecklistsPresenter(clRepo, mThread, cThread)
     }
 
     @Provides
     fun provideChecklistPresenter(clRepo: ChecklistRepository,
-                                   @Named("main") mThread: Scheduler): ChecklistPresenter {
+                                  @Named("main") mThread: Scheduler): ChecklistPresenter {
         return ChecklistPresenter(clRepo, mThread)
     }
 

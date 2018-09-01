@@ -38,10 +38,10 @@ class PasswordFragment : MasterFragment(), IntLoginFragmentCallbacks {
     }
 
     companion object {
-        fun newInstance(id: Int): PasswordFragment {
+        fun newInstance(id: String): PasswordFragment {
             val fragment = PasswordFragment()
             val args = Bundle()
-            args.putInt(Constants.FRAGMENT_ID, id)
+            args.putString(Constants.FRAGMENT_ID, id)
             fragment.arguments = args
             return fragment
         }

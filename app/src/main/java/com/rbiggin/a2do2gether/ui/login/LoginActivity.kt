@@ -24,6 +24,7 @@ import com.rbiggin.a2do2gether.utils.Constants
 import com.rbiggin.a2do2gether.utils.Utilities
 
 import kotlinx.android.synthetic.main.activity_login.*
+import timber.log.Timber
 import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity(), IntLoginActivity{
@@ -81,7 +82,7 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
     }
 
     override fun displayFunctionalDialog(type_id: Int) {
-        Log.w(TAG, "displayFunctionalDialog called from presenter with ID: $type_id")
+        Timber.w("displayFunctionalDialog called from presenter with ID: $type_id")
         val lambda: () -> Unit = when(type_id){
             Constants.DIALOG_FORGOT_PASSWORD -> {
                 { presenter.sendPasswordReset() }
@@ -94,15 +95,15 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
                                     getString(R.string.forgot_password_prompt), positiveCode = lambda)
     }
 
-    override fun displayFragment(fragment_id: Int) {
+    override fun displayFragment(fragment_id: Constants.Id) {
         when(fragment_id){
-            Constants.REGISTER_FRAGMENT_ID -> {
+            Constants.Id.REGISTER_FRAGMENT -> {
                 loginViewPager.currentItem = 0
             }
-            Constants.ADDRESS_FRAGMENT_ID -> {
+            Constants.Id.ADDRESS_FRAGMENT -> {
                 loginViewPager.currentItem = 1
             }
-            Constants.PASSWORD_FRAGMENT_ID -> {
+            Constants.Id.PASSWORD_FRAGMENT -> {
                 loginViewPager.currentItem = 2
             }
         }
@@ -111,13 +112,13 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
     override fun onBackPressed() {
         when (loginViewPager.currentItem){
             0 -> {
-                presenter.backPressedInFragment(Constants.REGISTER_FRAGMENT_ID)
+                presenter.backPressedInFragment(Constants.Id.REGISTER_FRAGMENT)
             }
             1 -> {
                 super.onBackPressed()
             }
             2 -> {
-                presenter.backPressedInFragment(Constants.PASSWORD_FRAGMENT_ID)
+                presenter.backPressedInFragment(Constants.Id.PASSWORD_FRAGMENT)
             }
             else -> {
                 super.onBackPressed()
@@ -155,13 +156,13 @@ class LoginActivity : AppCompatActivity(), IntLoginActivity{
         override fun getItem(position: Int): Fragment {
             return when(position){
                 0 -> {
-                    CreateAccountFragment.newInstance(Constants.REGISTER_FRAGMENT_ID)
+                    CreateAccountFragment.newInstance(Constants.Id.REGISTER_FRAGMENT.value)
                 } 1 -> {
-                    LandingFragment.newInstance(Constants.ADDRESS_FRAGMENT_ID)
+                    LandingFragment.newInstance(Constants.Id.ADDRESS_FRAGMENT.value)
                 } 2 -> {
-                    PasswordFragment.newInstance(Constants.PASSWORD_FRAGMENT_ID)
+                    PasswordFragment.newInstance(Constants.Id.PASSWORD_FRAGMENT.value)
                 } else -> {
-                    LandingFragment.newInstance(Constants.ADDRESS_FRAGMENT_ID)
+                    LandingFragment.newInstance(Constants.Id.ADDRESS_FRAGMENT.value)
                 }
             }
         }
