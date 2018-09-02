@@ -28,10 +28,11 @@ class PresenterModule {
     @Provides
     fun provideMainPresenter(aRepo: AuthRepository,
                              clRepo: ChecklistRepository,
+                             tdlRepo: ToDoListRepository,
                              uRepo: UserProfileRepository,
                              cRepo: ConnectionsRepository,
                              sRepo: SettingsRepository): MainPresenter {
-        return MainPresenter(aRepo, clRepo, uRepo, cRepo, sRepo)
+        return MainPresenter(aRepo, clRepo, tdlRepo, uRepo, cRepo, sRepo)
     }
 
     @Provides

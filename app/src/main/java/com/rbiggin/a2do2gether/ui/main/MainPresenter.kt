@@ -9,6 +9,7 @@ import javax.inject.Inject
 
 class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
                                         private val checklistRepo: ChecklistRepository,
+                                        private val toDoListRepo: ToDoListRepository,
                                         private val userRepo: UserProfileRepository,
                                         private val connectionsRepository: ConnectionsRepository,
                                         private val settingsRepository: SettingsRepository) :
@@ -57,7 +58,8 @@ class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
 
     fun onViewDetached() {
         mActivity = null
-
+        checklistRepo.presenterDetached()
+        toDoListRepo.presenterDetached()
         settingsRepository.presenterDetached()
     }
 
@@ -122,6 +124,7 @@ class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
     private fun setupRepositories() {
         authRepo.setListener(this)
         checklistRepo.initialise()
+        toDoListRepo.initialise()
         userRepo.initialise()
         connectionsRepository.initialise()
         settingsRepository.initialise()

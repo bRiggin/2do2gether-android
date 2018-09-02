@@ -33,6 +33,13 @@ class RepositoryModule {
 
     @Provides
     @Singleton
+    fun provideToDoListsRepository(uidProvider: UidProvider, writer: FirebaseDatabaseWriter)
+            : ToDoListRepository {
+        return ToDoListRepository(uidProvider, writer)
+    }
+
+    @Provides
+    @Singleton
     fun provideConnectionsRepository(fbDatabase: IntFirebaseDatabase, uidProvider: UidProvider)
             : ConnectionsRepository {
         return ConnectionsRepository(fbDatabase, uidProvider)
