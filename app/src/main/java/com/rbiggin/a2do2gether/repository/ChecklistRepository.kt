@@ -97,6 +97,12 @@ class ChecklistRepository @Inject constructor(private val uidProvider: UidProvid
         }
     }
 
+    fun deleteChecklistSubject(id: String) {
+        if (checklistsWatcherMap.containsKey(id)){
+            checklistsWatcherMap.remove(id)
+        }
+    }
+
     private fun constructChecklist(id: String, data: DataSnapshot): ChecklistMap {
         val values = ArrayList<String>()
         val keys = ArrayList<String>()
@@ -112,7 +118,7 @@ class ChecklistRepository @Inject constructor(private val uidProvider: UidProvid
     fun addItem(listId: String?, newText: String){
         val path = "${Constants.FB_CHECKLISTS}/$mUid/$listId/items"
         mDatabase?.let {
-            databaseWriter.doPushWrite(it, path, arrayListOf(newText))
+            databaseWriter.doPushWrite(it, path, arrayListOf(newText as Any))
         }
     }
 
@@ -121,6 +127,22 @@ class ChecklistRepository @Inject constructor(private val uidProvider: UidProvid
         val path = "${Constants.FB_CHECKLISTS}/$mUid/$listId/items/$itemId"
         mDatabase?.let {
             databaseWriter.doDelete(it, path)
+        }
+    }
+
+    fun deleteChecklist(listId: String){
+        val path = "${Constants.FB_CHECKLISTS}/$mUid/$listId"
+        mDatabase?.let {
+            databaseWriter.doDelete(it, path)
+        }
+        deleteChecklistSubject(listId)
+    }
+
+    fun newChecklist(title: String){
+        val path = "${Constants.FB_CHECKLISTS}/$mUid/"
+        val data = hashMapOf(Constants.FB_CHECKLIST_TITLE to title as Any)
+        mDatabase?.let {
+            databaseWriter.doPushWrite(it, path, data)
         }
     }
 }

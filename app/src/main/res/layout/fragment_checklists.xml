@@ -26,6 +26,10 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        app:selectedDotRadius="6dp"
+        app:fadingDotCount="2"
+        app:selectedDotColor="@color/white"
+        app:dotColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toTopOf="@+id/checklistsTextEntryLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

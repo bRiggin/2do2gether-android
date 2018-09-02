@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
         } else {
-            if (currentFragment is IntMainListener) {
+            if (currentFragment is Listener) {
                 if (currentFragment.onBackPressed()) {
                     presenter.onBackPressed()
                     super.onBackPressed()
@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.mainFrameLayout)
-        if (currentFragment is IntMainListener) {
+        if (currentFragment is Listener) {
             when (item.itemId) {
                 R.id.action_share -> {
                     currentFragment.menuItemPressed(Constants.MenuBarItem.SHARE_PUBLISH)
@@ -317,5 +317,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             Timber.d("loadImageFromStorage($uid), FileNotFoundException: $e")
         }
         return null
+    }
+
+    interface Listener {
+        fun menuItemPressed(item: Constants.MenuBarItem)
+
+        fun onBackPressed(): Boolean
     }
 }

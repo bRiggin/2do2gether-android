@@ -36,7 +36,6 @@ class ChecklistFragment : BaseFragment(), ChecklistPresenter.View, ChecklistAdap
 
     override fun onStart() {
         super.onStart()
-        presenter.onViewWillShow()
 
         mLayoutManager = LinearLayoutManager(mContext)
         checklistRv.layoutManager = mLayoutManager
@@ -45,9 +44,20 @@ class ChecklistFragment : BaseFragment(), ChecklistPresenter.View, ChecklistAdap
 
     override fun onResume() {
         super.onResume()
+        presenter.onViewWillShow()
         mFragmentId?.let {
             presenter.onIdSupplied(it)
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        presenter.onViewWillHide()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onViewDetached()
     }
 
     override fun onDisplayDialogMessage(message_id: Int, message: String?) {

@@ -6,14 +6,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.application.MyApplication
 import com.rbiggin.a2do2gether.model.UserConnectionRequest
 import com.rbiggin.a2do2gether.model.UserConnectionSearch
 import com.rbiggin.a2do2gether.model.UserDetails
 import com.rbiggin.a2do2gether.ui.base.BaseFragment
-import com.rbiggin.a2do2gether.ui.main.IntMainListener
+import com.rbiggin.a2do2gether.ui.main.MainActivity
 import com.rbiggin.a2do2gether.utils.Constants
 import com.rbiggin.a2do2gether.utils.Utilities
 import javax.inject.Inject
@@ -22,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_my_connections.*
 
 class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
                                               MyConnectionsPresenter.Button,
-                                              IntMainListener{
+                                              MainActivity.Listener {
 
     @Inject lateinit var presenter: MyConnectionsPresenter
 

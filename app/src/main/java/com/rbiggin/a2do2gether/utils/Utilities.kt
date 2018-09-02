@@ -12,6 +12,7 @@ import android.util.Base64
 import android.view.View
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.rbiggin.a2do2gether.R
@@ -19,6 +20,48 @@ import com.rbiggin.a2do2gether.model.UserConnectionRequest
 import com.rbiggin.a2do2gether.model.UserDetails
 
 class Utilities {
+
+    fun showTextEntryDialog(context: Context, title: String, hint: String,
+                            posButtonText: String = "Yes", positiveCode: (String) -> Unit = {},
+                            negButtonText: String = "No", negativeCode: () -> Unit = {},
+                            timed: Boolean = false) {
+        (context as Activity).runOnUiThread {
+            val alertDialog = Dialog(context)
+            alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            alertDialog.setContentView(R.layout.dialog_text_entry)
+            alertDialog.findViewById<TextView?>(R.id.textDialogTitle)?.text = title
+            alertDialog.findViewById<EditText?>(R.id.textDialogEt)?.hint = hint
+
+            val negButton = alertDialog.findViewById<TextView>(R.id.textDialogNegativeButton)
+            negButton.text = negButtonText
+            negButton.setOnClickListener {
+                if (!context.isFinishing) {
+                    alertDialog.dismiss()
+                }
+                negativeCode()
+            }
+
+            val posButton = alertDialog.findViewById<TextView>(R.id.textDialogPositiveButton)
+            posButton.text = posButtonText
+            posButton.setOnClickListener {
+                if (!context.isFinishing) {
+                    alertDialog.dismiss()
+                }
+                val text = alertDialog.findViewById<EditText?>(R.id.textDialogEt)?.text.toString().trim()
+                positiveCode(text)
+            }
+            alertDialog.show()
+
+            if (timed) {
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed({
+                    if (alertDialog.isShowing) {
+                        alertDialog.dismiss()
+                    }
+                }, Constants.DIALOG_DISMISS_TIME.toLong())
+            }
+        }
+    }
 
     fun showOKDialog(context: Context, title: String, desc: String, okayButtonText: String = "OK",
                      functionalCode: () -> Unit = {}, timed: Boolean = false) {

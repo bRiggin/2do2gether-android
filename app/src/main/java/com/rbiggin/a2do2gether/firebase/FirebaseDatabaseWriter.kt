@@ -16,6 +16,11 @@ object FirebaseDatabaseWriter {
         }
     }
 
+    fun doPushWrite(dbRef: DatabaseReference, path: String, data: HashMap<String, Any>) {
+        val mReference = dbRef.child(path)
+        mReference.push().updateChildren(data)
+    }
+
     fun doDelete(dbRef: DatabaseReference, path: String) {
         val mReference = dbRef.child(path)
         mReference.removeValue()

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/alertDialogLayout"
+    android:id="@+id/textDialogLayout"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -17,20 +17,22 @@
         android:orientation="vertical"
         android:layout_alignParentTop="true">
         <TextView style="@style/TextViewStyle"
-            android:id="@+id/alertDialogTitle"
+            android:id="@+id/textDialogTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Alert Dialog Demo Title"
             android:textColor="@color/white"
             android:layout_marginBottom="5dp"
             android:textSize="20sp"/>
-        <TextView style="@style/TextViewStyle"
-            android:id="@+id/alertDialogMessage"
-            android:layout_width="wrap_content"
+        <EditText style="@style/EditTextStyle"
+            android:id="@+id/textDialogEt"
+            android:background="@drawable/layout_edit_text"
+            android:maxLines="1"
+            android:inputType="text"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textColor="@color/white"
-            android:text="Alert Dialog Message string demo.."
+            android:hint="Alert Dialog Hint..."
             android:textSize="14sp"
             android:layout_marginBottom="5dp"/>
     </LinearLayout>
@@ -43,7 +45,7 @@
         android:layout_below="@+id/alertDialogTitleAndMessage"
         android:layout_alignParentEnd="true">
         <TextView style="@style/TextViewStyle"
-            android:id="@+id/alertDialogNegativeButton"
+            android:id="@+id/textDialogNegativeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No"
@@ -52,7 +54,7 @@
             android:layout_marginEnd="30dp"
             android:textSize="16sp"/>
         <TextView style="@style/TextViewStyle"
-            android:id="@+id/alertDialogPositiveButton"
+            android:id="@+id/textDialogPositiveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Yes"
