@@ -31,8 +31,8 @@
         <RelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginEnd="16dp">
             <ProgressBar
                 android:id="@+id/listProgressBar"
@@ -55,61 +55,363 @@
                 android:layout_alignEnd="@id/listProgressBar"
                 android:layout_alignBottom="@id/listProgressBar"/>
         </RelativeLayout>
-
-
-
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/to_do_recycler_view"
+    <View
+        android:id="@+id/view2"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="16dp"
+        android:layout_height=".5dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/layout_container"
-        android:padding="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/toDoViewFlipper"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
-    <ViewFlipper
-        android:id="@+id/toDoViewFlipper"
+    <View
+        android:id="@+id/view3"
         android:layout_width="0dp"
+        android:layout_height=".5dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/indefinitePagerIndicator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.rbrooks.indefinitepagerindicator.IndefinitePagerIndicator
+        android:id="@+id/indefinitePagerIndicator"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/toDoViewFlipper"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/toDoViewFlipper"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-        <Button
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="8dp"
-            android:layout_gravity="center"
-            android:background="@drawable/icon_plus"/>
+        <EditText style="@style/EditTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:hint="@string/first_name_hint"
+            android:background="@drawable/layout_edit_text"
+            android:layout_weight="2"/>
+        <Button style="@style/TextViewStyle"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/layout_button"
+            android:text="@string/enter"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/view3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view2">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom">
-            <EditText style="@style/EditTextStyle"
-                android:layout_width="0dp"
+            android:orientation="vertical">
+
+            <com.github.florent37.expansionpanel.ExpansionHeader
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:background="@drawable/layout_edit_text"
-                android:layout_weight="2"/>
-            <Button style="@style/TextViewStyle"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/layout_button"
-                android:text="@string/enter"
-                android:textAllCaps="false"/>
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:expansion_headerIndicator="@id/headerIndicator"
+                app:expansion_layout="@id/expansionLayout"
+                app:expansion_toggleOnClick="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/profile_default"/>
+
+                        <TextView style="@style/TextViewStyle"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:text="Hello there, this is an example of a long to do list items that contains quite alot of text and therefore makes a good demo."/>
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:adjustViewBounds="true"
+                            android:id="@+id/headerIndicator"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:layout_width="wrap_content"/>
+
+                        <View
+                            android:id="@+id/markerUpp4fer"
+                            android:layout_width="2dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="8dp"
+                            android:background="@color/blue_900" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/white"/>
+                </LinearLayout>
+
+
+
+            </com.github.florent37.expansionpanel.ExpansionHeader>
+
+            <com.github.florent37.expansionpanel.ExpansionLayout
+                android:id="@+id/expansionLayout"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+
+                <include layout="@layout/to_do_list_details"/>
+
+            </com.github.florent37.expansionpanel.ExpansionLayout>
+
+
+
+
+
+
+            <com.github.florent37.expansionpanel.ExpansionHeader
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:expansion_headerIndicator="@id/headerIndicator2"
+                app:expansion_layout="@id/expansionLayout2"
+                app:expansion_toggleOnClick="true">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/profile_default"/>
+
+                        <TextView style="@style/TextViewStyle"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:text="Hello there, This is a much shorter example."/>
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:adjustViewBounds="true"
+                            android:id="@+id/headerIndicator2"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_width="wrap_content" />
+
+                        <View
+                            android:id="@+id/markerUpper"
+                            android:layout_width="2dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@color/blue_900" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/white"/>
+                </LinearLayout>
+
+
+            </com.github.florent37.expansionpanel.ExpansionHeader>
+
+            <com.github.florent37.expansionpanel.ExpansionLayout
+                android:id="@+id/expansionLayout2"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+
+                <include layout="@layout/to_do_list_details"/>
+
+            </com.github.florent37.expansionpanel.ExpansionLayout>
+
+
+
+
+            <com.github.florent37.expansionpanel.ExpansionHeader
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                app:expansion_headerIndicator="@id/headerIndicator3"
+                app:expansion_layout="@id/expansionLayout3"
+                app:expansion_toggleOnClick="true">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/profile_default"/>
+
+                        <TextView style="@style/TextViewStyle"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:text="Hello there, This is a much shorter example."/>
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:adjustViewBounds="true"
+                            android:id="@+id/headerIndicator3"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_width="wrap_content" />
+
+                        <View
+                            android:id="@+id/markerUpper3"
+                            android:layout_width="2dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@color/blue_900" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/white"/>
+                </LinearLayout>
+
+
+            </com.github.florent37.expansionpanel.ExpansionHeader>
+
+            <com.github.florent37.expansionpanel.ExpansionLayout
+                android:id="@+id/expansionLayout3"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+
+                <include layout="@layout/to_do_list_details"/>
+
+            </com.github.florent37.expansionpanel.ExpansionLayout>
+
+
+
+
+
+            <com.github.florent37.expansionpanel.ExpansionHeader
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:expansion_headerIndicator="@id/headerIndicator4"
+                app:expansion_layout="@id/expansionLayout4"
+                app:expansion_toggleOnClick="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/profile_default"/>
+
+                        <TextView style="@style/TextViewStyle"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:text="Hello there, this is an example of a long to do list items that contains quite alot of text and therefore makes a good demo."/>
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:adjustViewBounds="true"
+                            android:id="@+id/headerIndicator4"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:layout_width="wrap_content"/>
+
+                        <View
+                            android:id="@+id/markerUpp4fer4"
+                            android:layout_width="2dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="8dp"
+                            android:background="@color/blue_900" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/white"/>
+                </LinearLayout>
+
+
+
+            </com.github.florent37.expansionpanel.ExpansionHeader>
+
+            <com.github.florent37.expansionpanel.ExpansionLayout
+                android:id="@+id/expansionLayout4"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+
+                <include layout="@layout/to_do_list_details"/>
+
+            </com.github.florent37.expansionpanel.ExpansionLayout>
+
         </LinearLayout>
-        <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:background="@drawable/icon_plus_button"/>
-    </ViewFlipper>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

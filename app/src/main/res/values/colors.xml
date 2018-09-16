@@ -6,9 +6,13 @@
 
     <color name="white">#FFFFFF</color>
     <color name="text_colour">@color/white</color>
+    <color name="black">#000000</color>
 
+    <color name="grey_900">#212121</color>
+    <color name="grey_700">#616161</color>
     <color name="grey_500">#9E9E9E</color>
     <color name="grey_300">#E0E0E0</color>
+    <color name="transparent">#00000000</color>
 
     <color name="blue_50">#E3F2FD</color>
     <color name="blue_100">#BBDEFB</color>

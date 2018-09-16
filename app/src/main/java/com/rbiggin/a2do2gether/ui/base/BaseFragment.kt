@@ -5,7 +5,7 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 
-open class BaseFragment : Fragment(){
+open class  BaseFragment : Fragment(){
 
     var mFragmentId: Int? = null
 
