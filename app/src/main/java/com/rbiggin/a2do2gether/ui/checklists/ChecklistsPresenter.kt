@@ -1,21 +1,27 @@
-package com.rbiggin.a2do2gether.ui.settings
+package com.rbiggin.a2do2gether.ui.checklists
 
+import com.rbiggin.a2do2gether.model.ChecklistMap
 import com.rbiggin.a2do2gether.repository.ChecklistRepository
+import com.rbiggin.a2do2gether.repository.ToDoListRepository
 import com.rbiggin.a2do2gether.ui.base.BasePresenter
-import com.rbiggin.a2do2gether.ui.checklists.ChecklistsFragment
-import com.rbiggin.a2do2gether.ui.main.MainActivity
 import com.rbiggin.a2do2gether.utils.Constants
+import io.reactivex.Observable
 import io.reactivex.Scheduler
+import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
 class ChecklistsPresenter @Inject constructor(private val checklistRepository: ChecklistRepository,
+                                              private val toDoListRepository: ToDoListRepository,
                                               private val uiThread: Scheduler,
                                               private val computationThread: Scheduler) :
-                                              BasePresenter<ChecklistsFragment>(){
+        BasePresenter<ChecklistsPresenter.View>() {
 
     var checklistManifest: ArrayList<String> = ArrayList()
 
-    override fun onViewAttached(view: ChecklistsFragment) {
+    private val popUpCommandSubject: PublishSubject<PopUpType> = PublishSubject.create()
+
+    override fun onViewAttached(view: ChecklistsPresenter.View) {
         super.onViewAttached(view)
 
         disposeOnViewWillDetach(checklistRepository.checklistsSubject
@@ -31,9 +37,9 @@ class ChecklistsPresenter @Inject constructor(private val checklistRepository: C
     override fun onViewWillShow() {
         super.onViewWillShow()
         view?.let {
-            disposeOnViewWillHide(it.newItemSubject
+            disposeOnViewWillHide(it.onNewItemCtreated()
                     .observeOn(computationThread)
-                    .filter {text ->
+                    .filter { text ->
                         !text.trim().isEmpty()
                     }
                     .subscribe { text ->
@@ -41,45 +47,72 @@ class ChecklistsPresenter @Inject constructor(private val checklistRepository: C
                         checklistRepository.addItem(view?.currentListId(), text)
                     })
 
-            disposeOnViewWillHide(it.menuItemSubject
+            disposeOnViewWillHide(it.onMenuItemSelected()
                     .observeOn(uiThread)
                     .subscribe { menuButton ->
-                        when (menuButton){
+                        when (menuButton) {
                             Constants.MenuBarItem.PLUS -> {
-                                it.displayNewChecklistDialog()
+                                popUpCommandSubject.onNext(PopUpType.NEW_CHECKLIST)
                             }
                             Constants.MenuBarItem.DELETE -> {
-                                it.displayDeleteChecklistDialog()
+                                popUpCommandSubject.onNext(PopUpType.DELETE_CHECKLIST)
                             }
                             Constants.MenuBarItem.SHARE_PUBLISH -> {
-                                it.displayPublishChecklistDialog()
+                                popUpCommandSubject.onNext(PopUpType.PUBLISH_CHECKLIST)
                             }
                         }
                     })
+
+            disposeOnViewWillHide(it.onDisplayPopUpCommand(
+                    popUpCommandSubject.observeOn(uiThread)))
         }
     }
 
-    fun deleteCurrentChecklist(currentIndex: Int){
-        val index = when(currentIndex){
+    fun deleteCurrentChecklist(currentIndex: Int) {
+        val index = when (currentIndex) {
             0 -> {
                 0
             }
-            else ->{
+            else -> {
                 currentIndex - 1
             }
         }
         view?.setAdapterResetIndex(index)
-        view?.currentListId()?.let{
+        view?.currentListId()?.let {
             checklistRepository.deleteChecklist(it)
         }
     }
 
-    fun newCurrentChecklist(title: String){
+    fun newCurrentChecklist(title: String) {
         view?.setAdapterResetIndex(checklistManifest.size + 1)
         checklistRepository.newChecklist(title)
     }
 
+    fun onChecklistPublished(title: String) {
+        val listId = view?.let{
+            it.currentListId()
+        }
+
+        val checklist = listId?.let {
+            checklistRepository.requestSpecificChecklist(it)
+        }
+
+        checklist?.let {
+            toDoListRepository.publishNewToDoListFromChecklist(title, it)
+        }
+    }
+
+    enum class PopUpType {
+        NEW_CHECKLIST,
+        DELETE_CHECKLIST,
+        PUBLISH_CHECKLIST
+    }
+
     interface View : BasePresenter.View {
+        fun onNewItemCtreated(): Observable<String>
+
+        fun onMenuItemSelected(): Observable<Constants.MenuBarItem>
+
         fun onUpdateAdapter()
 
         fun clearEditText()
@@ -88,10 +121,6 @@ class ChecklistsPresenter @Inject constructor(private val checklistRepository: C
 
         fun currentListId(): String?
 
-        fun displayNewChecklistDialog()
-
-        fun displayDeleteChecklistDialog()
-
-        fun displayPublishChecklistDialog()
+        fun onDisplayPopUpCommand(popUpCommand: Observable<PopUpType>): Disposable
     }
 }

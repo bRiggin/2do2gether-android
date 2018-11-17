@@ -24,9 +24,9 @@ class ChecklistPresenter @Inject constructor(private val checklistRepository: Ch
     }
 
     private fun constructChecklistArray(checklistMap: ChecklistMap): ChecklistArray {
-        checklistMap.items["values"]?.let {
-            return ChecklistArray(checklistMap.id, checklistMap.title, it)
-        } ?: throw IllegalStateException()
+        val items: ArrayList<String> = ArrayList()
+        checklistMap.items.forEach{ items.add(it.value) }
+        return ChecklistArray(checklistMap.id, checklistMap.title, items)
     }
 
     fun onItemDeleted(index: Int, listId: String) {

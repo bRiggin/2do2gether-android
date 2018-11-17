@@ -4,7 +4,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.rbiggin.a2do2gether.firebase.FirebaseDatabaseWriter
 import com.rbiggin.a2do2gether.firebase.FirebaseReadWatcher
-import com.rbiggin.a2do2gether.model.ChecklistArray
 import com.rbiggin.a2do2gether.model.ChecklistMap
 import com.rbiggin.a2do2gether.utils.Constants
 import io.reactivex.subjects.BehaviorSubject
@@ -104,15 +103,13 @@ class ChecklistRepository @Inject constructor(private val uidProvider: UidProvid
     }
 
     private fun constructChecklist(id: String, data: DataSnapshot): ChecklistMap {
-        val values = ArrayList<String>()
-        val keys = ArrayList<String>()
+        val items: HashMap<String, String> = HashMap()
         for (item in data.child(Constants.FB_CHECKLIST_ITEMS).children){
-            values.add(item.value.toString())
-            keys.add(item.key.toString())
+            items[item.key.toString()] = item.value.toString()
         }
         val title = data.child(Constants.FB_CHECKLIST_TITLE).value.toString()
 
-        return ChecklistMap(id, title, hashMapOf("keys" to keys, "values" to values))
+        return ChecklistMap(id, title, items)
     }
 
     fun addItem(listId: String?, newText: String){
@@ -144,5 +141,9 @@ class ChecklistRepository @Inject constructor(private val uidProvider: UidProvid
         mDatabase?.let {
             databaseWriter.doPushWrite(it, path, data)
         }
+    }
+
+    fun requestSpecificChecklist(listId: String): ChecklistMap?{
+        return checklistsWatcherMap[listId]?.value
     }
 }

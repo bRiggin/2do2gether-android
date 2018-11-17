@@ -23,12 +23,6 @@ class Constants {
          */
         const val FB_USER_PROFILE: String = "user_profile"
         const val FB_CHECKLISTS: String = "checklists"
-        const val FB_TO_DO_LISTS: String = "to_do_lists"
-        const val FB_TO_DO_LISTS_REF: String = "to_do_lists_references"
-        const val FB_TO_DO_CREATOR: String = "creator"
-        const val FB_TO_DO_DESCRIPTION: String = "item_description"
-        const val FB_TO_DO_STATUS: String = "status"
-        const val FB_TO_DO_COMPLETED: String = "completed_by"
         const val FB_CHECKLIST_TITLE: String = "title"
         const val FB_CHECKLIST_ITEMS: String = "items"
         const val FB_CONNECTION_REQUEST: String = "connection_requests"

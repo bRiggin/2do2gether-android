@@ -7,7 +7,7 @@ import com.rbiggin.a2do2gether.ui.connections.MyConnectionsPresenter
 import com.rbiggin.a2do2gether.ui.login.LoginPresenter
 import com.rbiggin.a2do2gether.ui.main.MainPresenter
 import com.rbiggin.a2do2gether.ui.profile.MyProfilePresenter
-import com.rbiggin.a2do2gether.ui.settings.ChecklistsPresenter
+import com.rbiggin.a2do2gether.ui.checklists.ChecklistsPresenter
 import com.rbiggin.a2do2gether.ui.settings.SettingsPresenter
 import com.rbiggin.a2do2gether.ui.todo.ToDoListPresenter
 import com.rbiggin.a2do2gether.utils.Utilities
@@ -53,9 +53,10 @@ class PresenterModule {
     @Provides
     @Singleton
     fun provideChecklistsPresenter(clRepo: ChecklistRepository,
+                                   tdlRepo: ToDoListRepository,
                                    @Named("main") mThread: Scheduler,
                                    @Named("computation") cThread: Scheduler): ChecklistsPresenter {
-        return ChecklistsPresenter(clRepo, mThread, cThread)
+        return ChecklistsPresenter(clRepo, tdlRepo, mThread, cThread)
     }
 
     @Provides

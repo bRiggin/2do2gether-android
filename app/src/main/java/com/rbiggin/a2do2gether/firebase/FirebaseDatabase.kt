@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.rbiggin.a2do2gether.utils.Constants
 
+@Deprecated("Now replaced by other firebase modules")
 object FirebaseDatabase : IntFirebaseDatabase {
 
     override fun doRead(dbRef: DatabaseReference, path: String,
