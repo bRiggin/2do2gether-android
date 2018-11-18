@@ -32,7 +32,7 @@ class FirebaseReadWatcher(dbRef: DatabaseReference, path: String, type: Constant
                 listener?.onReadWatcherValueEvent(null, false, databaseError.message, resultType)
             }
         }
-        mReference.addValueEventListener(mValuerEventListener)
+        mReference.orderByKey().addValueEventListener(mValuerEventListener)
     }
 
     fun detachListener(){

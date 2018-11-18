@@ -1,6 +1,5 @@
 package com.rbiggin.a2do2gether.ui.checklists
 
-import com.rbiggin.a2do2gether.model.ChecklistMap
 import com.rbiggin.a2do2gether.repository.ChecklistRepository
 import com.rbiggin.a2do2gether.repository.ToDoListRepository
 import com.rbiggin.a2do2gether.ui.base.BasePresenter

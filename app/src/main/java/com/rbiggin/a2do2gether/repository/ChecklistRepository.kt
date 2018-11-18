@@ -4,7 +4,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.rbiggin.a2do2gether.firebase.FirebaseDatabaseWriter
 import com.rbiggin.a2do2gether.firebase.FirebaseReadWatcher
-import com.rbiggin.a2do2gether.model.ChecklistMap
+import com.rbiggin.a2do2gether.model.Checklist
 import com.rbiggin.a2do2gether.utils.Constants
 import io.reactivex.subjects.BehaviorSubject
 import timber.log.Timber
@@ -20,7 +20,7 @@ class ChecklistRepository @Inject constructor(private val uidProvider: UidProvid
 
     private var checklistsWatcher: FirebaseReadWatcher? = null
 
-    private val checklistsWatcherMap: HashMap<String, BehaviorSubject<ChecklistMap>> = HashMap()
+    private val checklistsWatcherMap: HashMap<String, BehaviorSubject<Checklist>> = HashMap()
 
     val checklistsSubject: BehaviorSubject<ArrayList<String>> = BehaviorSubject.create()
 
@@ -83,14 +83,14 @@ class ChecklistRepository @Inject constructor(private val uidProvider: UidProvid
         return manifest
     }
 
-    fun getChecklistSubject(id: String) : BehaviorSubject<ChecklistMap> {
+    fun getChecklistSubject(id: String) : BehaviorSubject<Checklist> {
         if (checklistsWatcherMap.containsKey(id)){
             checklistsWatcherMap[id]?.let {
                 return it
             } ?: throw Exception()
             //todo add info
         } else {
-            val subject: BehaviorSubject<ChecklistMap> = BehaviorSubject.create()
+            val subject: BehaviorSubject<Checklist> = BehaviorSubject.create()
             checklistsWatcherMap[id] = subject
             return subject
         }
@@ -102,14 +102,14 @@ class ChecklistRepository @Inject constructor(private val uidProvider: UidProvid
         }
     }
 
-    private fun constructChecklist(id: String, data: DataSnapshot): ChecklistMap {
-        val items: HashMap<String, String> = HashMap()
+    private fun constructChecklist(id: String, data: DataSnapshot): Checklist {
+        val items: ArrayList<Pair<String, String>> = ArrayList()
         for (item in data.child(Constants.FB_CHECKLIST_ITEMS).children){
-            items[item.key.toString()] = item.value.toString()
+            items.add(Pair(item.key.toString(), item.value.toString()))
         }
         val title = data.child(Constants.FB_CHECKLIST_TITLE).value.toString()
 
-        return ChecklistMap(id, title, items)
+        return Checklist(id, title, items)
     }
 
     fun addItem(listId: String?, newText: String){
@@ -119,8 +119,7 @@ class ChecklistRepository @Inject constructor(private val uidProvider: UidProvid
         }
     }
 
-    fun deleteItem(listId: String, itemIndex: Int){
-        val itemId = checklistsWatcherMap[listId]?.value?.items?.get("keys")?.get(itemIndex)
+    fun deleteItem(listId: String, itemId: String){
         val path = "${Constants.FB_CHECKLISTS}/$mUid/$listId/items/$itemId"
         mDatabase?.let {
             databaseWriter.doDelete(it, path)
@@ -143,7 +142,7 @@ class ChecklistRepository @Inject constructor(private val uidProvider: UidProvid
         }
     }
 
-    fun requestSpecificChecklist(listId: String): ChecklistMap?{
+    fun requestSpecificChecklist(listId: String): Checklist?{
         return checklistsWatcherMap[listId]?.value
     }
 }

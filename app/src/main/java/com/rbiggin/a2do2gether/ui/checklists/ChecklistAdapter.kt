@@ -7,7 +7,7 @@ import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.utils.inflate
 import kotlinx.android.synthetic.main.row_item_checklist.view.*
 
-class ChecklistAdapter(private val itemValues: ArrayList<String>,
+class ChecklistAdapter(private val itemValues: ArrayList<Pair<String, String>>,
                        private val listener: Listener)
                        : RecyclerView.Adapter<ChecklistAdapter.ItemHolder>() {
 
@@ -17,8 +17,8 @@ class ChecklistAdapter(private val itemValues: ArrayList<String>,
     }
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
-        holder.setText(itemValues[position])
-        holder.mPosition = position
+        holder.setText(itemValues[position].second)
+        holder.itemKey = itemValues[position].first
     }
 
     override fun getItemCount(): Int {
@@ -26,8 +26,10 @@ class ChecklistAdapter(private val itemValues: ArrayList<String>,
     }
 
     class ItemHolder(private val view: View,
-                     private val listener: Listener,
-                     var mPosition : Int? = null) : RecyclerView.ViewHolder(view), View.OnClickListener {
+                     private val listener: Listener) : RecyclerView.ViewHolder(view), View.OnClickListener {
+
+        var itemKey: String? = null
+
         init {
             view.checklistItemDeleteBtn.setOnClickListener(this)
         }
@@ -37,13 +39,13 @@ class ChecklistAdapter(private val itemValues: ArrayList<String>,
         }
 
         override fun onClick(view: View?) {
-            mPosition?.let {
+            itemKey?.let {
                 listener.itemDeleted(it)
             }
         }
     }
 
     interface Listener {
-        fun itemDeleted(index: Int)
+        fun itemDeleted(itemId: String)
     }
 }

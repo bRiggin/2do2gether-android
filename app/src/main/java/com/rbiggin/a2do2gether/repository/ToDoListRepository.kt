@@ -4,7 +4,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.rbiggin.a2do2gether.firebase.FirebaseDatabaseWriter
 import com.rbiggin.a2do2gether.firebase.FirebaseReadWatcher
-import com.rbiggin.a2do2gether.model.ChecklistMap
+import com.rbiggin.a2do2gether.model.Checklist
 import com.rbiggin.a2do2gether.model.ToDoListItem
 import com.rbiggin.a2do2gether.model.ToDoListMap
 import com.rbiggin.a2do2gether.utils.Constants
@@ -168,7 +168,7 @@ class ToDoListRepository @Inject constructor(private val uidProvider: UidProvide
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun publishNewToDoListFromChecklist(title: String, checklist: ChecklistMap) {
+    fun publishNewToDoListFromChecklist(title: String, checklist: Checklist) {
         val toDoList = constructToDoListFromChecklist(title, checklist)
         val referencePath = "$fbDbToDoListReferencesKey/$uid"
         val data = toDoList.items as HashMap<String, Any>?
@@ -181,7 +181,7 @@ class ToDoListRepository @Inject constructor(private val uidProvider: UidProvide
         }
     }
 
-    private fun constructToDoListFromChecklist(title: String, checklist: ChecklistMap): ToDoListMap {
+    private fun constructToDoListFromChecklist(title: String, checklist: Checklist): ToDoListMap {
         return uid?.let { id ->
             ToDoListMap("",
                     title,
@@ -190,12 +190,12 @@ class ToDoListRepository @Inject constructor(private val uidProvider: UidProvide
         } ?: throw IllegalStateException()
     }
 
-    private fun constructToDoListItemsFromChecklist(items: HashMap<String, String>): HashMap<String, ToDoListItem> {
+    private fun constructToDoListItemsFromChecklist(items: ArrayList<Pair<String, String>>): HashMap<String, ToDoListItem> {
         val newItems: HashMap<String, ToDoListItem> = HashMap()
 
         uid?.let { id ->
             items.forEach{
-                newItems[it.key] = ToDoListItem(it.value,
+                newItems[it.first] = ToDoListItem(it.second,
                         id,
                         false,
                         null,

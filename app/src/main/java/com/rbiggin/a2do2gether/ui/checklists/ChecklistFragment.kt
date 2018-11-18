@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.application.MyApplication
-import com.rbiggin.a2do2gether.model.ChecklistArray
+import com.rbiggin.a2do2gether.model.Checklist
 import com.rbiggin.a2do2gether.ui.base.BaseFragment
 import com.rbiggin.a2do2gether.utils.Constants
 import kotlinx.android.synthetic.main.fragment_checklist.*
@@ -19,7 +19,7 @@ class ChecklistFragment : BaseFragment(), ChecklistPresenter.View, ChecklistAdap
     @Inject
     lateinit var presenter: ChecklistPresenter
 
-    private var checklistItems: ArrayList<String> = ArrayList()
+    private var checklistItems: ArrayList<Pair<String, String>> = ArrayList()
 
     private lateinit var mLayoutManager: LinearLayoutManager
 
@@ -64,15 +64,16 @@ class ChecklistFragment : BaseFragment(), ChecklistPresenter.View, ChecklistAdap
         //todo
     }
 
-    override fun onChecklistUpdate(checklist: ChecklistArray) {
+    override fun onChecklistUpdate(checklist: Checklist) {
         checklistTitle.text = checklist.title
         checklistItems.clear()
         checklistItems.addAll(checklist.items)
         checklistRv.adapter.notifyDataSetChanged()
     }
 
-    override fun itemDeleted(index: Int) {
-        mFragmentId?.let { presenter.onItemDeleted(index, it) }
+    override fun itemDeleted(itemId: String) {
+        mFragmentId?.let { presenter.onItemDeleted(itemId, it) }
+
     }
 
     companion object {
