@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.application.MyApplication
 import com.rbiggin.a2do2gether.ui.base.BaseFragment
+import com.rbiggin.a2do2gether.ui.todo.item.ToDoListItemHeader
+import com.rbiggin.a2do2gether.ui.todo.item.ToDoListItemLayout
 import com.rbiggin.a2do2gether.utils.Constants
+import kotlinx.android.synthetic.main.fragment_to_do_list.*
 import javax.inject.Inject
 
 class ToDoListFragment : BaseFragment(), ToDoListPresenter.View {
@@ -29,11 +32,24 @@ class ToDoListFragment : BaseFragment(), ToDoListPresenter.View {
     override fun onAttach(context: Context?) {
         (context?.applicationContext as MyApplication).daggerComponent.inject(this)
         super.onAttach(context)
+
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_to_do_list, container, false)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        mContext?.let{
+            val thing = View.generateViewId()
+            val otherThing = ToDoListItemLayout(thing, it)
+            tempLinearLayout.addView(ToDoListItemHeader(otherThing, it))
+            tempLinearLayout.addView(otherThing)
+        }
     }
 
     override fun onDestroy() {
