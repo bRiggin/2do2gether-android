@@ -5,9 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.utils.inflate
+import kotlinx.android.synthetic.main.row_item_checklist.view.*
 
-
-class ToDoListAdapter(private val to  : ArrayList<Pair<String, String>>,
+class ToDoListAdapter(private val toDoLists  : ArrayList<Pair<String, String>>,
                       private val listener: Listener)
     : RecyclerView.Adapter<ToDoListAdapter.ItemHolder>() {
 
@@ -17,13 +17,11 @@ class ToDoListAdapter(private val to  : ArrayList<Pair<String, String>>,
     }
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
-        holder.setText(itemValues[position].second)
-        holder.itemKey = itemValues[position].first
+        //holder.setText(itemValues[position].second)
+        //holder.itemKey = itemValues[position].first
     }
 
-    override fun getItemCount(): Int {
-        return itemValues.size
-    }
+    override fun getItemCount(): Int = toDoLists.size
 
     class ItemHolder(private val view: View,
                      private val listener: Listener) : RecyclerView.ViewHolder(view), View.OnClickListener {

@@ -10,6 +10,7 @@ import com.rbiggin.a2do2gether.ui.profile.MyProfilePresenter
 import com.rbiggin.a2do2gether.ui.checklists.ChecklistsPresenter
 import com.rbiggin.a2do2gether.ui.settings.SettingsPresenter
 import com.rbiggin.a2do2gether.ui.todo.ToDoListPresenter
+import com.rbiggin.a2do2gether.ui.todo.ToDoListsPresenter
 import com.rbiggin.a2do2gether.utils.Utilities
 import dagger.Module
 import dagger.Provides
@@ -67,8 +68,18 @@ class PresenterModule {
 
     @Provides
     @Singleton
-    fun provideToDoListPresenter(): ToDoListPresenter {
-        return ToDoListPresenter()
+    fun provideToDoListsPresenter(tdlRepo: ToDoListRepository,
+                                  @Named("main") mThread: Scheduler,
+                                  @Named("computation") cThread: Scheduler): ToDoListsPresenter {
+        return ToDoListsPresenter(tdlRepo, mThread, cThread)
+    }
+
+    @Provides
+    @Singleton
+    fun provideToDoListPresenter(sRepo: SettingsRepository,
+                                tdlRepo: ToDoListRepository,
+                                 @Named("main") mThread: Scheduler): ToDoListPresenter {
+        return ToDoListPresenter(sRepo, tdlRepo, mThread)
     }
 
     @Provides
