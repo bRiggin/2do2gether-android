@@ -2,9 +2,9 @@ package com.rbiggin.a2do2gether.ui.checklists
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +33,6 @@ class ChecklistsFragment : BaseFragment(), ChecklistsPresenter.View, MainActivit
     private var resetIndex: Int? = null
 
     private val newItemSubject: PublishSubject<String> = PublishSubject.create()
-
     private val menuItemSubject: PublishSubject<Constants.MenuBarItem> = PublishSubject.create()
 
     override fun onNewItemCtreated(): Observable<String> {
@@ -44,8 +43,8 @@ class ChecklistsFragment : BaseFragment(), ChecklistsPresenter.View, MainActivit
         return menuItemSubject
     }
 
-    override fun onAttach(context: Context?) {
-        (context?.applicationContext as MyApplication).daggerComponent.inject(this)
+    override fun onAttach(context: Context) {
+        (context.applicationContext as MyApplication).daggerComponent.inject(this)
         super.onAttach(context)
         presenter.onViewAttached(this)
     }
@@ -57,9 +56,7 @@ class ChecklistsFragment : BaseFragment(), ChecklistsPresenter.View, MainActivit
 
     override fun onStart() {
         super.onStart()
-
         checklistsViewPager.adapter = PagerAdapter(childFragmentManager)
-        pageIndicator.attachToViewPager(checklistsViewPager)
     }
 
     override fun onResume() {
@@ -123,14 +120,13 @@ class ChecklistsFragment : BaseFragment(), ChecklistsPresenter.View, MainActivit
         return popUpCommand.subscribe { command ->
             mContext?.let {
                 when (command) {
-                    ChecklistsPresenter.PopUpType.NEW_CHECKLIST -> {
+                    ChecklistsPresenter.PopUpType.NEW_CHECKLIST ->
                         utilities.showTextEntryDialog(it, getString(R.string.new_checklist),
                                 getString(R.string.new_checklist_hint),
                                 posButtonText = getString(R.string.create),
                                 negButtonText = getString(R.string.cancel),
                                 positiveCode = { text -> presenter.newCurrentChecklist(text) })
-                    }
-                    ChecklistsPresenter.PopUpType.DELETE_CHECKLIST -> {
+                    ChecklistsPresenter.PopUpType.DELETE_CHECKLIST ->
                         utilities.showFunctionDialog(it, getString(R.string.delete_checklist),
                                 getString(R.string.delete_checklist_description),
                                 posButtonText = getString(R.string.delete),
@@ -139,8 +135,7 @@ class ChecklistsFragment : BaseFragment(), ChecklistsPresenter.View, MainActivit
                                     presenter.deleteCurrentChecklist(checklistsViewPager.currentItem)
                                     checklistsViewPager.currentItem = 0
                                 })
-                    }
-                    ChecklistsPresenter.PopUpType.PUBLISH_CHECKLIST -> {
+                    ChecklistsPresenter.PopUpType.PUBLISH_CHECKLIST ->
                         utilities.showTextEntryDialog(it, getString(R.string.publish_checklist),
                                 getString(R.string.publish_checklist_hint),
                                 posButtonText = getString(R.string.publish),
@@ -148,7 +143,6 @@ class ChecklistsFragment : BaseFragment(), ChecklistsPresenter.View, MainActivit
                                 positiveCode = {
                                     presenter.onChecklistPublished(it)
                                 })
-                    }
                 }
             }
         }

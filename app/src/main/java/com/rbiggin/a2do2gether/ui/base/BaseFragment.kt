@@ -3,8 +3,7 @@ package com.rbiggin.a2do2gether.ui.base
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.Fragment
 import android.view.inputmethod.InputMethodManager
 import com.rbiggin.a2do2gether.utils.Constants
 
@@ -14,7 +13,7 @@ open class BaseFragment : Fragment(){
 
     var mContext: Context? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
     }

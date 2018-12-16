@@ -1,6 +1,6 @@
 package com.rbiggin.a2do2gether.ui.connections
 
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 import com.rbiggin.a2do2gether.model.UserConnectionRequest
 import com.rbiggin.a2do2gether.model.UserConnectionSearch
 import com.rbiggin.a2do2gether.model.UserDetails

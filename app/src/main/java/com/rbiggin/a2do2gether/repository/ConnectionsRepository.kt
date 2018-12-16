@@ -1,6 +1,6 @@
 package com.rbiggin.a2do2gether.repository
 
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase

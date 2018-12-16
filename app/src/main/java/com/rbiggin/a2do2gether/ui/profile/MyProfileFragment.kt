@@ -30,8 +30,8 @@ class MyProfileFragment : BaseFragment(), MyProfilePresenter.View {
         return inflater.inflate(R.layout.fragment_my_profile, container, false)
     }
 
-    override fun onAttach(context: Context?) {
-        (context?.applicationContext as MyApplication).daggerComponent.inject(this)
+    override fun onAttach(context: Context) {
+        (context.applicationContext as MyApplication).daggerComponent.inject(this)
         super.onAttach(context)
 
         presenter.onViewAttached(this)

@@ -18,7 +18,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="wrap_content"
         android:text="Hello there, this is an example of a long to do list items that contains quite alot of text and therefore makes a good demo."/>
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:adjustViewBounds="true"
         android:id="@+id/headerIndicator"
         android:layout_height="wrap_content"

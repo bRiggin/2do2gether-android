@@ -5,7 +5,7 @@ import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Handler
 import kotlinx.android.synthetic.main.recyclerview_item_row.*
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.rbiggin.a2do2gether.R

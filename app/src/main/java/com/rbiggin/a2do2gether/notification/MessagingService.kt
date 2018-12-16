@@ -1,6 +1,6 @@
 package com.rbiggin.a2do2gether.notification
 
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.rbiggin.a2do2gether.R
@@ -9,7 +9,7 @@ import android.app.TaskStackBuilder
 import android.content.Intent
 import android.content.SharedPreferences
 import com.rbiggin.a2do2gether.ui.main.MainActivity
-import android.support.v4.app.NotificationManagerCompat
+import androidx.core.app.NotificationManagerCompat
 import com.rbiggin.a2do2gether.application.MyApplication
 import com.rbiggin.a2do2gether.utils.Constants
 import com.rbiggin.a2do2gether.utils.Utilities

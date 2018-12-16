@@ -79,10 +79,13 @@ class AuthRepository @Inject constructor(private val authApi: FirebaseAuth,
     fun updateFcmToken() {
         val currentFcmToken = sharedPrefs.getString(utilities.encode(Constants.SP_FCM_TOKEN), falseString)
         if (currentFcmToken != falseString){
-            val decodedToken = utilities.decode(currentFcmToken)
-            user?.firebaseUser?.uid?.let {
-                val data = hashMapOf(it to decodedToken as Any)
-                mDatabase?.let { fbDatabaseApi.doWrite(it, Constants.FB_FCM_TOKENS, data) }
+            currentFcmToken?.let { token ->
+                val decodedToken = utilities.decode(token)
+                user?.firebaseUser?.uid?.let {uid ->
+                    val data = hashMapOf(uid to decodedToken as Any)
+                    mDatabase?.let { fbDatabaseApi.doWrite(it, Constants.FB_FCM_TOKENS, data) }
+                }
+
             }
         }
     }

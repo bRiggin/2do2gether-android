@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.application.MyApplication
+import com.rbiggin.a2do2gether.model.ToDoListMap
 import com.rbiggin.a2do2gether.ui.base.BaseFragment
 import com.rbiggin.a2do2gether.ui.todo.item.ToDoListItemHeader
 import com.rbiggin.a2do2gether.ui.todo.item.ToDoListItemLayout
@@ -29,8 +30,8 @@ class ToDoListFragment : BaseFragment(), ToDoListPresenter.View {
         }
     }
 
-    override fun onAttach(context: Context?) {
-        (context?.applicationContext as MyApplication).daggerComponent.inject(this)
+    override fun onAttach(context: Context) {
+        (context.applicationContext as MyApplication).daggerComponent.inject(this)
         super.onAttach(context)
 
 
@@ -48,7 +49,7 @@ class ToDoListFragment : BaseFragment(), ToDoListPresenter.View {
             val thing = View.generateViewId()
             val otherThing = ToDoListItemLayout(thing, it)
             tempLinearLayout.addView(ToDoListItemHeader(otherThing, it))
-            tempLinearLayout.addView(otherThing)
+            //tempLinearLayout.addView(otherThing)
         }
     }
 
@@ -59,5 +60,9 @@ class ToDoListFragment : BaseFragment(), ToDoListPresenter.View {
 
     override fun onDisplayDialogMessage(message_id: Int, message: String?) {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onToDoListUpdate(toDoList: ToDoListMap) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

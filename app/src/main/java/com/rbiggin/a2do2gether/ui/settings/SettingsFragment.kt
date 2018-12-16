@@ -40,8 +40,8 @@ class SettingsFragment : BaseFragment(), SettingsPresenter.View {
         }
     }
 
-    override fun onAttach(context: Context?) {
-        (context?.applicationContext as MyApplication).daggerComponent.inject(this)
+    override fun onAttach(context: Context) {
+        (context.applicationContext as MyApplication).daggerComponent.inject(this)
         super.onAttach(context)
     }
 

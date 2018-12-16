@@ -1,6 +1,6 @@
 package com.rbiggin.a2do2gether.ui.todo
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.rbiggin.a2do2gether.R

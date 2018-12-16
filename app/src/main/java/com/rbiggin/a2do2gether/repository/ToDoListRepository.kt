@@ -35,9 +35,6 @@ class ToDoListRepository @Inject constructor(private val uidProvider: UidProvide
 
     fun initialise() {
         dbRef = com.google.firebase.database.FirebaseDatabase.getInstance().reference
-        if (dbRef == null)
-            throw NullPointerException("dbRef was unsuccessfully initialised  by FirebaseDatabase")
-
         uidProvider.getUid()?.let { uid = it }
         if (uid.isNullOrBlank())
             throw NullPointerException("Uid provided by UidProvider has returned null")

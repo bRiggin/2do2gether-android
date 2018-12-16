@@ -2,7 +2,7 @@ package com.rbiggin.a2do2gether.ui.login.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.rbiggin.a2do2gether.application.MyApplication
 import com.rbiggin.a2do2gether.ui.login.LoginPresenter
 import com.rbiggin.a2do2gether.utils.Constants
@@ -16,7 +16,7 @@ open class MasterFragment : Fragment() {
 
     private var mContext: Context? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
     }

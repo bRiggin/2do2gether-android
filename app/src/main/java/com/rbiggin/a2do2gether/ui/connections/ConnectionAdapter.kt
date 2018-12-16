@@ -1,6 +1,6 @@
 package com.rbiggin.a2do2gether.ui.connections
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.View
 import com.bumptech.glide.Glide

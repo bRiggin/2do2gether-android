@@ -2,7 +2,7 @@ package com.rbiggin.a2do2gether.ui.checklists
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,8 +23,8 @@ class ChecklistFragment : BaseFragment(), ChecklistPresenter.View, ChecklistAdap
 
     private lateinit var mLayoutManager: LinearLayoutManager
 
-    override fun onAttach(context: Context?) {
-        (context?.applicationContext as MyApplication).daggerComponent.inject(this)
+    override fun onAttach(context: Context) {
+        (context.applicationContext as MyApplication).daggerComponent.inject(this)
         super.onAttach(context)
         presenter.onViewAttached(this)
     }
@@ -68,7 +68,7 @@ class ChecklistFragment : BaseFragment(), ChecklistPresenter.View, ChecklistAdap
         checklistTitle.text = checklist.title
         checklistItems.clear()
         checklistItems.addAll(checklist.items)
-        checklistRv.adapter.notifyDataSetChanged()
+        checklistRv.adapter?.notifyDataSetChanged()
     }
 
     override fun itemDeleted(itemId: String) {

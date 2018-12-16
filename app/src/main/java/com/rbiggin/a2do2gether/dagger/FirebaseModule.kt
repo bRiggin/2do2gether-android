@@ -9,25 +9,17 @@ import javax.inject.Singleton
 class FirebaseModule {
     @Provides
     @Singleton
-    fun provideFirebaseAuth(): FirebaseAuth {
-        return FirebaseAuth
-    }
+    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth
 
     @Provides
     @Singleton
-    fun provideFirebaseStorage(): IntFirebaseStorage {
-        return FirebaseStorage
-    }
+    fun provideFirebaseStorage(): IntFirebaseStorage = FirebaseStorage
 
     @Provides
     @Singleton
-    fun provideFirebaseDatabase(): IntFirebaseDatabase {
-        return FirebaseDatabase
-    }
+    fun provideFirebaseDatabase(): IntFirebaseDatabase = FirebaseDatabase
 
     @Provides
     @Singleton
-    fun provideFirebaseDatabaseWriter(): FirebaseDatabaseWriter {
-        return FirebaseDatabaseWriter
-    }
+    fun provideFirebaseDatabaseWriter(): FirebaseDatabaseWriter = FirebaseDatabaseWriter
 }

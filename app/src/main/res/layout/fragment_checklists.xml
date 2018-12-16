@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/checklistsViewPager"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -17,19 +17,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-    </android.support.v4.view.ViewPager>
+    </androidx.viewpager.widget.ViewPager>
 
-    <com.rbrooks.indefinitepagerindicator.IndefinitePagerIndicator
+    <com.rd.PageIndicatorView
         android:id="@+id/pageIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        app:selectedDotRadius="6dp"
-        app:fadingDotCount="2"
-        app:selectedDotColor="@color/white"
-        app:dotColor="@color/colorPrimaryDark"
+        app:piv_viewPager="@id/checklistsViewPager"
+        app:piv_animationType="drop"
+        app:piv_dynamicCount="true"
         app:layout_constraintBottom_toTopOf="@+id/checklistsTextEntryLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -63,4 +62,4 @@
             android:text="@string/add"
             android:textAllCaps="false" />
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,7 @@ package com.rbiggin.a2do2gether.ui.homepage
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView

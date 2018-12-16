@@ -1,6 +1,6 @@
 package com.rbiggin.a2do2gether.ui.base
 
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
