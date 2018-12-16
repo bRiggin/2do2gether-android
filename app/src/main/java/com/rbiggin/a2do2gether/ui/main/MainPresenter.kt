@@ -1,7 +1,6 @@
 package com.rbiggin.a2do2gether.ui.main
 
 import android.graphics.Bitmap
-import android.util.Log
 import com.rbiggin.a2do2gether.repository.*
 import com.rbiggin.a2do2gether.utils.Constants
 import timber.log.Timber
@@ -59,7 +58,7 @@ class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
     fun onViewDetached() {
         mActivity = null
         checklistRepo.presenterDetached()
-        toDoListRepo.presenterDetached()
+        toDoListRepo.removeRepositoryReferences()
         settingsRepository.presenterDetached()
     }
 

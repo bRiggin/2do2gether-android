@@ -8,6 +8,7 @@ import com.rbiggin.a2do2gether.model.Checklist
 import com.rbiggin.a2do2gether.utils.Constants
 import io.reactivex.subjects.BehaviorSubject
 import timber.log.Timber
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class ChecklistRepository @Inject constructor(private val uidProvider: UidProvider,
@@ -19,9 +20,7 @@ class ChecklistRepository @Inject constructor(private val uidProvider: UidProvid
     private var mUid: String? = null
 
     private var checklistsWatcher: FirebaseReadWatcher? = null
-
     private val checklistsWatcherMap: HashMap<String, BehaviorSubject<Checklist>> = HashMap()
-
     val checklistsSubject: BehaviorSubject<ArrayList<String>> = BehaviorSubject.create()
 
     fun initialise() {
@@ -48,26 +47,20 @@ class ChecklistRepository @Inject constructor(private val uidProvider: UidProvid
     override fun onReadWatcherValueEvent(snapshot: DataSnapshot?, success: Boolean,
                                          errorMessage: String?, type: Constants.DatabaseApi) {
         when (type) {
-            Constants.DatabaseApi.READ_CHECKLISTS -> {
-                if (success) {
-                    snapshot?.let {
-                        updateChecklists(it)
-                    }
-                } else {
-                    Timber.d("ChecklistsWatcher error, message: $errorMessage")
+            Constants.DatabaseApi.READ_CHECKLISTS ->
+                when(success){
+                    true -> snapshot?.let { updateChecklists(it) }
+                    false -> Timber.d("ChecklistsWatcher error, message: $errorMessage")
                 }
-            }
-            else -> {
-                throw IllegalArgumentException("SettingsRepository, onReadWatcherValueEvent: " +
+            else -> throw IllegalArgumentException("SettingsRepository, onReadWatcherValueEvent: " +
                         "Inappropriate type returned from FirebaseReadWatcher")
-            }
         }
     }
 
     private fun updateChecklists(data: DataSnapshot) {
         for (checklist in data.children) {
             checklist.key?.let{
-                getChecklistSubject(it).onNext(constructChecklist(it, checklist))
+                onChecklistChanged(it).onNext(constructChecklist(it, checklist))
             }
         }
         checklistsSubject.onNext(constructChecklistManifest(data))
@@ -83,12 +76,12 @@ class ChecklistRepository @Inject constructor(private val uidProvider: UidProvid
         return manifest
     }
 
-    fun getChecklistSubject(id: String) : BehaviorSubject<Checklist> {
+    fun onChecklistChanged(id: String) : BehaviorSubject<Checklist> {
         if (checklistsWatcherMap.containsKey(id)){
             checklistsWatcherMap[id]?.let {
                 return it
-            } ?: throw Exception()
-            //todo add info
+            } ?: throw IllegalStateException("checklistsWatcherMap contains $id but was unable to " +
+                    "retrieve the associated BehaviourSubject")
         } else {
             val subject: BehaviorSubject<Checklist> = BehaviorSubject.create()
             checklistsWatcherMap[id] = subject

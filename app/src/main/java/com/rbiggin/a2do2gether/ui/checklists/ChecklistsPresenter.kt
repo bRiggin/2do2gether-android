@@ -50,15 +50,12 @@ class ChecklistsPresenter @Inject constructor(private val checklistRepository: C
                     .observeOn(uiThread)
                     .subscribe { menuButton ->
                         when (menuButton) {
-                            Constants.MenuBarItem.PLUS -> {
+                            Constants.MenuBarItem.PLUS ->
                                 popUpCommandSubject.onNext(PopUpType.NEW_CHECKLIST)
-                            }
-                            Constants.MenuBarItem.DELETE -> {
+                            Constants.MenuBarItem.DELETE ->
                                 popUpCommandSubject.onNext(PopUpType.DELETE_CHECKLIST)
-                            }
-                            Constants.MenuBarItem.SHARE_PUBLISH -> {
+                            Constants.MenuBarItem.SHARE_PUBLISH ->
                                 popUpCommandSubject.onNext(PopUpType.PUBLISH_CHECKLIST)
-                            }
                         }
                     })
 
@@ -69,17 +66,11 @@ class ChecklistsPresenter @Inject constructor(private val checklistRepository: C
 
     fun deleteCurrentChecklist(currentIndex: Int) {
         val index = when (currentIndex) {
-            0 -> {
-                0
-            }
-            else -> {
-                currentIndex - 1
-            }
+            0 -> 0
+            else -> currentIndex - 1
         }
         view?.setAdapterResetIndex(index)
-        view?.currentListId()?.let {
-            checklistRepository.deleteChecklist(it)
-        }
+        view?.currentListId()?.let { checklistRepository.deleteChecklist(it) }
     }
 
     fun newCurrentChecklist(title: String) {
@@ -88,17 +79,11 @@ class ChecklistsPresenter @Inject constructor(private val checklistRepository: C
     }
 
     fun onChecklistPublished(title: String) {
-        val listId = view?.let{
-            it.currentListId()
-        }
+        val listId = view?.let { it.currentListId() }
 
-        val checklist = listId?.let {
-            checklistRepository.requestSpecificChecklist(it)
-        }
+        val checklist = listId?.let { checklistRepository.requestSpecificChecklist(it) }
 
-        checklist?.let {
-            toDoListRepository.publishNewToDoListFromChecklist(title, it)
-        }
+        checklist?.let { toDoListRepository.publishNewToDoListFromChecklist(title, it) }
     }
 
     enum class PopUpType {
@@ -109,17 +94,11 @@ class ChecklistsPresenter @Inject constructor(private val checklistRepository: C
 
     interface View : BasePresenter.View {
         fun onNewItemCtreated(): Observable<String>
-
         fun onMenuItemSelected(): Observable<Constants.MenuBarItem>
-
         fun onUpdateAdapter()
-
         fun clearEditText()
-
         fun setAdapterResetIndex(index: Int)
-
         fun currentListId(): String?
-
         fun onDisplayPopUpCommand(popUpCommand: Observable<PopUpType>): Disposable
     }
 }

@@ -21,9 +21,7 @@ class ChecklistAdapter(private val itemValues: ArrayList<Pair<String, String>>,
         holder.itemKey = itemValues[position].first
     }
 
-    override fun getItemCount(): Int {
-        return itemValues.size
-    }
+    override fun getItemCount(): Int = itemValues.size
 
     class ItemHolder(private val view: View,
                      private val listener: Listener) : RecyclerView.ViewHolder(view), View.OnClickListener {

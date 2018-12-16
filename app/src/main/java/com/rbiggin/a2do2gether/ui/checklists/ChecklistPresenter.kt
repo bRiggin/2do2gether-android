@@ -7,10 +7,9 @@ import io.reactivex.Scheduler
 import javax.inject.Inject
 
 class ChecklistPresenter @Inject constructor(private val checklistRepository: ChecklistRepository,
-                                             private val uiThread: Scheduler) :
-        BasePresenter<ChecklistFragment>() {
+                                             private val uiThread: Scheduler) : BasePresenter<ChecklistFragment>() {
     fun onIdSupplied(id: String) {
-        disposeOnViewWillDetach(checklistRepository.getChecklistSubject(id)
+        disposeOnViewWillDetach(checklistRepository.onChecklistChanged(id)
                 .observeOn(uiThread)
                 .distinctUntilChanged()
                 .subscribe {
