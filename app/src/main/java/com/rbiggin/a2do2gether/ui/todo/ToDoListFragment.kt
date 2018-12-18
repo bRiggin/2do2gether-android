@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.application.MyApplication
-import com.rbiggin.a2do2gether.model.ToDoListMap
+import com.rbiggin.a2do2gether.model.ToDoList
 import com.rbiggin.a2do2gether.ui.base.BaseFragment
 import com.rbiggin.a2do2gether.ui.todo.item.ToDoListItemHeader
 import com.rbiggin.a2do2gether.ui.todo.item.ToDoListItemLayout
@@ -62,7 +62,7 @@ class ToDoListFragment : BaseFragment(), ToDoListPresenter.View {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onToDoListUpdate(toDoList: ToDoListMap) {
+    override fun onToDoListUpdate(toDoList: ToDoList) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

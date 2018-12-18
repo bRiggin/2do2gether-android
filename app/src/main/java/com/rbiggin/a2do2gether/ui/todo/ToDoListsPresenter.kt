@@ -21,20 +21,22 @@ class ToDoListsPresenter @Inject constructor(private val toDoListRepository: ToD
     override fun onViewAttached(view: View) {
         super.onViewAttached(view)
 
-        disposeOnViewWillDetach(toDoListRepository.onToDoListsChanged()
-                .subscribeOn(computationThread)
-                .distinctUntilChanged()
-                .observeOn(uiThread)
-                .subscribe {
-                    toDoListsManifest.clear()
-                    toDoListsManifest.addAll(it)
-                    view.onUpdateAdapter()
-                })
+        toDoListRepository.onToDoListsChanged()?.let { toDoLists ->
+            disposeOnViewWillDetach(toDoLists
+                    .subscribeOn(computationThread)
+                    .distinctUntilChanged()
+                    .observeOn(uiThread)
+                    .subscribe {
+                        toDoListsManifest.clear()
+                        toDoListsManifest.addAll(it)
+                        view.onUpdateAdapter()
+                    })
+        }
     }
 
     override fun onViewWillShow() {
         super.onViewWillShow()
-        view?.let {view ->
+        view?.let { view ->
             disposeOnViewWillHide(view.onNewItemCtreated()
                     .observeOn(computationThread)
                     .filter { text -> !text.trim().isEmpty() }

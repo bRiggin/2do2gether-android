@@ -1,7 +1,7 @@
 package com.rbiggin.a2do2gether.firebase
 
 import com.google.firebase.database.DatabaseReference
-import com.rbiggin.a2do2gether.model.ToDoListMap
+import com.rbiggin.a2do2gether.model.ToDoList
 
 object FirebaseDatabaseWriter {
 
@@ -23,11 +23,11 @@ object FirebaseDatabaseWriter {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun doPushWrite(dbRef: DatabaseReference, path: String, data: ToDoListMap): DatabaseReference {
+    fun doPushWrite(dbRef: DatabaseReference, path: String, data: ToDoList): DatabaseReference {
         val mReference = dbRef.child(path).push()
-        mReference.child(ToDoListMap.DataBaseKeys.CREATOR.key).setValue(data.creator)
-        mReference.child(ToDoListMap.DataBaseKeys.TITLE.key).setValue(data.title)
-        mReference.child(ToDoListMap.DataBaseKeys.ITEMS.key).updateChildren(data.items as HashMap<String, Any>)
+        mReference.child(ToDoList.DataBaseKeys.CREATOR.key).setValue(data.creator)
+        mReference.child(ToDoList.DataBaseKeys.TITLE.key).setValue(data.title)
+        mReference.child(ToDoList.DataBaseKeys.ITEMS.key).updateChildren(data.items as HashMap<String, Any>)
         return  mReference
     }
 

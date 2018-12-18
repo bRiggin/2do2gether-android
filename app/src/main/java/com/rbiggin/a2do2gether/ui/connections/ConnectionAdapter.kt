@@ -62,7 +62,7 @@ class ConnectionAdapter (private val connections: ArrayList<UserDetails>,
         }
 
         private fun setImage(reference: StorageReference){
-            Glide.with(fragment)
+            Glide.with(fragment.context)
                     .using(FirebaseImageLoader())
                     .load(reference)
                     .error(R.drawable.profile_default)
