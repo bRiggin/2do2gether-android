@@ -2,13 +2,14 @@ package com.rbiggin.a2do2gether.repository
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.rbiggin.a2do2gether.firebase.FirebaseDatabaseWriter
 import com.rbiggin.a2do2gether.firebase.FirebaseReadWatcher
 import com.rbiggin.a2do2gether.model.SettingsUpdate
 import com.rbiggin.a2do2gether.utils.Constants
+import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import timber.log.Timber
-import java.util.*
 import javax.inject.Inject
 
 class SettingsRepository @Inject constructor(private val uidProvider: UidProvider,
@@ -21,25 +22,30 @@ class SettingsRepository @Inject constructor(private val uidProvider: UidProvide
 
     private var settingsWatcher: FirebaseReadWatcher? = null
 
-    val reorderListSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    private val reorderListByCompletionSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    fun onReorderListByCompletionChanged(): Observable<Boolean> = reorderListByCompletionSubject
 
-    val profilePublicSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    private val profilePublicSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    fun onProfilePublicChanged(): Observable<Boolean> = profilePublicSubject
 
-    val connectionRequestsSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    private val connectionRequestsSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    fun onConnectionRequestsChanged(): Observable<Boolean> = connectionRequestsSubject
 
-    val newConnectionsSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    private val newConnectionsSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    fun onNewConnectionsChanged(): Observable<Boolean> = newConnectionsSubject
 
-    val newListSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    private val newListSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    fun onNewListChanged(): Observable<Boolean> = newListSubject
 
-    val analyticsSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    private val analyticsSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
+    fun onAnalyticsChanged(): Observable<Boolean> = analyticsSubject
 
     fun initialise() {
-        mDatabase = com.google.firebase.database.FirebaseDatabase.getInstance().reference
+        mDatabase = FirebaseDatabase.getInstance().reference
         mUid = uidProvider.getUid()
         if (mUid.isNullOrBlank()) {
             throw NullPointerException("Uid provided by UidProvider has returned null")
         }
-
         watchUserSettings()
     }
 
@@ -79,24 +85,12 @@ class SettingsRepository @Inject constructor(private val uidProvider: UidProvide
         for (setting in data.children) {
             val value = setting.value.toString().toBoolean()
             when (setting.key) {
-                Constants.Setting.LIST_REORDER.value -> {
-                    reorderListSubject.onNext(value)
-                }
-                Constants.Setting.PROFILE_PRIVACY.value -> {
-                    profilePublicSubject.onNext(value)
-                }
-                Constants.Setting.CONNECTION_REQUEST.value -> {
-                    connectionRequestsSubject.onNext(value)
-                }
-                Constants.Setting.NEW_CONNECTIONS.value -> {
-                    newConnectionsSubject.onNext(value)
-                }
-                Constants.Setting.NEW_LIST.value -> {
-                    newListSubject.onNext(value)
-                }
-                Constants.Setting.ANALYTICS.value -> {
-                    analyticsSubject.onNext(value)
-                }
+                Constants.Setting.LIST_REORDER.value -> reorderListByCompletionSubject.onNext(value)
+                Constants.Setting.PROFILE_PRIVACY.value -> profilePublicSubject.onNext(value)
+                Constants.Setting.CONNECTION_REQUEST.value -> connectionRequestsSubject.onNext(value)
+                Constants.Setting.NEW_CONNECTIONS.value -> newConnectionsSubject.onNext(value)
+                Constants.Setting.NEW_LIST.value -> newListSubject.onNext(value)
+                Constants.Setting.ANALYTICS.value -> analyticsSubject.onNext(value)
             }
         }
     }

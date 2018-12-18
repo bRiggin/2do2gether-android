@@ -1,6 +1,7 @@
 package com.rbiggin.a2do2gether.ui.todo
 
 import com.rbiggin.a2do2gether.model.ToDoList
+import com.rbiggin.a2do2gether.model.ToDoListItem
 import com.rbiggin.a2do2gether.repository.SettingsRepository
 import com.rbiggin.a2do2gether.repository.ToDoListRepository
 import com.rbiggin.a2do2gether.ui.base.BasePresenter
@@ -11,6 +12,11 @@ class ToDoListPresenter @Inject constructor(private val settingsRepository: Sett
                                             private val toDoListRepository: ToDoListRepository,
                                             private val uiThread: Scheduler) : BasePresenter<ToDoListFragment>() {
 
+    override fun onViewAttached(view: ToDoListFragment) {
+        super.onViewAttached(view)
+        //disposeOnViewWillDetach(settingsRepository.onReorderListByCompletionChanged())
+    }
+
     fun onIdSupplied(id: String) {
         toDoListRepository.onToDoListChanged(id)?.let { subject ->
             disposeOnViewWillDetach(subject
@@ -20,6 +26,10 @@ class ToDoListPresenter @Inject constructor(private val settingsRepository: Sett
                         view?.onToDoListUpdate(it)
                     })
         }
+    }
+
+    fun sortToDoListItems(list: ToDoList): ArrayList<Pair<String, ToDoListItem>>{
+        return ArrayList()
     }
 
     fun onItemDeleted(itemId: String, listId: String) {

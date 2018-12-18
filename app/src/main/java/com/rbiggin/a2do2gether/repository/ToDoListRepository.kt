@@ -16,7 +16,6 @@ import timber.log.Timber
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-import kotlin.reflect.jvm.internal.impl.protobuf.UninitializedMessageException
 
 class ToDoListRepository @Inject constructor(private val uidProvider: UidProvider,
                                              private val databaseWriter: FirebaseDatabaseWriter) :
@@ -140,8 +139,8 @@ class ToDoListRepository @Inject constructor(private val uidProvider: UidProvide
             ToDoList("", title, uid, constructToDoListItemsFromChecklist(checklist.items))
 
     private fun constructToDoListItemsFromChecklist(items: ArrayList<Pair<String, String>>)
-            : HashMap<String, ToDoListItem> {
-        val newItems: HashMap<String, ToDoListItem> = HashMap()
+            : LinkedHashMap<String, ToDoListItem> {
+        val newItems: LinkedHashMap<String, ToDoListItem> = LinkedHashMap()
         items.forEach {
             newItems[it.first] = ToDoListItem(it.second, uid, false, null, ToDoListItem.Priority.TODO)
         }

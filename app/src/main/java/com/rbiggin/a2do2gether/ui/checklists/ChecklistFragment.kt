@@ -21,7 +21,7 @@ class ChecklistFragment : BaseFragment(), ChecklistPresenter.View, ChecklistAdap
 
     private var checklistItems: ArrayList<Pair<String, String>> = ArrayList()
 
-    private lateinit var mLayoutManager: LinearLayoutManager
+    private lateinit var layoutManager: LinearLayoutManager
 
     override fun onAttach(context: Context) {
         (context.applicationContext as MyApplication).daggerComponent.inject(this)
@@ -30,24 +30,20 @@ class ChecklistFragment : BaseFragment(), ChecklistPresenter.View, ChecklistAdap
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_checklist, container, false)
-    }
+                              savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_checklist, container, false)
 
     override fun onStart() {
         super.onStart()
-
-        mLayoutManager = LinearLayoutManager(mContext)
-        checklistRv.layoutManager = mLayoutManager
+        layoutManager = LinearLayoutManager(mContext)
+        checklistRv.layoutManager = layoutManager
         checklistRv.adapter = ChecklistAdapter(checklistItems, this)
     }
 
     override fun onResume() {
         super.onResume()
         presenter.onViewWillShow()
-        mFragmentId?.let {
-            presenter.onIdSupplied(it)
-        }
+        mFragmentId?.let { presenter.onIdSupplied(it) }
     }
 
     override fun onPause() {
@@ -73,11 +69,9 @@ class ChecklistFragment : BaseFragment(), ChecklistPresenter.View, ChecklistAdap
 
     override fun itemDeleted(itemId: String) {
         mFragmentId?.let { presenter.onItemDeleted(itemId, it) }
-
     }
 
     companion object {
-
         fun newInstance(viewId: String): ChecklistFragment {
             val fragment = ChecklistFragment()
             val args = Bundle()

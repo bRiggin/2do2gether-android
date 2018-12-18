@@ -58,7 +58,7 @@ class MyConnectionsPresenter @Inject constructor(private val connectionsRepo: Co
                     }
                 })
 
-        disposeOnViewWillDetach(settingsRepository.profilePublicSubject
+        disposeOnViewWillDetach(settingsRepository.onProfilePublicChanged()
                 .observeOn(uiThread)
                 .subscribe {
                     profileIsPublic = it

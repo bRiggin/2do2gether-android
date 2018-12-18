@@ -30,19 +30,19 @@ class MessagingPresenter @Inject constructor(private val authRepository: AuthRep
                     settingsRepository.initialise()
                 })
 
-        disposeOnServiceDestroyed(settingsRepository.connectionRequestsSubject
+        disposeOnServiceDestroyed(settingsRepository.onConnectionRequestsChanged()
                 .distinctUntilChanged()
                 .subscribe {
                     notifyConnectionRequests = it
                 })
 
-        disposeOnServiceDestroyed(settingsRepository.newConnectionsSubject
+        disposeOnServiceDestroyed(settingsRepository.onNewConnectionsChanged()
                 .distinctUntilChanged()
                 .subscribe {
                     notifyNewConnections = it
                 })
 
-        disposeOnServiceDestroyed(settingsRepository.newListSubject
+        disposeOnServiceDestroyed(settingsRepository.onNewListChanged()
                 .distinctUntilChanged()
                 .subscribe {
                     notifyNewLists = it
@@ -71,33 +71,26 @@ class MessagingPresenter @Inject constructor(private val authRepository: AuthRep
             val body = remoteMessage.notification?.body ?: "Unknown"
 
             when (type) {
-                Constants.NotificationType.REQUEST.value -> {
+                Constants.NotificationType.REQUEST.value ->
                     if (notifyConnectionRequests) {
                         service?.onConnectionsNotification(title, body)
                     }
-                }
-                Constants.NotificationType.NEW_CONNECTION.value -> {
+                Constants.NotificationType.NEW_CONNECTION.value ->
                     if (notifyNewConnections) {
                         service?.onConnectionsNotification(title, body)
                     }
-                }
-                Constants.NotificationType.NEW_LIST.value -> {
+                Constants.NotificationType.NEW_LIST.value ->
                     if (notifyNewLists) {
 
                     }
-                }
-                else -> {
-                    Timber.d("Unknown notification type: $type")
-                }
+                else -> Timber.d("Unknown notification type: $type")
             }
         }
     }
 
     interface Service {
         fun onConnectionsNotification(title: String, body: String)
-
         fun onListNotification(title: String, body: String)
-
         fun saveFcmToken(token: String)
     }
 }

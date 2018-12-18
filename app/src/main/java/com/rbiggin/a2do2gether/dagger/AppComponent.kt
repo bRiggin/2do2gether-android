@@ -12,6 +12,7 @@ import com.rbiggin.a2do2gether.ui.main.MainActivity
 import com.rbiggin.a2do2gether.ui.profile.MyProfileFragment
 import com.rbiggin.a2do2gether.ui.settings.SettingsFragment
 import com.rbiggin.a2do2gether.ui.todo.ToDoListFragment
+import com.rbiggin.a2do2gether.ui.todo.ToDoListsFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -35,6 +36,8 @@ interface AppComponent {
     fun inject(target: SettingsFragment){}
 
     fun inject(target: MyConnectionsFragment){}
+
+    fun inject(target: ToDoListsFragment){}
 
     fun inject(target: ToDoListFragment){}
 

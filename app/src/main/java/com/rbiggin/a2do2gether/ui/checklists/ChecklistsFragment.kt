@@ -33,15 +33,10 @@ class ChecklistsFragment : BaseFragment(), ChecklistsPresenter.View, MainActivit
     private var resetIndex: Int? = null
 
     private val newItemSubject: PublishSubject<String> = PublishSubject.create()
+    override fun onNewItemCtreated(): Observable<String> = newItemSubject
+
     private val menuItemSubject: PublishSubject<Constants.MenuBarItem> = PublishSubject.create()
-
-    override fun onNewItemCtreated(): Observable<String> {
-        return newItemSubject
-    }
-
-    override fun onMenuItemSelected(): Observable<Constants.MenuBarItem> {
-        return menuItemSubject
-    }
+    override fun onMenuItemSelected(): Observable<Constants.MenuBarItem> = menuItemSubject
 
     override fun onAttach(context: Context) {
         (context.applicationContext as MyApplication).daggerComponent.inject(this)
@@ -62,18 +57,12 @@ class ChecklistsFragment : BaseFragment(), ChecklistsPresenter.View, MainActivit
     override fun onResume() {
         super.onResume()
         presenter.onViewWillShow()
-        checklistsItemAddBtn.clicks().subscribeBy {
-            newItemSubject.onNext(checklistEt.text.toString())
-        }
+        checklistsItemAddBtn.clicks().subscribeBy { newItemSubject.onNext(checklistEt.text.toString()) }
     }
 
     override fun onPause() {
         super.onPause()
         presenter.onViewWillHide()
-
-        checklistsItemAddBtn.clicks().subscribeBy {
-            newItemSubject.onNext(checklistEt.text.toString())
-        }
     }
 
     override fun onDestroy() {
@@ -81,13 +70,9 @@ class ChecklistsFragment : BaseFragment(), ChecklistsPresenter.View, MainActivit
         presenter.onViewDetached()
     }
 
-    override fun menuItemPressed(item: Constants.MenuBarItem) {
-        menuItemSubject.onNext(item)
-    }
+    override fun menuItemPressed(item: Constants.MenuBarItem) = menuItemSubject.onNext(item)
 
-    override fun onBackPressed(): Boolean {
-        return true
-    }
+    override fun onBackPressed(): Boolean = true
 
     override fun setAdapterResetIndex(index: Int) {
         resetIndex = index
@@ -148,19 +133,13 @@ class ChecklistsFragment : BaseFragment(), ChecklistsPresenter.View, MainActivit
         }
     }
 
-    override fun onDisplayDialogMessage(message_id: Int, message: String?) {
-        // no action
-    }
+    override fun onDisplayDialogMessage(message_id: Int, message: String?) { /** no action */  }
 
     inner class PagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+        override fun getItem(position: Int): Fragment =
+                ChecklistFragment.newInstance(presenter.checklistManifest[position])
 
-        override fun getItem(position: Int): Fragment {
-            return ChecklistFragment.newInstance(presenter.checklistManifest[position])
-        }
-
-        override fun getCount(): Int {
-            return presenter.checklistManifest.size
-        }
+        override fun getCount(): Int = presenter.checklistManifest.size
     }
 
     companion object {

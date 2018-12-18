@@ -12,8 +12,8 @@ class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
                                         private val userRepo: UserProfileRepository,
                                         private val connectionsRepository: ConnectionsRepository,
                                         private val settingsRepository: SettingsRepository) :
-                                        AuthRepository.Listener,
-                                        UserProfileRepository.ActivityListener {
+        AuthRepository.Listener,
+        UserProfileRepository.ActivityListener {
 
     private var mActivity: MainPresenter.View? = null
 
@@ -31,8 +31,9 @@ class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
             var profilePicture: Bitmap?
             authRepo.getEmail()?.let {
                 mActivity?.setupActivity(it)
-            } ?: throw ExceptionInInitializerError("MainPresenter, onViewAttached: authentication " +
-                    "repository return null user uid and therefore unable to setup user repository.")
+            }
+                    ?: throw ExceptionInInitializerError("MainPresenter, onViewAttached: authentication " +
+                            "repository return null user uid and therefore unable to setup user repository.")
 
             authRepo.userId()?.let {
                 profilePicture = mActivity?.getProfilePicture(it)
@@ -43,8 +44,9 @@ class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
                     mActivity?.updateProfilePicture(profilePicture as Bitmap)
                 }
 
-            } ?: throw ExceptionInInitializerError("MainPresenter, onViewWillSHow: authentication " +
-                    "repository return null user uid and therefore unable to setup user repository.")
+            }
+                    ?: throw ExceptionInInitializerError("MainPresenter, onViewWillSHow: authentication " +
+                            "repository return null user uid and therefore unable to setup user repository.")
             userRepo.getUsersName()
 
             mActivity?.updateActionBar(Constants.Fragment.TODO)
@@ -62,36 +64,24 @@ class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
         settingsRepository.presenterDetached()
     }
 
-    private fun loadFragmentOnLoad(fragment: String?){
+    private fun loadFragmentOnLoad(fragment: String?) {
         fragment?.let {
-            val fragmentToLoad: Constants.Fragment = when(it) {
-                Constants.Fragment.TODO.toString() -> {
-                    Constants.Fragment.TODO
-                }
-                Constants.Fragment.CHECKLIST.toString() -> {
-                    Constants.Fragment.CHECKLIST
-                }
-                Constants.Fragment.MY_CONNECTIONS.toString() -> {
-                    Constants.Fragment.MY_CONNECTIONS
-                }
-                Constants.Fragment.MY_PROFILE.toString() -> {
-                    Constants.Fragment.MY_PROFILE
-                }
-                Constants.Fragment.SETTINGS.toString() -> {
-                    Constants.Fragment.SETTINGS
-                } else -> {
+            val fragmentToLoad: Constants.Fragment = when (it) {
+                Constants.Fragment.TODO.toString() -> Constants.Fragment.TODO
+                Constants.Fragment.CHECKLIST.toString() -> Constants.Fragment.CHECKLIST
+                Constants.Fragment.MY_CONNECTIONS.toString() -> Constants.Fragment.MY_CONNECTIONS
+                Constants.Fragment.MY_PROFILE.toString() -> Constants.Fragment.MY_PROFILE
+                Constants.Fragment.SETTINGS.toString() -> Constants.Fragment.SETTINGS
+                else ->
                     //todo add data
                     throw IllegalArgumentException()
-                }
             }
             onNavDrawerItemSelected(fragmentToLoad, 0)
         }
     }
 
-    fun reloadMenuButtons(){
-        currentFragment?.let {
-            mActivity?.updateActionBar(it)
-        }
+    fun reloadMenuButtons() {
+        currentFragment?.let { mActivity?.updateActionBar(it) }
     }
 
     /**
@@ -108,13 +98,10 @@ class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
                 mActivity?.popBackStack()
             }
             when (type) {
-                Constants.Fragment.TODO -> {
-                    mActivity?.popBackStack()
-                }
+                Constants.Fragment.TODO -> mActivity?.popBackStack()
                 Constants.Fragment.CHECKLIST, Constants.Fragment.MY_CONNECTIONS,
-                Constants.Fragment.MY_PROFILE, Constants.Fragment.SETTINGS -> {
+                Constants.Fragment.MY_PROFILE, Constants.Fragment.SETTINGS ->
                     mActivity?.launchFragment(type, true)
-                }
             }
             currentFragment = type
         }
@@ -138,10 +125,7 @@ class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
         }
     }
 
-    private fun isCurrentFragmentDifferent(selectedType: Constants.Fragment): Boolean {
-        return currentFragment != selectedType
-    }
-
+    private fun isCurrentFragmentDifferent(selectedType: Constants.Fragment): Boolean = currentFragment != selectedType
 
     override fun onUserDetailsChanged(userName: String) {
         mActivity?.updateUsersName(userName)
@@ -159,23 +143,14 @@ class MainPresenter @Inject constructor(private val authRepo: AuthRepository,
 
     interface View {
         fun launchLoginActivity()
-
         fun setupActivity(email: String)
-
         fun updateActionBar(type: Constants.Fragment)
-
         fun updateNavigationDrawer(type: Constants.Fragment)
-
         fun launchFragment(type: Constants.Fragment, toBackStack: Boolean)
-
         fun updateProfilePicture(image: Bitmap)
-
         fun updateUsersName(name: String)
-
         fun popBackStack()
-
         fun getProfilePicture(uid: String): Bitmap?
-
         fun saveProfilePicture(image: Bitmap, uid: String)
     }
 }

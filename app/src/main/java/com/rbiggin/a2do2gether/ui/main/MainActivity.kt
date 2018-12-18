@@ -24,7 +24,7 @@ import com.rbiggin.a2do2gether.ui.connections.MyConnectionsFragment
 import com.rbiggin.a2do2gether.ui.login.LoginActivity
 import com.rbiggin.a2do2gether.ui.profile.MyProfileFragment
 import com.rbiggin.a2do2gether.ui.settings.SettingsFragment
-import com.rbiggin.a2do2gether.ui.todo.ToDoListFragment
+import com.rbiggin.a2do2gether.ui.todo.ToDoListsFragment
 import com.rbiggin.a2do2gether.utils.Constants
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -124,18 +124,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val currentFragment = supportFragmentManager.findFragmentById(R.id.mainFrameLayout)
         if (currentFragment is Listener) {
             when (item.itemId) {
-                R.id.action_share -> {
-                    currentFragment.menuItemPressed(Constants.MenuBarItem.SHARE_PUBLISH)
-                }
-                R.id.action_add -> {
-                    currentFragment.menuItemPressed(Constants.MenuBarItem.PLUS)
-                }
-                R.id.action_delete -> {
-                    currentFragment.menuItemPressed(Constants.MenuBarItem.DELETE)
-                }
-                else -> {
-                    return super.onOptionsItemSelected(item)
-                }
+                R.id.action_share -> currentFragment.menuItemPressed(Constants.MenuBarItem.SHARE_PUBLISH)
+                R.id.action_add -> currentFragment.menuItemPressed(Constants.MenuBarItem.PLUS)
+                R.id.action_delete -> currentFragment.menuItemPressed(Constants.MenuBarItem.DELETE)
+                else -> return super.onOptionsItemSelected(item)
             }
         }
         return true
@@ -144,21 +136,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val backStackCount = supportFragmentManager.backStackEntryCount
         when (item.itemId) {
-            R.id.drawer_to_do_lists -> {
-                presenter.onNavDrawerItemSelected(Constants.Fragment.TODO, backStackCount)
-            }
-            R.id.drawer_checklists -> {
-                presenter.onNavDrawerItemSelected(Constants.Fragment.CHECKLIST, backStackCount)
-            }
-            R.id.drawer_my_connections -> {
-                presenter.onNavDrawerItemSelected(Constants.Fragment.MY_CONNECTIONS, backStackCount)
-            }
-            R.id.drawer_my_profile -> {
-                presenter.onNavDrawerItemSelected(Constants.Fragment.MY_PROFILE, backStackCount)
-            }
-            R.id.drawer_settings -> {
-                presenter.onNavDrawerItemSelected(Constants.Fragment.SETTINGS, backStackCount)
-            }
+            R.id.drawer_to_do_lists -> presenter.onNavDrawerItemSelected(Constants.Fragment.TODO, backStackCount)
+            R.id.drawer_checklists -> presenter.onNavDrawerItemSelected(Constants.Fragment.CHECKLIST, backStackCount)
+            R.id.drawer_my_connections -> presenter.onNavDrawerItemSelected(Constants.Fragment.MY_CONNECTIONS, backStackCount)
+            R.id.drawer_my_profile -> presenter.onNavDrawerItemSelected(Constants.Fragment.MY_PROFILE, backStackCount)
+            R.id.drawer_settings -> presenter.onNavDrawerItemSelected(Constants.Fragment.SETTINGS, backStackCount)
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
@@ -166,21 +148,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun launchFragment(type: Constants.Fragment, toBackStack: Boolean) {
         val fragment: BaseFragment = when (type) {
-            Constants.Fragment.TODO -> {
-                ToDoListFragment.newInstance(Constants.Id.TODOLIST_FRAGMENT.value)
-            }
-            Constants.Fragment.CHECKLIST -> {
-                ChecklistsFragment.newInstance(Constants.Id.CHECKLIST_FRAGMENT.value)
-            }
-            Constants.Fragment.MY_CONNECTIONS -> {
-                MyConnectionsFragment.newInstance(Constants.Id.CONNECTIONS_FRAGMENT.value)
-            }
-            Constants.Fragment.MY_PROFILE -> {
-                MyProfileFragment.newInstance(Constants.Id.PROFILE_FRAGMENT.value)
-            }
-            Constants.Fragment.SETTINGS -> {
-                SettingsFragment.newInstance(Constants.Id.SETTINGS_FRAGMENT.value)
-            }
+            Constants.Fragment.TODO -> ToDoListsFragment.newInstance(Constants.Id.TODOLIST_FRAGMENT.value)
+            Constants.Fragment.CHECKLIST -> ChecklistsFragment.newInstance(Constants.Id.CHECKLIST_FRAGMENT.value)
+            Constants.Fragment.MY_CONNECTIONS -> MyConnectionsFragment.newInstance(Constants.Id.CONNECTIONS_FRAGMENT.value)
+            Constants.Fragment.MY_PROFILE -> MyProfileFragment.newInstance(Constants.Id.PROFILE_FRAGMENT.value)
+            Constants.Fragment.SETTINGS -> SettingsFragment.newInstance(Constants.Id.SETTINGS_FRAGMENT.value)
         }
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.mainFrameLayout, fragment)
@@ -198,21 +170,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setupMenuBarItems(type)
         val view = supportActionBar?.customView?.findViewById(R.id.action_bar_title_view) as TextView
         val heading = when (type) {
-            Constants.Fragment.TODO -> {
-                getString(R.string.to_do_lists)
-            }
-            Constants.Fragment.CHECKLIST -> {
-                getString(R.string.checklists)
-            }
-            Constants.Fragment.MY_CONNECTIONS -> {
-                getString(R.string.my_connections)
-            }
-            Constants.Fragment.MY_PROFILE -> {
-                getString(R.string.my_profile)
-            }
-            Constants.Fragment.SETTINGS -> {
-                getString(R.string.settings)
-            }
+            Constants.Fragment.TODO -> getString(R.string.to_do_lists)
+            Constants.Fragment.CHECKLIST -> getString(R.string.checklists)
+            Constants.Fragment.MY_CONNECTIONS -> getString(R.string.my_connections)
+            Constants.Fragment.MY_PROFILE -> getString(R.string.my_profile)
+            Constants.Fragment.SETTINGS -> getString(R.string.settings)
         }
         view.text = heading
     }
@@ -262,21 +224,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun updateNavigationDrawer(type: Constants.Fragment) {
         when (type) {
-            Constants.Fragment.TODO -> {
-                navigationDrawer.setCheckedItem(R.id.drawer_to_do_lists)
-            }
-            Constants.Fragment.CHECKLIST -> {
-                navigationDrawer.setCheckedItem(R.id.drawer_checklists)
-            }
-            Constants.Fragment.MY_CONNECTIONS -> {
-                navigationDrawer.setCheckedItem(R.id.drawer_my_connections)
-            }
-            Constants.Fragment.MY_PROFILE -> {
-                navigationDrawer.setCheckedItem(R.id.drawer_my_profile)
-            }
-            Constants.Fragment.SETTINGS -> {
-                navigationDrawer.setCheckedItem(R.id.drawer_settings)
-            }
+            Constants.Fragment.TODO -> navigationDrawer.setCheckedItem(R.id.drawer_to_do_lists)
+            Constants.Fragment.CHECKLIST -> navigationDrawer.setCheckedItem(R.id.drawer_checklists)
+            Constants.Fragment.MY_CONNECTIONS -> navigationDrawer.setCheckedItem(R.id.drawer_my_connections)
+            Constants.Fragment.MY_PROFILE -> navigationDrawer.setCheckedItem(R.id.drawer_my_profile)
+            Constants.Fragment.SETTINGS -> navigationDrawer.setCheckedItem(R.id.drawer_settings)
         }
     }
 
@@ -321,7 +273,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     interface Listener {
         fun menuItemPressed(item: Constants.MenuBarItem)
-
         fun onBackPressed(): Boolean
     }
 }

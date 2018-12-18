@@ -2,6 +2,7 @@ package com.rbiggin.a2do2gether.repository
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.rbiggin.a2do2gether.firebase.FirebaseDatabaseWriter
 import com.rbiggin.a2do2gether.firebase.FirebaseReadWatcher
 import com.rbiggin.a2do2gether.model.Checklist
@@ -24,7 +25,7 @@ class ChecklistRepository @Inject constructor(private val uidProvider: UidProvid
     val checklistsSubject: BehaviorSubject<ArrayList<String>> = BehaviorSubject.create()
 
     fun initialise() {
-        mDatabase = com.google.firebase.database.FirebaseDatabase.getInstance().reference
+        mDatabase = FirebaseDatabase.getInstance().reference
         mUid = uidProvider.getUid()
         if (mUid.isNullOrBlank()) {
             throw NullPointerException("Uid provided by UidProvider has returned null")

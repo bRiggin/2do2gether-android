@@ -18,42 +18,42 @@ class SettingsPresenter @Inject constructor(private val authRepo: AuthRepository
     override fun onViewAttached(view: SettingsFragment) {
         super.onViewAttached(view)
 
-        disposeOnViewWillDetach(settingsRepo.reorderListSubject
+        disposeOnViewWillDetach(settingsRepo.onReorderListByCompletionChanged()
                 .observeOn(uiThread)
                 .distinctUntilChanged()
                 .subscribe {
                     view.updateSwitch(SettingsUpdate(Constants.Setting.LIST_REORDER, it))
                 })
 
-        disposeOnViewWillDetach(settingsRepo.profilePublicSubject
+        disposeOnViewWillDetach(settingsRepo.onProfilePublicChanged()
                 .observeOn(uiThread)
                 .distinctUntilChanged()
                 .subscribe {
                     view.updateSwitch(SettingsUpdate(Constants.Setting.PROFILE_PRIVACY, it))
                 })
 
-        disposeOnViewWillDetach(settingsRepo.connectionRequestsSubject
+        disposeOnViewWillDetach(settingsRepo.onConnectionRequestsChanged()
                 .observeOn(uiThread)
                 .distinctUntilChanged()
                 .subscribe {
                     view.updateSwitch(SettingsUpdate(Constants.Setting.CONNECTION_REQUEST, it))
                 })
 
-        disposeOnViewWillDetach(settingsRepo.newConnectionsSubject
+        disposeOnViewWillDetach(settingsRepo.onNewConnectionsChanged()
                 .observeOn(uiThread)
                 .distinctUntilChanged()
                 .subscribe {
                     view.updateSwitch(SettingsUpdate(Constants.Setting.NEW_CONNECTIONS, it))
                 })
 
-        disposeOnViewWillDetach(settingsRepo.newListSubject
+        disposeOnViewWillDetach(settingsRepo.onNewListChanged()
                 .observeOn(uiThread)
                 .distinctUntilChanged()
                 .subscribe {
                     view.updateSwitch(SettingsUpdate(Constants.Setting.NEW_LIST, it))
                 })
 
-        disposeOnViewWillDetach(settingsRepo.analyticsSubject
+        disposeOnViewWillDetach(settingsRepo.onAnalyticsChanged()
                 .observeOn(uiThread)
                 .distinctUntilChanged()
                 .subscribe {

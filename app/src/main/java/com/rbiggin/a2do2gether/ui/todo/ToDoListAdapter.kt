@@ -4,10 +4,11 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.rbiggin.a2do2gether.R
+import com.rbiggin.a2do2gether.model.ToDoListItem
 import com.rbiggin.a2do2gether.utils.inflate
 import kotlinx.android.synthetic.main.row_item_checklist.view.*
 
-class ToDoListAdapter(private val toDoLists  : ArrayList<Pair<String, String>>,
+class ToDoListAdapter(private val toDoLists  : ArrayList<Pair<String, ToDoListItem>>,
                       private val listener: Listener)
     : RecyclerView.Adapter<ToDoListAdapter.ItemHolder>() {
 
