@@ -29,6 +29,9 @@
     <string name="create_account_successful">Your account has been created and a verification link has been sent to your email address, be sure to check spam folder.</string>
 
     <!-- To-Do strings -->
+    <string name="to_do">2Do</string>
+    <string name="important">Important</string>
+    <string name="critical">Critical</string>
     <string name="to_do_lists">2Do Lists</string>
     <string name="share_list">Share 2Do List</string>
     <string name="new_item_hint">New 2Do list item&#8230;</string>

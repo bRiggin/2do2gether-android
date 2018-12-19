@@ -17,6 +17,10 @@ class ToDoListPresenter @Inject constructor(private val settingsRepository: Sett
         //disposeOnViewWillDetach(settingsRepository.onReorderListByCompletionChanged())
     }
 
+    override fun onViewWillShow() {
+        super.onViewWillShow()
+    }
+
     fun onIdSupplied(id: String) {
         toDoListRepository.onToDoListChanged(id)?.let { subject ->
             disposeOnViewWillDetach(subject
@@ -28,8 +32,11 @@ class ToDoListPresenter @Inject constructor(private val settingsRepository: Sett
         }
     }
 
-    fun sortToDoListItems(list: ToDoList): ArrayList<Pair<String, ToDoListItem>>{
-        return ArrayList()
+    fun sortToDoListItems(toDoList: ToDoList): ArrayList<Pair<String, ToDoListItem>>{
+        val list: ArrayList<Pair<String, ToDoListItem>> = ArrayList()
+        //todo actually do some sorting
+        toDoList.items?.forEach { list.add(Pair(it.key, it.value)) }
+        return list
     }
 
     fun onItemDeleted(itemId: String, listId: String) {

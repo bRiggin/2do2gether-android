@@ -59,8 +59,8 @@ class ToDoListsFragment : BaseFragment(), ToDoListsPresenter.View, MainActivity.
 
         mContext?.let {
             val thing = View.generateViewId()
-            val otherThing = ToDoListItemLayout(thing, it)
-            //tempLinearLayout.addView(ToDoListItemHeader(otherThing, it))
+            //val otherThing = ToDoListItemLayout(thing, it)
+            //tempLinearLayout.addView(ToDoListItemView(otherThing, it))
             //tempLinearLayout.addView(otherThing)
         }
     }

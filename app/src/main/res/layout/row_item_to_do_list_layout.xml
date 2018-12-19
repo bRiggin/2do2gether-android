@@ -1,132 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginBottom="8dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
 
-    <View
-        android:id="@+id/lowerBoarder"
-        android:layout_width="0dp"
-        android:layout_height=".5dp"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    <com.rbiggin.a2do2gether.ui.todo.item.ToDoListItemHeader
+        android:id="@+id/listItemHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/itemCompleteLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            style="@style/TextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="Completed by:" />
-
-        <TextView
-            style="@style/TextViewStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="User's name" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_margin="8dp"
-            android:src="@drawable/profile_default" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/priorityLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/dateLayout"
-        app:layout_constraintEnd_toStartOf="@+id/button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemCompleteLayout">
-
-        <LinearLayout
-            android:id="@+id/linearLayout3"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:gravity="center_vertical">
+            android:orientation="vertical">
 
-            <TextView
-                style="@style/TextViewStyle"
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="Priority:" />
+                android:gravity="center_vertical">\
 
-            <TextView
-                style="@style/TextViewStyle"
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/profile_default" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/TextViewStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:text="Well hello there, y, I really hope this app is done soon" />
+
+                <Button
+                    android:id="@+id/completedBtn"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/layout_container" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/blue_900" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/white" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </com.rbiggin.a2do2gether.ui.todo.item.ToDoListItemHeader>
+
+    <com.rbiggin.a2do2gether.ui.todo.item.ToDoListItemLayout
+        android:id="@+id/listItemDetailsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="Important" />
-        </LinearLayout>
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:padding="16dp"
+                app:layout_constraintBottom_toTopOf="@+id/importantPriorityBtn"
+                app:layout_constraintEnd_toStartOf="@+id/deleteToDoListBtn"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_margin="16dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/icon_delete_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemCompleteLayout" />
+                    <TextView
+                        style="@style/TextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Created: " />
 
-    <LinearLayout
-        android:id="@+id/dateLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="24dp"
-        android:gravity="center_vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button"
-        app:layout_constraintStart_toStartOf="parent">
+                    <TextView
+                        style="@style/TextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="17/10/1990" />
+                </LinearLayout>
 
-        <TextView
-            style="@style/TextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="Created:" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="16dp">
 
-        <TextView
-            style="@style/TextViewStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="12/09/2018" />
-    </LinearLayout>
+                    <TextView
+                        style="@style/TextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Completed By:  " />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        style="@style/TextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rhys Biggin" />
+                </LinearLayout>
+            </LinearLayout>
+            <ImageButton
+                android:id="@+id/deleteToDoListBtn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/icon_delete_button"
+                app:layout_constraintBottom_toTopOf="@+id/importantPriorityBtn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/toDoPriorityBtn"
+                style="@style/TextViewStyle"
+                android:background="@drawable/layout_priority_todo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp"
+                android:padding="8dp"
+                android:text="@string/to_do"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toTopOf="@+id/bottomBorder"
+                app:layout_constraintEnd_toStartOf="@+id/importantPriorityBtn"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/importantPriorityBtn"
+                style="@style/TextViewStyle"
+                android:background="@drawable/layout_priority_important"
+                android:textAllCaps="false"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:padding="8dp"
+                android:text="@string/important"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toTopOf="@+id/bottomBorder"
+                app:layout_constraintEnd_toStartOf="@+id/criticalPriorityBtn"
+                app:layout_constraintStart_toEndOf="@+id/toDoPriorityBtn" />
+            <TextView
+                android:id="@+id/criticalPriorityBtn"
+                style="@style/TextViewStyle"
+                android:background="@drawable/layout_priority_critical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:padding="8dp"
+                android:textAlignment="center"
+                android:text="@string/critical"
+                app:layout_constraintBottom_toTopOf="@+id/bottomBorder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/importantPriorityBtn" />
+            <View
+                android:id="@+id/bottomBorder"
+                android:layout_width="0dp"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.rbiggin.a2do2gether.ui.todo.item.ToDoListItemLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

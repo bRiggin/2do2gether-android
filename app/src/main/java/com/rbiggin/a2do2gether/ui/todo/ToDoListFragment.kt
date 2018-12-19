@@ -38,7 +38,6 @@ class ToDoListFragment : BaseFragment(), ToDoListPresenter.View, ToDoListAdapter
         super.onStart()
         layoutManager = LinearLayoutManager(mContext)
         toDoListRv.layoutManager = layoutManager
-        toDoListRv.adapter = ToDoListAdapter(toDoListItems, this)
     }
 
     override fun onResume() {
@@ -59,8 +58,9 @@ class ToDoListFragment : BaseFragment(), ToDoListPresenter.View, ToDoListAdapter
 
     override fun onToDoListUpdate(toDoList: ToDoList) {
         toDoListItems.clear()
-        //toDoListItems.addAll(toDoList.items)
-        toDoListRv.adapter?.notifyDataSetChanged()
+        toDoListItems.addAll(presenter.sortToDoListItems(toDoList))
+        toDoListRv.adapter = ToDoListAdapter(toDoListItems, this)
+        //toDoListRv.adapter?.notifyDataSetChanged()
     }
 
     override fun itemDeleted(itemId: String) {

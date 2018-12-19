@@ -31,16 +31,6 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
     private lateinit var mPendingLayoutManager: LinearLayoutManager
     private lateinit var mConnectionsLayoutManager: LinearLayoutManager
 
-    companion object {
-        fun newInstance(id: String): MyConnectionsFragment {
-            val fragment = MyConnectionsFragment()
-            val args = Bundle()
-            args.putString(Constants.FRAGMENT_ID, id)
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
     override fun onAttach(context: Context) {
         (context.applicationContext as MyApplication).daggerComponent.inject(this)
         super.onAttach(context)
@@ -80,17 +70,14 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
     override fun onDestroy() {
         super.onDestroy()
         presenter.onViewDetached()
-
     }
 
     override fun onDisplayView(view: MyConnectionsPresenter.Window) {
         when(view){
-            MyConnectionsPresenter.Window.MAIN_VIEW -> {
+            MyConnectionsPresenter.Window.MAIN_VIEW ->
                 myConnectionsLayoutFlipper.displayedChild = myConnectionsLayoutFlipper.indexOfChild(myConnectionsMainView)
-            }
-            MyConnectionsPresenter.Window.SEARCH_VIEW -> {
+            MyConnectionsPresenter.Window.SEARCH_VIEW ->
                 myConnectionsLayoutFlipper.displayedChild = myConnectionsLayoutFlipper.indexOfChild(myConnectionsSearchView)
-            }
         }
     }
 
@@ -133,18 +120,10 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
         message?.let{ dialogMessage = message }
 
         val messageString: String = when (message_id){
-            Constants.ERROR_NICKNAME_STRUCTURE_ERROR -> {
-                getString(R.string.nickname_error, Constants.NUMBER_OF_CHARACTERS_IN_NICKNAME)
-            }
-            Constants.ERROR_USER_NOT_PUBLIC -> {
-                getString(R.string.connections_user_not_public)
-            }
-            Constants.DB_CONNECTION_REQUEST_SUBMITTED -> {
-                getString(R.string.connection_request_submitted)
-            }
-            Constants.ERROR_NO_NETWORK -> {
-                getString(R.string.error_network)
-            }
+            Constants.ERROR_NICKNAME_STRUCTURE_ERROR -> getString(R.string.nickname_error, Constants.NUMBER_OF_CHARACTERS_IN_NICKNAME)
+            Constants.ERROR_USER_NOT_PUBLIC -> getString(R.string.connections_user_not_public)
+            Constants.DB_CONNECTION_REQUEST_SUBMITTED -> getString(R.string.connection_request_submitted)
+            Constants.ERROR_NO_NETWORK -> getString(R.string.error_network)
             else -> { getString(R.string.error_unknown)
                 throw IllegalArgumentException("MyConnectionsFragment, onDisplayDialogMessage: An " +
                         "unknown error has been handed to this function. Error ID: $message_id")
@@ -177,6 +156,16 @@ class MyConnectionsFragment : BaseFragment(), MyConnectionsPresenter.View,
 
     override fun onRecyclerViewButtonClicked(type: MyConnectionsPresenter.Action, targetUid: String) {
         presenter.onRecyclerViewButtonPressed(type, targetUid)
+    }
+
+    companion object {
+        fun newInstance(id: String): MyConnectionsFragment {
+            val fragment = MyConnectionsFragment()
+            val args = Bundle()
+            args.putString(Constants.FRAGMENT_ID, id)
+            fragment.arguments = args
+            return fragment
+        }
     }
 }
 
