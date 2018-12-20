@@ -16,6 +16,9 @@ import timber.log.Timber
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class ToDoListRepository @Inject constructor(private val uidProvider: UidProvider,
                                              private val databaseWriter: FirebaseDatabaseWriter) :
@@ -31,6 +34,7 @@ class ToDoListRepository @Inject constructor(private val uidProvider: UidProvide
 
     private val toDoListMap: HashMap<String, Pair<FirebaseReadWatcher, BehaviorSubject<ToDoList>>> = HashMap()
     fun onToDoListChanged(id: String): Observable<ToDoList>? = toDoListMap[id]?.second
+    fun toDoList(id: String): ToDoList? = toDoListMap[id]?.second?.value
 
     private val toDoListsMembersMap: HashMap<String, Pair<FirebaseReadEqualWatcher, BehaviorSubject<ArrayList<String>>>> = HashMap()
     fun onToDoListMembersChanged(id: String): Observable<ArrayList<String>>? = toDoListsMembersMap[id]?.second
@@ -114,6 +118,11 @@ class ToDoListRepository @Inject constructor(private val uidProvider: UidProvide
         }
     }
 
+    fun completeItem(listId: String, itemId: String, status: Boolean){
+        val path = "$fbDbToDoListKey/$listId/${ToDoList.DataBaseKeys.ITEMS.key}/$itemId"
+        databaseWriter.doWrite(dbRef, path, hashMapOf(ToDoListItem.DataBaseKeys.STATUS.key to status))
+    }
+
     fun deleteItem(listId: String, itemId: String) {
         databaseWriter.doDelete(dbRef, "$fbDbToDoListKey/$uid/$listId/items/$itemId")
     }
@@ -127,11 +136,10 @@ class ToDoListRepository @Inject constructor(private val uidProvider: UidProvide
     @Suppress("UNCHECKED_CAST")
     fun publishNewToDoListFromChecklist(title: String, checklist: Checklist) {
         val toDoList = constructToDoListFromChecklist(title, checklist)
-        val referencePath = "$fbDbToDoListReferencesKey/$uid"
-
-        (toDoList.items as? HashMap<String, Any>)?.let { items ->
-            val toDoListReference = databaseWriter.doPushWrite(dbRef, fbDbToDoListKey, toDoList)
-            databaseWriter.doPushWrite(dbRef, referencePath, arrayListOf(toDoListReference.key as Any))
+        databaseWriter.doPushWrite(dbRef, fbDbToDoListKey, toDoList)?.let { listDbRef ->
+            val toDoListReference = hashMapOf<String, Any>(fbDbToDoListUserId to uid,
+                    fbDbToDoListListId to listDbRef)
+            databaseWriter.doPushWrite(dbRef, fbDbToDoListReferencesKey, toDoListReference)
         }
     }
 
@@ -142,9 +150,16 @@ class ToDoListRepository @Inject constructor(private val uidProvider: UidProvide
             : LinkedHashMap<String, ToDoListItem> {
         val newItems: LinkedHashMap<String, ToDoListItem> = LinkedHashMap()
         items.forEach {
-            newItems[it.first] = ToDoListItem(it.second, uid, false, null, ToDoListItem.Priority.TODO)
+            newItems[it.first] = ToDoListItem(it.second, uid, false, null,
+                    dateString(), ToDoListItem.Priority.TODO)
         }
         return newItems
+    }
+
+    private fun dateString(): String {
+        val currentTime = Calendar.getInstance().time
+        val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.UK)
+        return dateFormatter.format(currentTime)
     }
 
     fun removeRepositoryReferences() {

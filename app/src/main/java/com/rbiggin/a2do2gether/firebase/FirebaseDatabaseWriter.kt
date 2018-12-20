@@ -23,12 +23,12 @@ object FirebaseDatabaseWriter {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun doPushWrite(dbRef: DatabaseReference, path: String, data: ToDoList): DatabaseReference {
+    fun doPushWrite(dbRef: DatabaseReference, path: String, data: ToDoList): String? {
         val mReference = dbRef.child(path).push()
         mReference.child(ToDoList.DataBaseKeys.CREATOR.key).setValue(data.creator)
         mReference.child(ToDoList.DataBaseKeys.TITLE.key).setValue(data.title)
         mReference.child(ToDoList.DataBaseKeys.ITEMS.key).updateChildren(data.items as HashMap<String, Any>)
-        return  mReference
+        return  mReference.key
     }
 
     fun doDelete(dbRef: DatabaseReference, path: String) {

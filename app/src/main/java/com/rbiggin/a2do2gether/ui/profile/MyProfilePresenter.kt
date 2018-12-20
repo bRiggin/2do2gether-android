@@ -2,6 +2,7 @@ package com.rbiggin.a2do2gether.ui.profile
 
 import android.graphics.Bitmap
 import android.util.Log
+import com.bumptech.glide.Glide
 import com.rbiggin.a2do2gether.repository.*
 import com.rbiggin.a2do2gether.ui.base.BasePresenter
 import com.rbiggin.a2do2gether.utils.Constants

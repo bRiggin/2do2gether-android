@@ -6,16 +6,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.storage.FirebaseStorage
 import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.application.MyApplication
 import com.rbiggin.a2do2gether.model.ToDoList
 import com.rbiggin.a2do2gether.model.ToDoListItem
 import com.rbiggin.a2do2gether.ui.base.BaseFragment
+import com.rbiggin.a2do2gether.ui.todo.item.ToDoListItemLayout
 import com.rbiggin.a2do2gether.utils.Constants
 import kotlinx.android.synthetic.main.fragment_to_do_list.*
+import timber.log.Timber
 import javax.inject.Inject
 
-class ToDoListFragment : BaseFragment(), ToDoListPresenter.View, ToDoListAdapter.Listener {
+class ToDoListFragment
+    : BaseFragment(), ToDoListPresenter.View, ToDoListAdapter.Listener, ToDoListItemLayout.Listener {
 
     @Inject
     lateinit var presenter: ToDoListPresenter
@@ -56,15 +60,43 @@ class ToDoListFragment : BaseFragment(), ToDoListPresenter.View, ToDoListAdapter
         presenter.onViewDetached()
     }
 
-    override fun onToDoListUpdate(toDoList: ToDoList) {
-        toDoListItems.clear()
-        toDoListItems.addAll(presenter.sortToDoListItems(toDoList))
-        toDoListRv.adapter = ToDoListAdapter(toDoListItems, this)
-        //toDoListRv.adapter?.notifyDataSetChanged()
+    override fun onTitleChanged(listTitle: String) {
+        toDoListTitle.text = listTitle
     }
 
-    override fun itemDeleted(itemId: String) {
+    override fun onToDoListUpdate(toDoList: ToDoList,
+                                  cachedUiData: HashMap<String, Pair<Boolean, Boolean>>) {
+        toDoListItems.clear()
+        toDoListItems.addAll(presenter.sortToDoListItems(toDoList))
+        context?.let {
+            toDoListRv.adapter = ToDoListAdapter(it, FirebaseStorage.getInstance().reference,
+                    toDoListItems, cachedUiData, this, this)
+        }
+    }
+
+    override fun onProgressChanged(progress: Int) {
+        toDoListProgressBar.progress = progress
+        toDoListProgressTextView.text = "$progress%"
+    }
+
+    override fun onItemCompleted(itemId: String) {
+        mFragmentId?.let { presenter.onItemCompleted(itemId, it) }
+    }
+
+    override fun onItemDeleted(itemId: String) {
         mFragmentId?.let { presenter.onItemDeleted(itemId, it) }
+    }
+
+    override fun onItemUiTickStatusChanged(itemId: String, status: Boolean) {
+        presenter.updateCachedUi(itemId, ToDoListPresenter.CachedUiType.COMPLETED, status)
+    }
+
+    override fun onItemExpanded(id: String, expanded: Boolean) {
+        presenter.updateCachedUi(id, ToDoListPresenter.CachedUiType.EXPANDED, expanded)
+    }
+
+    override fun onItemPriorityChanged(itemId: String, priority: ToDoListItem.Priority) {
+        Timber.d("thing $itemId, $priority")
     }
 
     override fun onDisplayDialogMessage(message_id: Int, message: String?) {}

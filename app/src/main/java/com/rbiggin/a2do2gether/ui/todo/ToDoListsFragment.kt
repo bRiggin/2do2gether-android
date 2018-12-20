@@ -24,6 +24,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_checklists.*
 import kotlinx.android.synthetic.main.fragment_to_do_lists.*
+import timber.log.Timber
 import javax.inject.Inject
 
 class ToDoListsFragment : BaseFragment(), ToDoListsPresenter.View, MainActivity.Listener {
@@ -55,24 +56,24 @@ class ToDoListsFragment : BaseFragment(), ToDoListsPresenter.View, MainActivity.
 
     override fun onStart() {
         super.onStart()
-        toDoListsViewPager.adapter = PagerAdapter(childFragmentManager)
-
-        mContext?.let {
-            val thing = View.generateViewId()
-            //val otherThing = ToDoListItemLayout(thing, it)
-            //tempLinearLayout.addView(ToDoListItemView(otherThing, it))
-            //tempLinearLayout.addView(otherThing)
+        toDoListsViewPager.adapter?.let {
+            Timber.d("Adapter already set to toDoListsViewPager, no action taken")
+        } ?: run {
+            toDoListsViewPager.adapter = PagerAdapter(childFragmentManager)
         }
     }
 
     override fun onResume() {
         super.onResume()
         presenter.onViewWillShow()
+//        toDoListPageIndicator.releaseViewPager()
+//        toDoListPageIndicator.setViewPager(toDoListsViewPager)
         toDoListItemAddBtn.clicks().subscribeBy { newItemSubject.onNext(toDoListEt.text.toString()) }
     }
 
     override fun onPause() {
         super.onPause()
+        toDoListPageIndicator.setSelected(0)
         presenter.onViewWillHide()
     }
 

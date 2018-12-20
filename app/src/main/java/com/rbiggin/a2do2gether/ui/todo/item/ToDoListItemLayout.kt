@@ -15,6 +15,9 @@ class ToDoListItemLayout(context: Context, attrs: AttributeSet? = null) :
 
     private var expanded = false
     private var viewHeight = 0
+    var listener: Listener? = null
+    var itemId: String? = null
+    var initialStaticExpansionState: Boolean? = null
 
     private val valueAnimator: ValueAnimator = ValueAnimator.ofFloat()
 
@@ -40,11 +43,26 @@ class ToDoListItemLayout(context: Context, attrs: AttributeSet? = null) :
                 override fun onPreDraw(): Boolean {
                     viewTreeObserver.removeOnPreDrawListener(this)
                     viewHeight = height
-                    setHeight(0f)
+                    initialStaticExpansionState?.let {
+                        staticallyChangeHeight(it)
+                    } ?: run {
+                        staticallyChangeHeight(false)
+                    }
                     return false
                 }
             })
         }
+    }
+
+    private fun staticallyChangeHeight(expanded: Boolean){
+        if (expanded){
+            setHeight(viewHeight.toFloat())
+            this.expanded = true
+        } else {
+            setHeight(0f)
+            this.expanded = false
+        }
+        updateListener()
     }
 
     private fun setHeight(height: Float) {
@@ -56,15 +74,23 @@ class ToDoListItemLayout(context: Context, attrs: AttributeSet? = null) :
     }
 
     private fun expand(){
-        valueAnimator.setFloatValues(0f, 1f * viewHeight)
+        valueAnimator.setFloatValues(0f, viewHeight.toFloat())
         expanded = true
         valueAnimator.start()
     }
 
     private fun collapse(){
-        valueAnimator.setFloatValues(1f * viewHeight, 0f)
+        valueAnimator.setFloatValues(viewHeight.toFloat(), 0f)
         expanded = false
         valueAnimator.start()
+    }
+
+    private fun updateListener(){
+        listener?.let { listener ->
+            itemId?.let { id ->
+                listener.onItemExpanded(id, expanded)
+            }
+        }
     }
 
     override fun onExpandToggle() {
@@ -72,5 +98,10 @@ class ToDoListItemLayout(context: Context, attrs: AttributeSet? = null) :
             expanded -> collapse()
             else -> expand()
         }
+        updateListener()
+    }
+
+    interface Listener{
+        fun onItemExpanded(id: String, expanded: Boolean)
     }
 }

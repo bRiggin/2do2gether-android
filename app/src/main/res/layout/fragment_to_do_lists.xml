@@ -3,76 +3,22 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
-    <LinearLayout
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/toDoListsViewPager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:orientation="vertical"
+        android:layout_margin="16dp"
+        android:padding="12dp"
         android:background="@drawable/layout_container"
         app:layout_constraintBottom_toTopOf="@+id/toDoListPageIndicator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            android:gravity="center">
-            <View
-                android:layout_width="80dp"
-                android:layout_height="72dp"/>
-            <TextView style="@style/TextViewStyle"
-                android:gravity="center"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="Title of list" />
-
-            <RelativeLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="80dp"
-                android:layout_height="72dp">
-                <ProgressBar
-                    android:id="@+id/listProgressBar"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentStart="true"
-                    android:indeterminateTint="@color/blue_900"
-                    android:indeterminate="false"
-                    android:max="100"
-                    android:progress="35"
-                    android:progressDrawable="@drawable/custom_progress"/>
-                <TextView style="@style/TextViewStyle"
-                    android:background="#00000000"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentStart="true"
-                    android:text="35%"
-                    android:gravity="center"
-                    android:layout_alignStart="@id/listProgressBar"
-                    android:layout_alignTop="@id/listProgressBar"
-                    android:layout_alignEnd="@id/listProgressBar"
-                    android:layout_alignBottom="@id/listProgressBar"/>
-            </RelativeLayout>
-        </LinearLayout>
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/toDoListsViewPager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </androidx.viewpager.widget.ViewPager>
-    </LinearLayout>
+    </androidx.viewpager.widget.ViewPager>
 
     <com.rd.PageIndicatorView
         android:id="@+id/toDoListPageIndicator"
@@ -117,5 +63,4 @@
             android:text="@string/add"
             android:textAllCaps="false" />
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

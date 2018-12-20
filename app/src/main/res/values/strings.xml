@@ -32,6 +32,8 @@
     <string name="to_do">2Do</string>
     <string name="important">Important</string>
     <string name="critical">Critical</string>
+    <string name="created">Created:&#032;</string>
+    <string name="completed_by">Completed By:&#032;</string>
     <string name="to_do_lists">2Do Lists</string>
     <string name="share_list">Share 2Do List</string>
     <string name="new_item_hint">New 2Do list item&#8230;</string>

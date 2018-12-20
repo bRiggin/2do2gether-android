@@ -18,25 +18,21 @@ class ToDoListsPresenter @Inject constructor(private val toDoListRepository: ToD
 
     private val popUpCommandSubject: PublishSubject<PopUpType> = PublishSubject.create()
 
-    override fun onViewAttached(view: View) {
-        super.onViewAttached(view)
-
-        toDoListRepository.onToDoListsChanged()?.let { toDoLists ->
-            disposeOnViewWillDetach(toDoLists
-                    .subscribeOn(computationThread)
-                    .distinctUntilChanged()
-                    .observeOn(uiThread)
-                    .subscribe {
-                        toDoListsManifest.clear()
-                        toDoListsManifest.addAll(it)
-                        view.onUpdateAdapter()
-                    })
-        }
-    }
-
     override fun onViewWillShow() {
         super.onViewWillShow()
         view?.let { view ->
+            toDoListRepository.onToDoListsChanged()?.let { toDoLists ->
+                disposeOnViewWillHide(toDoLists
+                        .subscribeOn(computationThread)
+                        .distinctUntilChanged()
+                        .observeOn(uiThread)
+                        .subscribe {
+                            toDoListsManifest.clear()
+                            toDoListsManifest.addAll(it)
+                            view.onUpdateAdapter()
+                        })
+            }
+
             disposeOnViewWillHide(view.onNewItemCtreated()
                     .observeOn(computationThread)
                     .filter { text -> !text.trim().isEmpty() }

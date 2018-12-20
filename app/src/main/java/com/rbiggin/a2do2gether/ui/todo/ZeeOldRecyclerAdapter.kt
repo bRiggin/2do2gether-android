@@ -39,7 +39,7 @@ class ZeeOldRecyclerAdapter(private val toDoLists: ArrayList<String>,
          * Android Extensions plugin adds in hidden caching functions and fields so that views are
          * not constantly queried. */
         private var View: View = v
-        private var animation: Drawable = appContext.getDrawable(R.drawable.animation_tick)
+        private var animation: Drawable = appContext.getDrawable(R.drawable.tick_animation)
         //private var photo: Photo? = null
         /** 3 Initialized the View.OnClickListener. */
         init {

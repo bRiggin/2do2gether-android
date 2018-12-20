@@ -75,7 +75,6 @@ class PresenterModule {
     }
 
     @Provides
-    @Singleton
     fun provideToDoListPresenter(sRepo: SettingsRepository,
                                 tdlRepo: ToDoListRepository,
                                  @Named("main") mThread: Scheduler): ToDoListPresenter {

@@ -2,9 +2,10 @@ package com.rbiggin.a2do2gether.model
 
 data class ToDoListItem(val description: String, val creator: String,
                         val status: Boolean, val completedBy: String? = null,
-                        val priority: Priority) {
+                        val dateCreated: String, val priority: Priority) {
 
     enum class DataBaseKeys(val key: String) {
+        CREATED("dateCreated"),
         DESCRIPTION("description"),
         CREATOR("creator"),
         STATUS("status"),
@@ -13,14 +14,15 @@ data class ToDoListItem(val description: String, val creator: String,
     }
 
     enum class Priority(val value: String) {
-        CRITICAL("critical"),
-        IMPORTANT("important"),
-        TODO("to_do")
+        CRITICAL("CRITICAL"),
+        IMPORTANT("IMPORTANT"),
+        TODO("TODO")
     }
 
     companion object {
 
         fun parseToDoListItem(item: HashMap<*, *>): ToDoListItem? {
+            val created = item[DataBaseKeys.CREATED.key] as? String
             val creator = item[DataBaseKeys.CREATOR.key] as? String
             val description = item[DataBaseKeys.DESCRIPTION.key] as? String
             val status = item[DataBaseKeys.STATUS.key].toString().toBoolean()
@@ -28,17 +30,20 @@ data class ToDoListItem(val description: String, val creator: String,
             val priority = parsePriority(item[DataBaseKeys.PRIORITY.key] as String?)
 
             return when {
-                creator is String && description is String && priority is ToDoListItem.Priority ->
-                    ToDoListItem(description, creator, status, completedBy, priority)
+                creator is String
+                        && description is String
+                        && priority is ToDoListItem.Priority
+                        && created is String ->
+                    ToDoListItem(description, creator, status, completedBy, created, priority)
                 else -> null
             }
         }
 
         private fun parsePriority(value: String?): Priority? {
             return when (value) {
-                "critical" -> Priority.CRITICAL
-                "important" -> Priority.IMPORTANT
-                "to_do" -> Priority.TODO
+                Priority.CRITICAL.value -> Priority.CRITICAL
+                Priority.IMPORTANT.value -> Priority.IMPORTANT
+                Priority.TODO.value -> Priority.TODO
                 else -> null
             }
         }

@@ -22,6 +22,13 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="TextViewBoldStyle">
+        <item name="android:textColor">@color/text_colour</item>
+        <item name="android:fontFamily">@font/caviar_dreams_family</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="EditTextStyle">
         <item name="android:fontFamily">@font/caviar_dreams_family</item>
         <item name="android:textSize">16sp</item>
