@@ -20,28 +20,31 @@ import timber.log.Timber
 class ToDoListAdapter(private val context: Context,
                       private val storageReference: StorageReference,
                       private val toDoListItems: ArrayList<Pair<String, ToDoListItem>>,
-                      private val cachedUiData: HashMap<String, Pair<Boolean, Boolean>>,
+                      private var cachedUiData: HashMap<String, ToDoListPresenter.CachedItem>,
                       private val expansionListener: ToDoListItemLayout.Listener,
                       private val listener: Listener)
     : RecyclerView.Adapter<ToDoListAdapter.ItemHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val inflatedView = parent.inflate(R.layout.row_item_to_do_list_layout, false)
-        return ItemHolder(context, inflatedView, expansionListener,  listener)
+        return ItemHolder(context, inflatedView, expansionListener, listener)
     }
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         holder.setViewId(toDoListItems[position].first)
 
-        cachedUiData[toDoListItems[position].first]?.let {
+        cachedUiData[toDoListItems[position].first]?.let { cachedItemUiState ->
             when {
-                it.second && toDoListItems[position].second.status ->
+                cachedItemUiState.completed && toDoListItems[position].second.status ->
                     holder.setStatus(true, true)
-                !it.second && toDoListItems[position].second.status ->
+                !cachedItemUiState.completed && toDoListItems[position].second.status ->
                     holder.setStatus(true, false)
-                else -> holder.setStatus(false, true)
+                cachedItemUiState.completed && !toDoListItems[position].second.status ->
+                    holder.setStatus(false, false)
+                !cachedItemUiState.completed && !toDoListItems[position].second.status ->
+                    holder.setStatus(false, true)
             }
-            holder.setViewExpansion(it.first)
+            holder.setViewExpansion(cachedItemUiState.expanded)
         } ?: run {
             holder.setStatus(toDoListItems[position].second.status, false)
             holder.setViewExpansion(false)
@@ -65,6 +68,10 @@ class ToDoListAdapter(private val context: Context,
 
     override fun getItemCount(): Int = toDoListItems.size
 
+    fun updateCachedUiData(newData: HashMap<String, ToDoListPresenter.CachedItem>) {
+        cachedUiData = newData
+    }
+
     class ItemHolder(private val context: Context,
                      private val view: View,
                      expansionListener: ToDoListItemLayout.Listener,
@@ -82,7 +89,7 @@ class ToDoListAdapter(private val context: Context,
             view.toDoListItemCompletedBtn.setOnClickListener(this)
         }
 
-        fun setViewId(id: String){
+        fun setViewId(id: String) {
             itemKey = id
             view.listItemDetailsLayout.itemId = id
         }
@@ -118,26 +125,22 @@ class ToDoListAdapter(private val context: Context,
 
         fun setStatus(status: Boolean, setStatically: Boolean) {
             itemKey?.let { uid ->
-                when (status) {
-                    true -> {
-                        view.toDoListItemDescription.paintFlags =
-                                view.toDoListItemDescription.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                        view.toDoListItemCompletedBtn.apply {
-                            if (setStatically) {
-                                setImageDrawable(context.getDrawable(R.drawable.tick_static))
-                            } else {
-                                setImageDrawable(context.getDrawable(R.drawable.tick_animation))
-                            }
-                            (drawable as? AnimatedVectorDrawable)?.start()
-                        }
-                        listener.onItemUiTickStatusChanged(uid, true)
-                    }
-                    false -> {
-                        view.toDoListItemDescription.paintFlags =
-                                view.toDoListItemDescription.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                        listener.onItemUiTickStatusChanged(uid, false)
-                    }
+                view.toDoListItemDescription.paintFlags = when (status) {
+                    true -> view.toDoListItemDescription.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                    false -> view.toDoListItemDescription.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 }
+                view.toDoListItemCompletedBtn.setImageDrawable(when (status) {
+                    true -> when (setStatically) {
+                        true -> context.getDrawable(R.drawable.tick_static)
+                        false -> context.getDrawable(R.drawable.tick_forward_animation)
+                    }
+                    false -> when (setStatically) {
+                        true -> context.getDrawable(R.drawable.icon_blank)
+                        false -> context.getDrawable(R.drawable.tick_reverse_animation)
+                    }
+                })
+                (view.toDoListItemCompletedBtn.drawable as? AnimatedVectorDrawable)?.start()
+                listener.onItemUiTickStatusChanged(uid, status)
             }
         }
 

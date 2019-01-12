@@ -65,13 +65,31 @@ class ToDoListFragment
     }
 
     override fun onToDoListUpdate(toDoList: ToDoList,
-                                  cachedUiData: HashMap<String, Pair<Boolean, Boolean>>) {
-        toDoListItems.clear()
-        toDoListItems.addAll(presenter.sortToDoListItems(toDoList))
-        context?.let {
-            toDoListRv.adapter = ToDoListAdapter(it, FirebaseStorage.getInstance().reference,
-                    toDoListItems, cachedUiData, this, this)
+                                  cachedUiState: HashMap<String, ToDoListPresenter.CachedItem>) {
+        val newState = presenter.sortToDoListItems(toDoList)
+        when (toDoListItems.isEmpty()) {
+            true -> toDoListItems.addAll(presenter.sortToDoListItems(toDoList))
+            else -> updateToDoListItems(newState)
         }
+        (toDoListRv.adapter as? ToDoListAdapter)?.updateCachedUiData(cachedUiState)
+        toDoListRv.adapter?.notifyDataSetChanged() ?: run {
+            context?.let { context ->
+                toDoListRv.adapter = ToDoListAdapter(context, FirebaseStorage.getInstance().reference,
+                        toDoListItems, cachedUiState, this, this)
+            }
+        }
+    }
+
+    private fun updateToDoListItems(newState: ArrayList<Pair<String, ToDoListItem>>) {
+        for ((index, item) in newState.withIndex()) {
+            if (toDoListItems.size >= index + 1) {
+                if (toDoListItems[index] != newState[index])
+                    toDoListItems[index] = newState[index]
+            } else {
+                toDoListItems[index] = item
+            }
+        }
+
     }
 
     override fun onProgressChanged(progress: Int) {
@@ -96,6 +114,7 @@ class ToDoListFragment
     }
 
     override fun onItemPriorityChanged(itemId: String, priority: ToDoListItem.Priority) {
+        // TODO
         Timber.d("thing $itemId, $priority")
     }
 

@@ -2,7 +2,6 @@ package com.rbiggin.a2do2gether.ui.todo
 
 import android.animation.ValueAnimator
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.Interpolator
 import com.rbiggin.a2do2gether.model.ToDoList
 import com.rbiggin.a2do2gether.model.ToDoListItem
 import com.rbiggin.a2do2gether.repository.SettingsRepository
@@ -17,7 +16,7 @@ class ToDoListPresenter @Inject constructor(private val settingsRepository: Sett
 
     private var currentProgress = 0
     private val valueAnimator: ValueAnimator = ValueAnimator.ofInt()
-    private val cachedUiState: HashMap<String, Pair<Boolean, Boolean>> = HashMap()
+    private val cachedUiState: HashMap<String, CachedItem> = HashMap()
 
     init {
         valueAnimator.interpolator = AccelerateDecelerateInterpolator()
@@ -43,11 +42,11 @@ class ToDoListPresenter @Inject constructor(private val settingsRepository: Sett
     private fun updateProgressBar(items: LinkedHashMap<String, ToDoListItem>?) {
         var numOfCompletedItems = 0.0
         items?.forEach {
-            if(it.value.status)
+            if (it.value.status)
                 numOfCompletedItems++
         }
         items?.let {
-            valueAnimator.setIntValues(currentProgress, ((numOfCompletedItems/it.size) * 100).toInt())
+            valueAnimator.setIntValues(currentProgress, ((numOfCompletedItems / it.size) * 100).toInt())
         } ?: run {
             valueAnimator.setIntValues(currentProgress, 0)
         }
@@ -58,7 +57,7 @@ class ToDoListPresenter @Inject constructor(private val settingsRepository: Sett
     fun sortToDoListItems(toDoList: ToDoList): ArrayList<Pair<String, ToDoListItem>> {
         val list: ArrayList<Pair<String, ToDoListItem>> = ArrayList()
         //todo actually do some sorting
-        toDoList.items?.forEach { list.add(Pair(it.key, it.value)) }
+        toDoList.items?.toSortedMap()?.forEach { list.add(Pair(it.key, it.value)) }
         return list
     }
 
@@ -70,19 +69,19 @@ class ToDoListPresenter @Inject constructor(private val settingsRepository: Sett
         }
     }
 
-    fun updateCachedUi(itemId: String, type: CachedUiType, state: Boolean){
-        when(type){
+    fun updateCachedUi(itemId: String, type: CachedUiType, state: Boolean) {
+        cachedUiState[itemId] = when (type) {
             CachedUiType.EXPANDED ->
                 cachedUiState[itemId]?.let {
-                    cachedUiState[itemId] = Pair(state, it.second)
+                    CachedItem(state, it.completed)
                 } ?: run {
-                    cachedUiState[itemId] = Pair(state, false)
+                    CachedItem(state, false)
                 }
             CachedUiType.COMPLETED ->
                 cachedUiState[itemId]?.let {
-                    cachedUiState[itemId] = Pair(it.first, state)
+                    CachedItem(it.expanded, state)
                 } ?: run {
-                    cachedUiState[itemId] = Pair(false, state)
+                    CachedItem(false, state)
                 }
         }
     }
@@ -92,13 +91,15 @@ class ToDoListPresenter @Inject constructor(private val settingsRepository: Sett
         cachedUiState.remove(itemId)
     }
 
-    enum class CachedUiType{
+    enum class CachedUiType {
         EXPANDED,
         COMPLETED
     }
 
+    data class CachedItem(val expanded: Boolean, val completed: Boolean)
+
     interface View : BasePresenter.View {
-        fun onToDoListUpdate(toDoList: ToDoList, cachedUiData: HashMap<String, Pair<Boolean, Boolean>>)
+        fun onToDoListUpdate(toDoList: ToDoList, cachedUiState: HashMap<String, CachedItem>)
         fun onTitleChanged(listTitle: String)
         fun onProgressChanged(progress: Int)
     }

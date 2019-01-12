@@ -22,9 +22,7 @@ class ToDoListItemLayout(context: Context, attrs: AttributeSet? = null) :
     private val valueAnimator: ValueAnimator = ValueAnimator.ofFloat()
 
     init {
-        valueAnimator.addUpdateListener {
-            setHeight(it.animatedValue as Float)
-        }
+        valueAnimator.addUpdateListener { setHeight(it.animatedValue as Float) }
     }
 
     override fun addView(child: View?, params: ViewGroup.LayoutParams?) {
@@ -38,7 +36,7 @@ class ToDoListItemLayout(context: Context, attrs: AttributeSet? = null) :
     }
 
     private fun onChildViewAdded() {
-        if (childCount == 1){
+        if (childCount == 1) {
             getChildAt(0).viewTreeObserver?.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
                 override fun onPreDraw(): Boolean {
                     viewTreeObserver.removeOnPreDrawListener(this)
@@ -54,8 +52,8 @@ class ToDoListItemLayout(context: Context, attrs: AttributeSet? = null) :
         }
     }
 
-    private fun staticallyChangeHeight(expanded: Boolean){
-        if (expanded){
+    private fun staticallyChangeHeight(expanded: Boolean) {
+        if (expanded) {
             setHeight(viewHeight.toFloat())
             this.expanded = true
         } else {
@@ -73,19 +71,19 @@ class ToDoListItemLayout(context: Context, attrs: AttributeSet? = null) :
         }
     }
 
-    private fun expand(){
-        valueAnimator.setFloatValues(0f, viewHeight.toFloat())
+    private fun expand() {
         expanded = true
+        valueAnimator.setFloatValues(0f, viewHeight.toFloat())
         valueAnimator.start()
     }
 
-    private fun collapse(){
-        valueAnimator.setFloatValues(viewHeight.toFloat(), 0f)
+    private fun collapse() {
         expanded = false
+        valueAnimator.setFloatValues(viewHeight.toFloat(), 0f)
         valueAnimator.start()
     }
 
-    private fun updateListener(){
+    private fun updateListener() {
         listener?.let { listener ->
             itemId?.let { id ->
                 listener.onItemExpanded(id, expanded)
@@ -101,7 +99,7 @@ class ToDoListItemLayout(context: Context, attrs: AttributeSet? = null) :
         updateListener()
     }
 
-    interface Listener{
+    interface Listener {
         fun onItemExpanded(id: String, expanded: Boolean)
     }
 }
