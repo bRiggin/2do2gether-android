@@ -91,6 +91,10 @@ class ToDoListPresenter @Inject constructor(private val settingsRepository: Sett
         cachedUiState.remove(itemId)
     }
 
+    fun onItemPriorityChanged(itemId: String, listId: String, priority: ToDoListItem.Priority){
+        toDoListRepository.changeItemPriority(listId, itemId, priority)
+    }
+
     enum class CachedUiType {
         EXPANDED,
         COMPLETED

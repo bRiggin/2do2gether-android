@@ -87,6 +87,7 @@ class ToDoListAdapter(private val context: Context,
             view.importantPriorityBtn.setOnClickListener(this)
             view.criticalPriorityBtn.setOnClickListener(this)
             view.toDoListItemCompletedBtn.setOnClickListener(this)
+            view.deleteToDoListItemBtn.setOnClickListener(this)
         }
 
         fun setViewId(id: String) {
@@ -204,6 +205,7 @@ class ToDoListAdapter(private val context: Context,
                         if (currentPriority != ToDoListItem.Priority.CRITICAL)
                             listener.onItemPriorityChanged(uid, ToDoListItem.Priority.CRITICAL)
                     R.id.toDoListItemCompletedBtn -> listener.onItemCompleted(uid)
+                    R.id.deleteToDoListItemBtn -> listener.onItemDeleted(uid)
                     else -> Timber.i("")
                 }
             }

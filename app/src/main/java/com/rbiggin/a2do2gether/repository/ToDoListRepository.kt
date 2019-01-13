@@ -19,7 +19,6 @@ import kotlin.collections.HashMap
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class ToDoListRepository @Inject constructor(private val uidProvider: UidProvider,
                                              private val databaseWriter: FirebaseDatabaseWriter) :
         FirebaseReadWatcher.Listener, FirebaseReadEqualWatcher.Listener {
@@ -124,13 +123,18 @@ class ToDoListRepository @Inject constructor(private val uidProvider: UidProvide
     }
 
     fun deleteItem(listId: String, itemId: String) {
-        databaseWriter.doDelete(dbRef, "$fbDbToDoListKey/$uid/$listId/items/$itemId")
+        databaseWriter.doDelete(dbRef, "$fbDbToDoListKey/$listId/items/$itemId")
     }
 
     fun addItem(listId: String?, newText: String) {
         //todo this needs to construct to do list item and write it
         val path = "$fbDbToDoListKey/$uid/$listId/items"
         databaseWriter.doPushWrite(dbRef, path, arrayListOf(newText as Any))
+    }
+
+    fun changeItemPriority(listId: String, itemId: String, priority: ToDoListItem.Priority){
+        val path = "$fbDbToDoListKey/$listId/items/$itemId"
+        databaseWriter.doWrite(dbRef, path, hashMapOf(ToDoListItem.DataBaseKeys.PRIORITY.key to priority.value))
     }
 
     @Suppress("UNCHECKED_CAST")

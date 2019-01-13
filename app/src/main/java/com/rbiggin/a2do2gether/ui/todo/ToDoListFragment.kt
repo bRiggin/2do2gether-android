@@ -102,7 +102,19 @@ class ToDoListFragment
     }
 
     override fun onItemDeleted(itemId: String) {
-        mFragmentId?.let { presenter.onItemDeleted(itemId, it) }
+        mFragmentId?.let {listId ->
+            var indexToRemove: Int? = null
+            for ((index, item) in toDoListItems.withIndex()) {
+                if (item.first == itemId)
+                    indexToRemove = index
+            }
+            indexToRemove?.let { toDoListItems.removeAt(it) }
+            presenter.onItemDeleted(itemId, listId)
+        }
+    }
+
+    override fun onItemPriorityChanged(itemId: String, priority: ToDoListItem.Priority) {
+        mFragmentId?.let { presenter.onItemPriorityChanged(itemId, it, priority) }
     }
 
     override fun onItemUiTickStatusChanged(itemId: String, status: Boolean) {
@@ -111,11 +123,6 @@ class ToDoListFragment
 
     override fun onItemExpanded(id: String, expanded: Boolean) {
         presenter.updateCachedUi(id, ToDoListPresenter.CachedUiType.EXPANDED, expanded)
-    }
-
-    override fun onItemPriorityChanged(itemId: String, priority: ToDoListItem.Priority) {
-        // TODO
-        Timber.d("thing $itemId, $priority")
     }
 
     override fun onDisplayDialogMessage(message_id: Int, message: String?) {}
