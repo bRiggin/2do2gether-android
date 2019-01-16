@@ -1,10 +1,11 @@
 package com.rbiggin.a2do2gether.model
 
-data class ToDoListItem(val description: String, val creator: String,
+data class ToDoListItem(val id: String, val description: String, val creator: String,
                         val status: Boolean, val completedBy: String? = null,
                         val dateCreated: String, val priority: Priority) {
 
     enum class DataBaseKeys(val key: String) {
+        ID("id"),
         CREATED("dateCreated"),
         DESCRIPTION("description"),
         CREATOR("creator"),
@@ -20,8 +21,8 @@ data class ToDoListItem(val description: String, val creator: String,
     }
 
     companion object {
-
         fun parseToDoListItem(item: HashMap<*, *>): ToDoListItem? {
+            val id = item[DataBaseKeys.ID.key] as? String
             val created = item[DataBaseKeys.CREATED.key] as? String
             val creator = item[DataBaseKeys.CREATOR.key] as? String
             val description = item[DataBaseKeys.DESCRIPTION.key] as? String
@@ -30,11 +31,12 @@ data class ToDoListItem(val description: String, val creator: String,
             val priority = parsePriority(item[DataBaseKeys.PRIORITY.key] as String?)
 
             return when {
-                creator is String
+                id is String
+                        && creator is String
                         && description is String
                         && priority is ToDoListItem.Priority
                         && created is String ->
-                    ToDoListItem(description, creator, status, completedBy, created, priority)
+                    ToDoListItem(id, description, creator, status, completedBy, created, priority)
                 else -> null
             }
         }

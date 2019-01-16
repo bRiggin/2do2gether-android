@@ -14,71 +14,75 @@ import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.model.ToDoListItem
 import com.rbiggin.a2do2gether.ui.todo.item.ToDoListItemLayout
 import com.rbiggin.a2do2gether.utils.inflate
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.row_item_to_do_list_layout.view.*
 import timber.log.Timber
+import java.lang.IllegalStateException
 
 class ToDoListAdapter(private val context: Context,
                       private val storageReference: StorageReference,
-                      private val toDoListItems: ArrayList<Pair<String, ToDoListItem>>,
-                      private var cachedUiData: HashMap<String, ToDoListPresenter.CachedItem>,
+                      private val toDoListItems: ArrayList<String>,
+                      private var itemObservables: HashMap<String, Observable<ToDoListItem>>,
                       private val expansionListener: ToDoListItemLayout.Listener,
                       private val listener: Listener)
     : RecyclerView.Adapter<ToDoListAdapter.ItemHolder>() {
 
+    private val onCachedUiSateChanged: BehaviorSubject<HashMap<String, ToDoListPresenter.CachedItem>> = BehaviorSubject.create()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val inflatedView = parent.inflate(R.layout.row_item_to_do_list_layout, false)
-        return ItemHolder(context, inflatedView, expansionListener, listener)
+        return ItemHolder(context, inflatedView, onCachedUiSateChanged, expansionListener, listener)
     }
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
-        holder.setViewId(toDoListItems[position].first)
-
-        cachedUiData[toDoListItems[position].first]?.let { cachedItemUiState ->
-            when {
-                cachedItemUiState.completed && toDoListItems[position].second.status ->
-                    holder.setStatus(true, true)
-                !cachedItemUiState.completed && toDoListItems[position].second.status ->
-                    holder.setStatus(true, false)
-                cachedItemUiState.completed && !toDoListItems[position].second.status ->
-                    holder.setStatus(false, false)
-                !cachedItemUiState.completed && !toDoListItems[position].second.status ->
-                    holder.setStatus(false, true)
-            }
-            holder.setViewExpansion(cachedItemUiState.expanded)
+        holder.setViewId(toDoListItems[position])
+        holder.itemPosition = position
+        itemObservables[toDoListItems[position]]?.let {
+            holder.onObservableChanged(it)
         } ?: run {
-            holder.setStatus(toDoListItems[position].second.status, false)
-            holder.setViewExpansion(false)
+            throw IllegalStateException("no observable available for to do list item: ${toDoListItems[position]}")
         }
+    }
 
-        holder.setDescription(toDoListItems[position].second.description)
+    fun updateCachedUiData(newData: HashMap<String, ToDoListPresenter.CachedItem>) {
+        onCachedUiSateChanged.onNext(newData)
+    }
 
-        val ref = storageReference.child("profile_pictures/${toDoListItems[position].second.creator}.jpg")
-        holder.setItemImage(ref)
+    fun updateObservables(newObservables: HashMap<String, Observable<ToDoListItem>>) {
+        itemObservables = newObservables
+    }
 
-        holder.setDateCreated(toDoListItems[position].second.dateCreated)
-
-        toDoListItems[position].second.completedBy?.let {
+    private fun updateCompletedBy(item: ToDoListItem, holder: ItemHolder) {
+        item.completedBy?.let {
             holder.setCompletedBy(it)
         } ?: run {
             holder.hideCompletedByLayout()
         }
+    }
 
-        holder.setPriority(toDoListItems[position].second.priority)
+    private fun updateItemImage(item: ToDoListItem, holder: ItemHolder) {
+        val ref = storageReference.child("profile_pictures/${item.creator}.jpg")
+        holder.setItemImage(ref)
     }
 
     override fun getItemCount(): Int = toDoListItems.size
 
-    fun updateCachedUiData(newData: HashMap<String, ToDoListPresenter.CachedItem>) {
-        cachedUiData = newData
-    }
-
     class ItemHolder(private val context: Context,
                      private val view: View,
+                     private val cachedUiData: Observable<HashMap<String, ToDoListPresenter.CachedItem>>,
                      expansionListener: ToDoListItemLayout.Listener,
                      private val listener: Listener) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
+        var itemPosition: Int? = null
         private var itemKey: String? = null
         private var currentPriority: ToDoListItem.Priority? = null
+        private var currentU
+
+        private var itemDisposable: Disposable? = null
+        private var uiDisposable: Disposable? = null
 
         init {
             view.listItemHeader.detailsView = view.listItemDetailsLayout
@@ -90,16 +94,43 @@ class ToDoListAdapter(private val context: Context,
             view.deleteToDoListItemBtn.setOnClickListener(this)
         }
 
+        fun onObservableChanged(observable: Observable<ToDoListItem>){
+            itemDisposable?.dispose()
+            itemDisposable = observable.distinctUntilChanged().subscribe { item ->
+                setDescription(item.description)
+                setDateCreated(item.dateCreated)
+                setPriority(item.priority)
+
+                itemPosition?.let { updateCompletionState(item.status, it) }
+                updateItemImage(item, holder)
+                updateCompletedBy(item, holder)
+            }
+        }
+
         fun setViewId(id: String) {
             itemKey = id
             view.listItemDetailsLayout.itemId = id
+
+            uiDisposable?.dispose()
+            uiDisposable = cachedUiData
+                    .map {
+                        it[id]?.let { newData ->
+                            newData
+                        } ?: run {
+                            throw IllegalStateException()
+                        }
+                    }
+                    .distinctUntilChanged()
+                    .subscribe {
+
+                    }
         }
 
         fun setViewExpansion(expanded: Boolean) {
             view.listItemDetailsLayout.initialStaticExpansionState = expanded
         }
 
-        fun setDescription(text: String) {
+        private fun setDescription(text: String) {
             view.toDoListItemDescription.text = text
         }
 
@@ -111,7 +142,7 @@ class ToDoListAdapter(private val context: Context,
                     .into(view.toDoListItemImage)
         }
 
-        fun setDateCreated(date: String) {
+        private fun setDateCreated(date: String) {
             view.toDoListItemCreatedTextView.text = date
         }
 
@@ -124,7 +155,22 @@ class ToDoListAdapter(private val context: Context,
             view.completedByLayout.visibility = View.GONE
         }
 
-        fun setStatus(status: Boolean, setStatically: Boolean) {
+        private fun updateCompletionState(state: Boolean, position: Int) {
+            cachedUiData[toDoListItems[position]]?.let { cachedItemUiState ->
+                when {
+                    cachedItemUiState.completed && state -> holder.setStatus(true, true)
+                    !cachedItemUiState.completed && state -> holder.setStatus(true, false)
+                    cachedItemUiState.completed && !state -> holder.setStatus(false, false)
+                    !cachedItemUiState.completed && !state -> holder.setStatus(false, true)
+                }
+                holder.setViewExpansion(cachedItemUiState.expanded)
+            } ?: run {
+                holder.setStatus(state, false)
+                holder.setViewExpansion(false)
+            }
+        }
+
+        private fun setStatus(status: Boolean, setStatically: Boolean) {
             itemKey?.let { uid ->
                 view.toDoListItemDescription.paintFlags = when (status) {
                     true -> view.toDoListItemDescription.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -145,7 +191,7 @@ class ToDoListAdapter(private val context: Context,
             }
         }
 
-        fun setPriority(priority: ToDoListItem.Priority) {
+        private fun setPriority(priority: ToDoListItem.Priority) {
             currentPriority = priority
             val white = context.resources.getColor(R.color.white)
             var colour = 0

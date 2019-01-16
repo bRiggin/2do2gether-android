@@ -9,13 +9,11 @@ import android.view.ViewGroup
 import com.google.firebase.storage.FirebaseStorage
 import com.rbiggin.a2do2gether.R
 import com.rbiggin.a2do2gether.application.MyApplication
-import com.rbiggin.a2do2gether.model.ToDoList
 import com.rbiggin.a2do2gether.model.ToDoListItem
 import com.rbiggin.a2do2gether.ui.base.BaseFragment
 import com.rbiggin.a2do2gether.ui.todo.item.ToDoListItemLayout
 import com.rbiggin.a2do2gether.utils.Constants
 import kotlinx.android.synthetic.main.fragment_to_do_list.*
-import timber.log.Timber
 import javax.inject.Inject
 
 class ToDoListFragment
@@ -23,8 +21,6 @@ class ToDoListFragment
 
     @Inject
     lateinit var presenter: ToDoListPresenter
-
-    private var toDoListItems: ArrayList<Pair<String, ToDoListItem>> = ArrayList()
 
     private lateinit var layoutManager: LinearLayoutManager
 
@@ -64,32 +60,25 @@ class ToDoListFragment
         toDoListTitle.text = listTitle
     }
 
-    override fun onToDoListUpdate(toDoList: ToDoList,
-                                  cachedUiState: HashMap<String, ToDoListPresenter.CachedItem>) {
-        val newState = presenter.sortToDoListItems(toDoList)
-        when (toDoListItems.isEmpty()) {
-            true -> toDoListItems.addAll(presenter.sortToDoListItems(toDoList))
-            else -> updateToDoListItems(newState)
-        }
-        (toDoListRv.adapter as? ToDoListAdapter)?.updateCachedUiData(cachedUiState)
-        toDoListRv.adapter?.notifyDataSetChanged() ?: run {
+    override fun onToDoListUpdate(update: ToDoListPresenter.ObservablesAndUiState) {
+        toDoListRv.adapter?.apply {
+            (this as? ToDoListAdapter)?.apply {
+                updateCachedUiData(update.cachedUiState)
+                updateObservables(update.observables)
+            }
+            notifyDataSetChanged()
+        } ?: run {
             context?.let { context ->
-                toDoListRv.adapter = ToDoListAdapter(context, FirebaseStorage.getInstance().reference,
-                        toDoListItems, cachedUiState, this, this)
+                toDoListRv.adapter = ToDoListAdapter(
+                        context,
+                        FirebaseStorage.getInstance().reference,
+                        update.sortedAdapterItems,
+                        update.cachedUiState,
+                        update.observables,
+                        this,
+                        this)
             }
         }
-    }
-
-    private fun updateToDoListItems(newState: ArrayList<Pair<String, ToDoListItem>>) {
-        for ((index, item) in newState.withIndex()) {
-            if (toDoListItems.size >= index + 1) {
-                if (toDoListItems[index] != newState[index])
-                    toDoListItems[index] = newState[index]
-            } else {
-                toDoListItems[index] = item
-            }
-        }
-
     }
 
     override fun onProgressChanged(progress: Int) {
@@ -102,15 +91,7 @@ class ToDoListFragment
     }
 
     override fun onItemDeleted(itemId: String) {
-        mFragmentId?.let {listId ->
-            var indexToRemove: Int? = null
-            for ((index, item) in toDoListItems.withIndex()) {
-                if (item.first == itemId)
-                    indexToRemove = index
-            }
-            indexToRemove?.let { toDoListItems.removeAt(it) }
-            presenter.onItemDeleted(itemId, listId)
-        }
+        mFragmentId?.let {listId -> presenter.onItemDeleted(itemId, listId) }
     }
 
     override fun onItemPriorityChanged(itemId: String, priority: ToDoListItem.Priority) {

@@ -154,7 +154,7 @@ class ToDoListRepository @Inject constructor(private val uidProvider: UidProvide
             : LinkedHashMap<String, ToDoListItem> {
         val newItems: LinkedHashMap<String, ToDoListItem> = LinkedHashMap()
         items.forEach {
-            newItems[it.first] = ToDoListItem(it.second, uid, false, null,
+            newItems[it.first] = ToDoListItem(it.first, it.second, uid, false, null,
                     dateString(), ToDoListItem.Priority.TODO)
         }
         return newItems
